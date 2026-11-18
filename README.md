@@ -1,7 +1,7 @@
 # 20 Pagine — scacchi estremi
 
 Sito statico con API Node.js su Vercel e partite online salvate in Upstash Redis.
-Nessuna dipendenza npm esterna. Richiede Node.js 22 o successivo.
+Richiede Node.js 22. Acorn è una dipendenza di sviluppo usata per generare il catalogo dei testi.
 
 ## Attivare le lobby su Vercel (passo per passo)
 
@@ -65,3 +65,45 @@ Non aprire solo il file HTML per provare l'online: serve un deployment Vercel,
 oppure `vercel dev` con le variabili del file `.env.example` configurate localmente.
 I test usano uno store simulato: non richiedono token e non contattano Upstash.
 Il collegamento effettivo a Upstash va verificato dopo il deployment.
+
+
+## Pannello riservato dei testi: `/panel`
+
+Il percorso non è collegato dal sito ed è marcato `noindex`, ma **non è la
+segretezza dell’URL a proteggerlo**: tutte le operazioni di modifica sono
+verificate dal server. Per abilitarlo:
+
+1. In Vercel → Settings → Environment Variables aggiungi `PANEL_PASSWORD`, con
+   la password privata che hai scelto. Non inserirla in HTML o nel repository.
+2. Aggiungi `PANEL_SESSION_SECRET`, una stringa casuale di almeno 32 caratteri.
+   Puoi generarla localmente con:
+   ```sh
+   node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+   ```
+   Non condividerla in chat. Usa un segreto differente dalla password.
+3. Abilita le variabili per gli ambienti necessari ed esegui un nuovo deploy.
+   Il pannello usa lo stesso Redis già configurato per le lobby.
+4. Apri `https://TUO-SITO/panel`, accedi e cerca il testo da cambiare.
+   Premi **Salva modifiche** e ricarica la pagina del gioco per applicarle.
+
+Sono disponibili i testi italiani e francesi e i messaggi dinamici con
+segnaposto `{0}`, `{1}`. Mantieni tutti i segnaposto e gli spazi significativi:
+alcune frasi sono composte da più frammenti. Il catalogo viene estratto al build.
+Per messaggi rari non in elenco usa **Aggiungi un testo non in elenco** con
+l’originale esatto (o con segnaposto per le parti variabili).
+Le modifiche riguardano testo visualizzato, non HTML, URL, classi CSS, codici
+partita, notazione o valori numerici del motore. La pagina amministrativa stessa
+non è personalizzabile da questo editor.
+
+Le personalizzazioni sono conservate senza scadenza nella chiave Redis
+`20pagine:site-text:v1`, separata dalle partite; un nuovo deploy non le cancella.
+Le modifiche simultanee sono rilevate: in caso di conflitto ricarica prima di
+salvare. Puoi ripristinare singoli testi o tutti gli originali, poi salvare.
+La lettura delle personalizzazioni è pubblica (come i testi del sito): **non
+inserire segreti nel contenuto**. Se Upstash non risponde, il gioco usa i testi
+originali dopo un’attesa massima di 2,5 secondi.
+
+L’accesso usa cookie firmati `HttpOnly`, `SameSite=Strict`, `Secure` su HTTPS,
+con durata di 8 ore e limite di 5 tentativi di login al minuto per IP.
+Cambiare password o segreto invalida le sessioni esistenti; usa comunque una
+password lunga e unica. Non esiste una password predefinita nel codice.

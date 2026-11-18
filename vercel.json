@@ -2,9 +2,80 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "public",
-  "functions": { "api/matches.js": { "maxDuration": 30 } },
+  "functions": {
+    "api/matches.js": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
-    { "source": "/api/matches/:id/:action", "destination": "/api/matches?id=:id&action=:action" },
-    { "source": "/api/matches/:id", "destination": "/api/matches?id=:id" }
+    {
+      "source": "/panel",
+      "destination": "/panel.html"
+    },
+    {
+      "source": "/panel/",
+      "destination": "/panel.html"
+    },
+    {
+      "source": "/api/matches/:id/:action",
+      "destination": "/api/matches?id=:id&action=:action"
+    },
+    {
+      "source": "/api/matches/:id",
+      "destination": "/api/matches?id=:id"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/panel",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+        }
+      ]
+    },
+    {
+      "source": "/panel/",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+        }
+      ]
+    },
+    {
+      "source": "/panel.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
+        }
+      ]
+    }
   ]
 }

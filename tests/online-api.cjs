@@ -116,7 +116,7 @@ test('Vercel routes target the same Node handler and static output includes asse
   const fs = require('node:fs');
   const config = JSON.parse(fs.readFileSync('vercel.json', 'utf8'));
   assert.equal(config.outputDirectory, 'public');
-  assert.equal(config.rewrites.length, 2);
+  assert.equal(config.rewrites.filter(route => route.source.startsWith('/api/matches/')).length, 2);
   assert(config.rewrites.some(route => route.source === '/api/matches/:id/:action' && route.destination === '/api/matches?id=:id&action=:action'));
   assert(config.rewrites.some(route => route.source === '/api/matches/:id' && route.destination === '/api/matches?id=:id'));
   assert(fs.existsSync('api/matches.js'));
