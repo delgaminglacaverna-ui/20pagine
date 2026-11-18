@@ -11,8 +11,9 @@
   flex-shrink: 0; border-radius: 50%; background: #000; vertical-align: middle; overflow: hidden; }
 .entry-live { width: 110px; height: 110px; }
 .entry-clock-face { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
-  opacity: 0; animation: entry-sketch .6s step-end infinite; }
-.entry-clock-face-2 { animation-delay: -.4s; } .entry-clock-face-3 { animation-delay: -.2s; }
+  opacity: 0; animation: entry-clock-frame-1 .6s step-end infinite; }
+.entry-clock-face-2 { animation-name: entry-clock-frame-2; }
+.entry-clock-face-3 { animation-name: entry-clock-frame-3; }
 .entry-hand { position: absolute; left: calc(50% - 2px); bottom: 50%; width: 4px; border-radius: 4px;
   transform-origin: 50% 100%; background: #fff; }
 .entry-hour { height: 21%; } .entry-minute { height: 35%; width: 3px; left: calc(50% - 1.5px); }
@@ -26,7 +27,10 @@
 .entry-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; min-height: 140px; }
 .entry-card .entry-choice { display: grid; justify-items: center; gap: 6px; padding: 10px 4px; }
 .entry-choice .entry-clock { width: min(100%, 100px); } .entry-answer-letter { font-weight: 800; }
-@keyframes entry-sketch { 0% { opacity: 1; } 25% { opacity: 0; } }
+/* Explicit thirds: all three drawings get 200ms, with no blank gaps. */
+@keyframes entry-clock-frame-1 { 0% { opacity: 1; } 33.333% { opacity: 0; } }
+@keyframes entry-clock-frame-2 { 0% { opacity: 0; } 33.333% { opacity: 1; } 66.666% { opacity: 0; } }
+@keyframes entry-clock-frame-3 { 0% { opacity: 0; } 66.666% { opacity: 1; } 100% { opacity: 0; } }
 @media (max-width: 420px) { .entry-equation { gap: 4px; } .entry-equation .entry-clock { width: clamp(72px, 24vw, 100px); } .entry-plus { font-size: 18px; } .entry-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .entry-clock-face { animation: none; opacity: 0; } .entry-clock-face-1 { opacity: 1; } }
 

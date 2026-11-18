@@ -97,15 +97,19 @@
         const node = document.createElement(tag); if (className) node.className = className;
         if (text !== undefined) node.textContent = text; return node;
       };
+      const creature = punishment ? 'mouth' : 'eye';
+      const frameCount = punishment ? 3 : 4;
+      const frameFolder = punishment ? 'mouths' : 'eyes';
+      const frameDuration = 0.72 / frameCount;
       const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '')), card = el('section', 'entry-card');
       const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', 'true');
       for (let index = 0; index < 8; index++) {
         const eye = el('span', 'entry-eye');
-        for (let frame = 1; frame <= 4; frame++) {
-          const image = el('img', 'entry-eye-frame entry-eye-frame-' + frame);
-          image.src = '/assets/eyes/frame-' + frame + '.webp';
+        for (let frame = 1; frame <= frameCount; frame++) {
+          const image = el('img', 'entry-' + creature + '-frame entry-' + creature + '-frame-' + frame);
+          image.src = '/assets/' + frameFolder + '/frame-' + frame + '.webp';
           image.alt = ''; image.draggable = false; image.width = image.height = 420;
-          image.style.animationDelay = `${-(index * 0.09 + (frame - 1) * 0.18)}s`;
+          image.style.animationDelay = `${-(index * 0.09 + (frame - 1) * frameDuration)}s`;
           eye.append(image);
         }
         eyes.append(eye);
@@ -115,10 +119,10 @@
       const clockBox = el('div', 'entry-italy');
       const bigEye = el('div', 'entry-big-eye'); bigEye.setAttribute('aria-hidden', 'true');
       if (punishment) {
-        for (let frame = 1; frame <= 4; frame++) {
-          const image = el('img', 'entry-eye-frame entry-eye-frame-' + frame);
-          image.src = '/assets/eyes/frame-' + frame + '.webp'; image.alt = ''; image.draggable = false;
-          image.style.animationDelay = `${-(frame - 1) * 0.18}s`; bigEye.append(image);
+        for (let frame = 1; frame <= frameCount; frame++) {
+          const image = el('img', 'entry-' + creature + '-frame entry-' + creature + '-frame-' + frame);
+          image.src = '/assets/' + frameFolder + '/frame-' + frame + '.webp'; image.alt = ''; image.draggable = false;
+          image.style.animationDelay = `${-(frame - 1) * frameDuration}s`; bigEye.append(image);
         }
         card.append(bigEye); clockBox.hidden = true;
       }
@@ -165,7 +169,7 @@
         closed = true; phase = 'denied'; cleanup();
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
         heading.textContent = t(punishment ? 'punishFailed' : timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
-        // Only a failed homework answer reveals the mouth frames.
+        // Both chess defeat and homework failure use mouths.
         screen.className = 'entry-gate entry-failed';
         for (const eye of [...eyes.children, bigEye]) {
           eye.replaceChildren();
