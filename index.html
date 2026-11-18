@@ -163,6 +163,7 @@ const FRENCH_TEXT = {
 function frenchText(text) {
   if (!FRENCH_MODE || typeof text !== "string") return text;
   if (Object.hasOwn(FRENCH_TEXT, text)) return FRENCH_TEXT[text];
+  if (/^Salta tra \d+s$/.test(text)) return text.replace(/^Salta tra (\d+)s$/, "Passer dans $1 s");
   return text;
 }
 // Translate presentation props only, never game identifiers, URLs or notation.
@@ -700,7 +701,7 @@ function Ff({ code: o, size: h }) {
   return v.jsx("span", {
     className: "pointer-events-none select-none leading-none" + (FRENCH_MODE ? " french-piece" : ""),
     style: {
-      fontSize: h ?? "7.4cqw",
+      fontSize: h ?? "var(--chess-piece-size, clamp(20px, 8.6vw, 55px))",
       fontFamily: z
         ? "Arial, Helvetica, sans-serif"
         : '"Segoe UI Symbol","Noto Sans Symbols 2","DejaVu Sans","Apple Symbols",serif',
@@ -723,7 +724,28 @@ function Ff({ code: o, size: h }) {
     ] : Jh[b],
   });
 }
+// Older interactive-whiteboard browsers may not support container query units.
+// Measure the actual board instead, including when fullscreen/layout changes.
+function watchBoardSize(element) {
+  if (!element) return;
+  const update = () => {
+    const width = element.clientWidth;
+    if (!width) return;
+    element.style.setProperty("--chess-piece-size", `${width * 0.086}px`);
+    element.style.setProperty("--chess-coordinate-size", `${width * 0.017}px`);
+  };
+  update();
+  const observer = typeof ResizeObserver !== "undefined" ? new ResizeObserver(update) : null;
+  observer?.observe(element);
+  window.addEventListener("resize", update);
+  return () => {
+    observer?.disconnect();
+    window.removeEventListener("resize", update);
+  };
+}
 function wh(o) {
+  const boardRef = ul.useRef(null);
+  ul.useEffect(() => watchBoardSize(boardRef.current), []);
   const {
       cells: h,
       flipped: b,
@@ -739,7 +761,7 @@ function wh(o) {
   return v.jsx("div", {
     className:
       "relative aspect-square w-full overflow-hidden rounded-sm border-[3px] border-[#404040] bg-[#404040] shadow-lg",
-    style: { containerType: "inline-size" },
+    ref: boardRef,
     children: v.jsx("div", {
       className: "grid h-full w-full grid-cols-10 grid-rows-10",
       children: y.map((U) => {
@@ -782,14 +804,14 @@ function wh(o) {
                 v.jsx("span", {
                   className:
                     "pointer-events-none absolute left-[3%] top-[2%] font-semibold leading-none",
-                  style: { fontSize: "1.7cqw", color: K },
+                  style: { fontSize: "var(--chess-coordinate-size, clamp(8px, 1.7vw, 11px))", color: K },
                   children: 10 - H,
                 }),
               Q &&
                 v.jsx("span", {
                   className:
                     "pointer-events-none absolute bottom-[2%] right-[4%] font-semibold leading-none",
-                  style: { fontSize: "1.7cqw", color: K },
+                  style: { fontSize: "var(--chess-coordinate-size, clamp(8px, 1.7vw, 11px))", color: K },
                   children: String.fromCharCode(97 + C),
                 }),
               L !== 0 &&
