@@ -2,7 +2,7 @@
 (function (root) {
   const TEXT = {
     it: {
-      taunt: 'BROO', speech1: 'AVEVI DETTO DI AVER STUDIATO', speech2: 'ORA BASTA', speech3: 'INVECE DI ESSERE IL PROFESSORE ECCEZIONALE CHE SONO', speech4: 'ASSEGNERÒ E BASTA', speech5: 'È FINITA PER TE!!!', speech6: 'VERGOGNATI', exit: 'Esci dalla sfida', punishRound: 'Domanda {0} di 300', punishFailed: 'CHRONOS HA VINTO.',
+      taunt: 'BROO', speech1: 'AVEVI DETTO DI AVER STUDIATO', speech2: 'ORA BASTA', speech3: 'INVECE DI ESSERE IL PROFESSORE ECCEZIONALE CHE SONO', speech4: 'ASSEGNERÒ E BASTA', speech5: 'È FINITA PER TE!!!', speech6: 'VERGOGNATI', punishRound: 'Domanda {0} di 300', punishFailed: 'CHRONOS HA VINTO.',
       title: 'HAI FATTO I COMPITI?', yes: 'SÌ', no: 'NO', challenge: 'RISPONDI',
       round: 'Prova {0} di 3', remaining: 'Tempo rimasto: {0} secondi',
       denied: 'CHRONOS: tempo scaduto. Torna ai compiti!',
@@ -11,7 +11,7 @@
       failed: 'Accesso non consentito. Torna ai compiti!', live: 'Ora italiana: {0}',
     },
     fr: {
-      taunt: 'BROO', speech1: 'TU AVAIS DIT AVOIR ÉTUDIÉ', speech2: 'MAINTENANT ÇA SUFFIT', speech3: 'AU LIEU D’ÊTRE LE PROFESSEUR EXCEPTIONNEL QUE JE SUIS', speech4: 'JE VAIS JUSTE DONNER DES DEVOIRS', speech5: 'C’EST FINI POUR TOI !!!', speech6: 'HONTE À TOI', exit: 'Quitter le défi', punishRound: 'Question {0} sur 300', punishFailed: 'CHRONOS A GAGNÉ.',
+      taunt: 'BROO', speech1: 'TU AVAIS DIT AVOIR ÉTUDIÉ', speech2: 'MAINTENANT ÇA SUFFIT', speech3: 'AU LIEU D’ÊTRE LE PROFESSEUR EXCEPTIONNEL QUE JE SUIS', speech4: 'JE VAIS JUSTE DONNER DES DEVOIRS', speech5: 'C’EST FINI POUR TOI !!!', speech6: 'HONTE À TOI', punishRound: 'Question {0} sur 300', punishFailed: 'CHRONOS A GAGNÉ.',
       title: 'AS-TU FAIT TES DEVOIRS ?', yes: 'OUI', no: 'NON', challenge: 'RÉPONDS',
       round: 'Épreuve {0} sur 3', remaining: 'Temps restant : {0} secondes',
       denied: 'CHRONOS : temps écoulé. Retourne faire tes devoirs !',
@@ -73,6 +73,20 @@
       return custom.replace(/\{(\d+)\}/g, (_, index) => String(values[Number(index)] ?? ''));
     };
     return new Promise(resolve => {
+      const sounds = new Set();
+      function playSound(name) {
+        try {
+          if (typeof root.Audio !== 'function') return;
+          const audio = new root.Audio('/assets/sounds/' + name + '.mp3');
+          audio.volume = 0.7; sounds.add(audio);
+          const release = () => sounds.delete(audio);
+          audio.addEventListener('ended', release, { once: true });
+          audio.addEventListener('error', release, { once: true });
+          const playing = audio.play();
+          if (playing?.catch) playing.catch(release);
+        } catch { /* Missing files and autoplay restrictions must not break the quiz. */ }
+      }
+      let closeTimer;
       let closed = false, round = 0, question, phase = 'welcome', previewTimer, roundTimer, introTimer, deadline;
       const el = (tag, className, text) => {
         const node = document.createElement(tag); if (className) node.className = className;
@@ -82,11 +96,11 @@
       const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', 'true');
       for (let index = 0; index < 8; index++) {
         const eye = el('span', 'entry-eye');
-        for (let frame = 1; frame <= 4; frame++) {
+        for (let frame = 1; frame <= 3; frame++) {
           const image = el('img', 'entry-eye-frame entry-eye-frame-' + frame);
           image.src = '/assets/eyes/frame-' + frame + '.webp';
           image.alt = ''; image.draggable = false; image.width = image.height = 420;
-          image.style.animationDelay = `${-(index * 0.09 + (frame - 1) * 0.18)}s`;
+          image.style.animationDelay = `${-(index * 0.09 + (frame - 1) * 0.24)}s`;
           eye.append(image);
         }
         eyes.append(eye);
@@ -96,10 +110,10 @@
       const clockBox = el('div', 'entry-italy');
       const bigEye = el('div', 'entry-big-eye'); bigEye.setAttribute('aria-hidden', 'true');
       if (punishment) {
-        for (let frame = 1; frame <= 4; frame++) {
+        for (let frame = 1; frame <= 3; frame++) {
           const image = el('img', 'entry-eye-frame entry-eye-frame-' + frame);
           image.src = '/assets/eyes/frame-' + frame + '.webp'; image.alt = ''; image.draggable = false;
-          image.style.animationDelay = `${-(frame - 1) * 0.18}s`; bigEye.append(image);
+          image.style.animationDelay = `${-(frame - 1) * 0.24}s`; bigEye.append(image);
         }
         card.append(bigEye); clockBox.hidden = true;
       }
@@ -130,6 +144,8 @@
       updateTime(); const liveTimer = root.setInterval(updateTime, 1000);
       function clearRound() { root.clearTimeout(previewTimer); root.clearInterval(roundTimer); }
       function cleanup() {
+        root.clearTimeout(closeTimer);
+        for (const audio of sounds) { try { audio.pause(); } catch {} } sounds.clear();
         clearRound(); root.clearTimeout(introTimer); root.clearInterval(liveTimer); root.removeEventListener('pagehide', cleanup);
         signal?.removeEventListener('abort', dismiss);
       }
@@ -144,10 +160,15 @@
         closed = true; phase = 'denied'; cleanup();
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
         heading.textContent = t(punishment ? 'punishFailed' : timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
-        resolve(false);
-        try { root.close(); } catch {}
-        // Browsers normally forbid closing tabs not opened by a script.
-        try { if (!root.closed) root.location.replace('about:blank'); } catch { /* denied screen remains */ }
+        playSound('Wrong');
+        function leave() {
+          resolve(false);
+          try { root.close(); } catch {}
+          // Browsers normally forbid closing tabs not opened by a script.
+          try { if (!root.closed) root.location.replace('about:blank'); } catch { /* denied screen remains */ }
+        }
+        // Give the failure cue time to play before navigating away.
+        if (punishment) closeTimer = root.setTimeout(leave, 900); else leave();
       }
       function pass() {
         if (closed) return;
@@ -166,9 +187,11 @@
         phase = 'checking'; clearRound();
         if (index !== question.correctIndex) { fail(); return; }
         round++;
-        if (round === totalRounds) pass(); else showQuestion();
+        if (round === totalRounds) { pass(); playSound('Correct'); }
+        else { playSound('Correct'); showQuestion(); }
       }
       function showQuestion() {
+        playSound('Clock');
         clearRound(); phase = 'preview'; question = makeQuestion(Math.random, punishment ? 15 : 2);
         heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment ? ' entry-punishment' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
         const progress = el('h2', 'entry-progress', `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
@@ -209,9 +232,7 @@
           tick(); roundTimer = root.setInterval(tick, 100); choices.firstElementChild.focus();
         }, 1000);
       }
-      const exit = el('button', 'entry-exit', t('exit')); exit.type = 'button';
       if (punishment) {
-        exit.addEventListener('click', dismiss); card.append(exit);
         phase = 'intro';
         const lines = ['taunt', 'speech1', 'speech2', 'speech3', 'speech4', 'speech5', 'speech6'];
         let line = 0;
@@ -222,7 +243,7 @@
           introTimer = root.setTimeout(nextLine, line === 3 ? 3800 : 2200);
         }
         introTimer = root.setTimeout(nextLine, 1200);
-        exit.focus(); return;
+        heading.focus(); return;
       }
       const buttons = el('div', 'entry-actions'), yes = el('button', 'entry-yes', t('yes')), no = el('button', 'entry-no', t('no'));
       yes.type = no.type = 'button';
@@ -252,7 +273,6 @@
     const background = document.getElementById('root'), wasInert = background?.inert;
     if (background) background.inert = true;
     const escape = event => {
-      if (event.key === 'Escape') { event.preventDefault(); overlay.querySelector('.entry-exit')?.click(); }
       if (event.key === 'Tab') {
         const buttons = [...overlay.querySelectorAll('button:not([disabled])')];
         const first = buttons[0], last = buttons[buttons.length - 1];
