@@ -107,3 +107,32 @@ L’accesso usa cookie firmati `HttpOnly`, `SameSite=Strict`, `Secure` su HTTPS,
 con durata di 8 ore e limite di 5 tentativi di login al minuto per IP.
 Cambiare password o segreto invalida le sessioni esistenti; usa comunque una
 password lunga e unica. Non esiste una password predefinita nel codice.
+
+
+## Ingresso «Hai fatto i compiti?» e prova di CHRONOS
+
+Prima di montare il gioco (quindi prima di avviare video, IA o auto-join delle
+lobby), il sito mostra un ingresso con i tre quadranti già presenti e l’ora
+italiana in tempo reale. Il fuso è `Europe/Rome`, con cambio automatico tra ora
+solare e legale; l’ora deriva dall’orologio del dispositivo.
+
+- **Sì:** tre prove consecutive. Ogni prova mostra tre orologi da sommare,
+  un secondo di osservazione e quattro risposte, con 12 secondi per rispondere.
+- Si sommano solo le posizioni delle lancette lunghe modulo 12; le corte sono
+  distrattori. Le quattro alternative hanno posizioni lunghe distinte e una sola
+  è corretta. Domande e alternative sono generate casualmente.
+- **No**, errore o tempo scaduto: si tenta `window.close()`. Molti browser lo
+  vietano sulle schede aperte normalmente; in quel caso si esce su `about:blank`.
+  Se anche la navigazione è bloccata, resta una schermata di accesso negato.
+- Tre risposte corrette sbloccano la sessione della scheda (`sessionStorage`),
+  così ricaricare o cambiare lingua non obbliga a ripetere il quiz. Nessun dato
+  viene inviato a Redis. Con storage disabilitato il quiz riappare al caricamento.
+- `/panel` resta raggiungibile direttamente, con la sua autenticazione server.
+  Questo ingresso è un gioco, **non un controllo di sicurezza**: è lato client.
+- I nuovi testi italiani e francesi sono inclusi nel catalogo del pannello.
+  Le animazioni rispettano `prefers-reduced-motion` e i pulsanti sono utilizzabili
+  anche da tastiera; gli orologi hanno descrizioni per gli screen reader.
+
+Meccanica ispirata alla prova a tre orologi di Chronos in The Battle Bricks:
+https://the-battle-bricks.fandom.com/wiki/Chronos
+https://thebattlebricks.miraheze.org/wiki/Chronos
