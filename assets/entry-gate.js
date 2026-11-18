@@ -2,7 +2,7 @@
 (function (root) {
   const TEXT = {
     it: {
-      taunt: 'SON SEI FINITO AHHHHHHHHHHH', rebuke: 'NON HAI STUDIATO, DOVRESTI VERGOGNARTI', exit: 'Esci dalla sfida', punishRound: 'Domanda {0} di 300', punishFailed: 'CHRONOS HA VINTO.',
+      taunt: 'BROO', speech1: 'AVEVI DETTO DI AVER STUDIATO', speech2: 'ORA BASTA', speech3: 'INVECE DI ESSERE IL PROFESSORE ECCEZIONALE CHE SONO', speech4: 'ASSEGNERÒ E BASTA', speech5: 'È FINITA PER TE!!!', speech6: 'VERGOGNATI', exit: 'Esci dalla sfida', punishRound: 'Domanda {0} di 300', punishFailed: 'CHRONOS HA VINTO.',
       title: 'HAI FATTO I COMPITI?', yes: 'SÌ', no: 'NO', challenge: 'RISPONDI',
       round: 'Prova {0} di 3', remaining: 'Tempo rimasto: {0} secondi',
       denied: 'CHRONOS: tempo scaduto. Torna ai compiti!',
@@ -11,7 +11,7 @@
       failed: 'Accesso non consentito. Torna ai compiti!', live: 'Ora italiana: {0}',
     },
     fr: {
-      taunt: 'TU ES FINI AHHHHHHHHHHH', rebuke: 'TU N’AS PAS ÉTUDIÉ, TU DEVRAIS AVOIR HONTE', exit: 'Quitter le défi', punishRound: 'Question {0} sur 300', punishFailed: 'CHRONOS A GAGNÉ.',
+      taunt: 'BROO', speech1: 'TU AVAIS DIT AVOIR ÉTUDIÉ', speech2: 'MAINTENANT ÇA SUFFIT', speech3: 'AU LIEU D’ÊTRE LE PROFESSEUR EXCEPTIONNEL QUE JE SUIS', speech4: 'JE VAIS JUSTE DONNER DES DEVOIRS', speech5: 'C’EST FINI POUR TOI !!!', speech6: 'HONTE À TOI', exit: 'Quitter le défi', punishRound: 'Question {0} sur 300', punishFailed: 'CHRONOS A GAGNÉ.',
       title: 'AS-TU FAIT TES DEVOIRS ?', yes: 'OUI', no: 'NON', challenge: 'RÉPONDS',
       round: 'Épreuve {0} sur 3', remaining: 'Temps restant : {0} secondes',
       denied: 'CHRONOS : temps écoulé. Retourne faire tes devoirs !',
@@ -73,7 +73,7 @@
       return custom.replace(/\{(\d+)\}/g, (_, index) => String(values[Number(index)] ?? ''));
     };
     return new Promise(resolve => {
-      let closed = false, round = 0, question, phase = 'welcome', previewTimer, roundTimer, deadline;
+      let closed = false, round = 0, question, phase = 'welcome', previewTimer, roundTimer, introTimer, deadline;
       const el = (tag, className, text) => {
         const node = document.createElement(tag); if (className) node.className = className;
         if (text !== undefined) node.textContent = text; return node;
@@ -92,7 +92,7 @@
         eyes.append(eye);
       }
       const heading = el('h1', '', t(punishment ? 'taunt' : 'title')); heading.tabIndex = -1;
-      if (punishment) heading.textContent += '\n' + t('rebuke');
+      if (punishment) { heading.setAttribute('aria-live', 'assertive'); screen.className += ' entry-jumpscare'; }
       const clockBox = el('div', 'entry-italy');
       const bigEye = el('div', 'entry-big-eye'); bigEye.setAttribute('aria-hidden', 'true');
       if (punishment) {
@@ -130,7 +130,7 @@
       updateTime(); const liveTimer = root.setInterval(updateTime, 1000);
       function clearRound() { root.clearTimeout(previewTimer); root.clearInterval(roundTimer); }
       function cleanup() {
-        clearRound(); root.clearInterval(liveTimer); root.removeEventListener('pagehide', cleanup);
+        clearRound(); root.clearTimeout(introTimer); root.clearInterval(liveTimer); root.removeEventListener('pagehide', cleanup);
         signal?.removeEventListener('abort', dismiss);
       }
       function dismiss() {
@@ -141,14 +141,9 @@
       root.addEventListener('pagehide', cleanup);
       function fail(timedOut = false) {
         if (closed) return;
-        if (punishment) {
-          phase = 'denied'; clearRound(); root.clearInterval(liveTimer);
-          heading.textContent = t('punishFailed'); stage.replaceChildren(); bigEye.hidden = false;
-          exit.focus(); return;
-        }
         closed = true; phase = 'denied'; cleanup();
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
-        heading.textContent = t(timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
+        heading.textContent = t(punishment ? 'punishFailed' : timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
         resolve(false);
         try { root.close(); } catch {}
         // Browsers normally forbid closing tabs not opened by a script.
@@ -175,7 +170,7 @@
       }
       function showQuestion() {
         clearRound(); phase = 'preview'; question = makeQuestion(Math.random, punishment ? 15 : 2);
-        heading.textContent = t('challenge'); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
+        heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment ? ' entry-punishment' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
         const progress = el('h2', 'entry-progress', `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
         progress.setAttribute('aria-label', t(punishment ? 'punishRound' : 'round', round + 1));
         const equation = el('div', 'entry-equation');
@@ -217,9 +212,17 @@
       const exit = el('button', 'entry-exit', t('exit')); exit.type = 'button';
       if (punishment) {
         exit.addEventListener('click', dismiss); card.append(exit);
-        const begin = el('button', 'entry-punishment-begin', t('challenge')); begin.type = 'button';
-        begin.addEventListener('click', () => { if (phase === 'welcome' && !closed) showQuestion(); });
-        stage.append(begin); begin.focus(); return;
+        phase = 'intro';
+        const lines = ['taunt', 'speech1', 'speech2', 'speech3', 'speech4', 'speech5', 'speech6'];
+        let line = 0;
+        function nextLine() {
+          if (closed || phase !== 'intro') return;
+          if (++line === lines.length) { showQuestion(); return; }
+          heading.textContent = t(lines[line]);
+          introTimer = root.setTimeout(nextLine, line === 3 ? 3800 : 2200);
+        }
+        introTimer = root.setTimeout(nextLine, 1200);
+        exit.focus(); return;
       }
       const buttons = el('div', 'entry-actions'), yes = el('button', 'entry-yes', t('yes')), no = el('button', 'entry-no', t('no'));
       yes.type = no.type = 'button';

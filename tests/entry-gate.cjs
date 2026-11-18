@@ -227,10 +227,10 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   const at = Date.parse('2026-07-01T12:00:00Z'), existing = JSON.stringify({ passedAt: at, expiresAt: at + 86400000 });
   const storage = new Map([['20pagine.chronos.pass.v3', existing]]);
   const h = harness(false, { storage, at }), result = h.begin({ punishment: true });
-  assert(h.all('entry-card')[0].children.some(node => node.textContent === 'SON SEI FINITO AHHHHHHHHHHH\nNON HAI STUDIATO, DOVRESTI VERGOGNARTI'));
+  assert(h.all('entry-card')[0].children.some(node => node.textContent === 'BROO'));
   assert.equal(h.all('entry-big-eye')[0].children.length, 4);
   assert.equal(h.all('entry-choice').length, 0);
-  h.all('entry-punishment-begin')[0].click();
+  h.advance(16000);
   for (let i = 0; i < 300; i++) {
     assert.equal(h.all('entry-term').length, 15);
     assert.equal(h.all('entry-progress')[0].attrs['aria-label'], `Domanda ${i + 1} di 300`);
@@ -241,20 +241,23 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   assert.equal(h.storage.get('20pagine.chronos.pass.v3'), existing);
   assert.equal(h.closeCalls, 0);
 });
-test('punishment can be dismissed, aborted or failed without closing the site or changing the pass', async () => {
+test('punishment dismissal preserves the pass, but errors and timeouts revoke it and exit', async () => {
   for (const mode of ['exit', 'abort', 'wrong', 'timeout']) {
-    const h = harness(), controller = new AbortController(), result = h.begin({ punishment: true, signal: controller.signal });
+    const h = harness(), controller = new AbortController();
+    h.storage.set('20pagine.chronos.pass.v3', 'existing'); h.storage.set('unrelated', 'keep');
+    const result = h.begin({ punishment: true, signal: controller.signal });
     if (mode === 'exit') h.all('entry-exit')[0].click();
     else if (mode === 'abort') controller.abort();
     else {
-      h.all('entry-punishment-begin')[0].click(); h.advance(1000);
+      h.advance(17000);
       if (mode === 'wrong') h.answer(false); else h.advance(12000);
       assert(h.all('entry-card')[0].children.some(node => node.textContent === 'CHRONOS HA VINTO.'));
       assert.equal(h.timers.size, 0);
-      h.all('entry-exit')[0].click();
     }
-    assert.equal(await result, false); assert.equal(h.timers.size, 0); assert.equal(h.closeCalls, 0);
-    assert.equal(h.destination, undefined); assert.equal(h.storage.size, 0);
+    assert.equal(await result, false); assert.equal(h.timers.size, 0); assert.equal(h.closeCalls, ['wrong', 'timeout'].includes(mode) ? 1 : 0);
+    assert.equal(h.destination, ['wrong', 'timeout'].includes(mode) ? 'about:blank' : undefined);
+    assert.equal(h.storage.has('20pagine.chronos.pass.v3'), !['wrong', 'timeout'].includes(mode));
+    assert.equal(h.storage.get('unrelated'), 'keep');
   }
 });
 test('loss overlay supports Escape and restores background interaction and scroll', async () => {
@@ -268,4 +271,31 @@ test('loss overlay supports Escape and restores background interaction and scrol
   assert.equal(await result, false);
   assert.equal(h.root.inert, false); assert.equal(h.body.style.overflow, 'auto');
   assert(!h.body.children.includes(overlay)); assert.equal(h.timers.size, 0);
+});
+test('jumpscare dialogue plays in order then starts automatically in both languages', async () => {
+  for (const french of [false, true]) {
+    const h = harness(french), controller = new AbortController();
+    const result = h.begin({ punishment: true, signal: controller.signal });
+    const words = h.gate.TEXT[french ? 'fr' : 'it'];
+    const heading = () => h.all('entry-card')[0].children.find(node => node.tag === 'h1');
+    assert.equal(heading().textContent, 'BROO');
+    assert.equal(h.all('entry-jumpscare').length, 1);
+    assert.equal(h.all('entry-punishment-begin').length, 0);
+    h.advance(1200);
+    for (let i = 1; i <= 6; i++) {
+      assert.equal(heading().textContent, words['speech' + i]);
+      assert.equal(h.all('entry-term').length, 0);
+      h.advance(i === 3 ? 3800 : 2200);
+    }
+    assert.equal(h.all('entry-jumpscare').length, 0);
+    assert.equal(h.all('entry-term').length, 15);
+    controller.abort(); assert.equal(await result, false); assert.equal(h.timers.size, 0);
+    h.advance(30000); assert.equal(h.all('entry-choice').length, 0);
+  }
+});
+test('blocked storage cannot prevent punishment failure from exiting', async () => {
+  const h = harness(false, { storageBlocked: true }), result = h.begin({ punishment: true });
+  h.advance(17000); h.answer(false);
+  assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+  assert.equal(h.destination, 'about:blank'); assert.equal(h.timers.size, 0);
 });
