@@ -157,7 +157,16 @@ Lo scacco matto subito contro l'IA o in 1v1 locale mostra un jumpscare dell'occh
 Poi partono automaticamente 300 domande da 15 orologi ciascuna.
 In locale lo schermo è condiviso: la sfida è per chi ha perso. Online compare
 solo al perdente (anche per resa), non al vincitore, agli spettatori o nelle patte;
-esclusa la modalità IA contro IA. **Esci dalla sfida** o Escape annullano la sfida.
+esclusa la modalità IA contro IA. Non ci sono pulsanti di uscita dalla sfida né scorciatoie Escape; i normali comandi del browser restano disponibili.
 Errore o timeout cancellano solo il pass d'ingresso di 24 ore e tentano di chiudere
 la scheda; se il browser lo vieta si apre `about:blank`. Gli altri dati restano intatti.
 Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'uscita.
+
+
+### Immagini e suoni del quiz
+
+Lo sfondo e il jumpscare usano le tre nuove immagini in `assets/eyes/frame-{1,2,3}.webp`.
+Aggiungere gli effetti audio in `assets/sounds/` con i nomi esatti `Clock.mp3`,
+`Correct.mp3` e `Wrong.mp3`: domanda, risposta giusta, errore/timeout.
+Il quiz funziona anche prima di caricarli o se l'autoplay è bloccato.
+Dopo un errore nella sfida attende 900 ms per il suono prima di uscire.

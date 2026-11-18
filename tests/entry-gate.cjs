@@ -3,9 +3,15 @@ const { test } = require('node:test');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const source = fs.readFileSync('assets/entry-gate.js', 'utf8');
-function harness(french = false, { storage = new Map(), at = Date.parse('2026-07-01T12:00:00Z'), storageBlocked = false } = {}) {
+function harness(french = false, { storage = new Map(), at = Date.parse('2026-07-01T12:00:00Z'), storageBlocked = false, audioMode } = {}) {
   let time = at, nextTimer = 0, closeCalls = 0, destination;
-  const timers = new Map();
+  const timers = new Map(), played = [];
+  class AudioMock {
+    constructor(src) { this.src = src; }
+    addEventListener() {}
+    play() { played.push(this.src); return audioMode === 'blocked' ? Promise.reject(Error('Autoplay denied')) : Promise.resolve(); }
+    pause() {}
+  }
   class Element {
     constructor(tag) { this.tag = tag; this.children = []; this.style = {}; this.attrs = {}; this.events = {}; this.textContent = ''; }
     append(...nodes) { nodes.forEach(node => { node.parent = this; this.children.push(node); }); }
@@ -28,7 +34,7 @@ function harness(french = false, { storage = new Map(), at = Date.parse('2026-07
   class ClockDate extends Date { constructor(...args) { super(...(args.length ? args : [time])); } static now() { return time; } }
   const addTimer = (fn, delay, repeat) => { const id = ++nextTimer; timers.set(id, { fn, at: time + delay, delay, repeat }); return id; };
   const context = vm.createContext({
-    Date: ClockDate, Intl, document: doc,
+    Date: ClockDate, Intl, document: doc, Audio: audioMode ? AudioMock : undefined,
     localStorage: {
       getItem: key => { if (storageBlocked) throw Error('Storage blocked'); return storage.get(key); },
       setItem: (key, value) => { if (storageBlocked) throw Error('Storage blocked'); storage.set(key, value); },
@@ -60,7 +66,7 @@ function harness(french = false, { storage = new Map(), at = Date.parse('2026-07
     const choice = all('entry-choice').find(node => (minute(node) === target) === correct);
     assert(choice); choice.click();
   }
-  return { gate: context.EntryGate, root, body, doc, storage, timers, advance, all, answer,
+  return { gate: context.EntryGate, root, body, doc, storage, timers, played, advance, all, answer,
     get now() { return time; },
     begin: (options = {}) => context.EntryGate.start({ container: root, french, ...options }),
     get closeCalls() { return closeCalls; }, get destination() { return destination; } };
@@ -174,12 +180,12 @@ test('blocked storage, malformed data and future-dated passes cannot bypass the 
     h.all('entry-no')[0].click(); assert.equal(await result, false);
   }
 });
-test('decorative eyes use all four uploaded frames and stay behind the controls', async () => {
+test('decorative eyes use all three uploaded frames and stay behind the controls', async () => {
   const h = harness(), result = h.begin();
   assert.equal(h.all('entry-eyes')[0].attrs['aria-hidden'], 'true');
   assert.equal(h.all('entry-eye').length, 8);
   for (const eye of h.all('entry-eye')) {
-    assert.equal(eye.children.length, 4);
+    assert.equal(eye.children.length, 3);
     eye.children.forEach((image, index) => {
       assert.equal(image.src, `/assets/eyes/frame-${index + 1}.webp`);
       assert(fs.existsSync(image.src.slice(1)));
@@ -228,7 +234,7 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   const storage = new Map([['20pagine.chronos.pass.v3', existing]]);
   const h = harness(false, { storage, at }), result = h.begin({ punishment: true });
   assert(h.all('entry-card')[0].children.some(node => node.textContent === 'BROO'));
-  assert.equal(h.all('entry-big-eye')[0].children.length, 4);
+  assert.equal(h.all('entry-big-eye')[0].children.length, 3);
   assert.equal(h.all('entry-choice').length, 0);
   h.advance(16000);
   for (let i = 0; i < 300; i++) {
@@ -242,16 +248,16 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   assert.equal(h.closeCalls, 0);
 });
 test('punishment dismissal preserves the pass, but errors and timeouts revoke it and exit', async () => {
-  for (const mode of ['exit', 'abort', 'wrong', 'timeout']) {
+  for (const mode of ['abort', 'wrong', 'timeout']) {
     const h = harness(), controller = new AbortController();
     h.storage.set('20pagine.chronos.pass.v3', 'existing'); h.storage.set('unrelated', 'keep');
     const result = h.begin({ punishment: true, signal: controller.signal });
-    if (mode === 'exit') h.all('entry-exit')[0].click();
-    else if (mode === 'abort') controller.abort();
+    if (mode === 'abort') controller.abort();
     else {
       h.advance(17000);
       if (mode === 'wrong') h.answer(false); else h.advance(12000);
       assert(h.all('entry-card')[0].children.some(node => node.textContent === 'CHRONOS HA VINTO.'));
+      h.advance(900);
       assert.equal(h.timers.size, 0);
     }
     assert.equal(await result, false); assert.equal(h.timers.size, 0); assert.equal(h.closeCalls, ['wrong', 'timeout'].includes(mode) ? 1 : 0);
@@ -260,14 +266,17 @@ test('punishment dismissal preserves the pass, but errors and timeouts revoke it
     assert.equal(h.storage.get('unrelated'), 'keep');
   }
 });
-test('loss overlay supports Escape and restores background interaction and scroll', async () => {
+test('loss overlay has no exit button or Escape shortcut and restores interaction on abort', async () => {
   const h = harness(), controller = new AbortController();
   h.body.style.overflow = 'auto'; h.root.inert = false;
   const result = h.gate.punish({ signal: controller.signal });
   const overlay = h.body.children.find(node => node.className === 'entry-defeat-overlay');
   assert(overlay); assert.equal(h.root.inert, true); assert.equal(h.body.style.overflow, 'hidden');
   assert.equal(overlay.attrs['role'], 'dialog');
+  assert.equal(overlay.querySelector('.entry-exit'), undefined);
   overlay.events.keydown({ key: 'Escape', preventDefault() {} });
+  assert.equal(h.root.inert, true);
+  controller.abort();
   assert.equal(await result, false);
   assert.equal(h.root.inert, false); assert.equal(h.body.style.overflow, 'auto');
   assert(!h.body.children.includes(overlay)); assert.equal(h.timers.size, 0);
@@ -295,7 +304,22 @@ test('jumpscare dialogue plays in order then starts automatically in both langua
 });
 test('blocked storage cannot prevent punishment failure from exiting', async () => {
   const h = harness(false, { storageBlocked: true }), result = h.begin({ punishment: true });
-  h.advance(17000); h.answer(false);
+  h.advance(17000); h.answer(false); h.advance(900);
   assert.equal(await result, false); assert.equal(h.closeCalls, 1);
   assert.equal(h.destination, 'about:blank'); assert.equal(h.timers.size, 0);
+});
+test('quiz plays question, correct and wrong cues and tolerates blocked audio', async () => {
+  for (const audioMode of ['allowed', 'blocked']) {
+    const h = harness(false, { audioMode }), result = h.begin({ punishment: true });
+    h.advance(17000);
+    assert.deepEqual(h.played, ['/assets/sounds/Clock.mp3']);
+    h.answer();
+    assert.deepEqual(h.played.slice(-2), ['/assets/sounds/Correct.mp3', '/assets/sounds/Clock.mp3']);
+    h.advance(1000); h.answer(false);
+    assert.equal(h.played.at(-1), '/assets/sounds/Wrong.mp3');
+    assert.equal(h.closeCalls, 0);
+    h.advance(899); assert.equal(h.closeCalls, 0);
+    h.advance(1); assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+    await Promise.resolve();
+  }
 });
