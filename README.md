@@ -146,3 +146,15 @@ solare e legale; l’ora deriva dall’orologio del dispositivo.
 Meccanica ispirata alla prova a tre orologi di Chronos in The Battle Bricks:
 https://the-battle-bricks.fandom.com/wiki/Chronos
 https://thebattlebricks.miraheze.org/wiki/Chronos
+
+### Sfida dopo una sconfitta
+
+Lo scacco matto subito contro l'IA o in 1v1 locale mostra un occhio con la frase
+«SON SEI FINITO AHHHHHHHHHHH» e
+«NON HAI STUDIATO, DOVRESTI VERGOGNARTI». In locale lo schermo è condiviso: la sfida è per
+chi ha perso. Online compare solo al perdente (anche in caso di resa), non al
+vincitore, agli spettatori o nelle patte; esclusa la modalità IA contro IA.
+Dopo **RISPONDI** partono 300 domande da 15 orologi ciascuna, con le stesse
+regole del quiz iniziale. **Esci dalla sfida** oppure Escape riportano alla
+partita; un errore/timeout termina la sfida senza chiudere la pagina. Il pass
+iniziale di 24 ore non viene né consultato né modificato da questa sfida.

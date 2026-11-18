@@ -49,3 +49,17 @@
   .entry-eye-frame { animation: none; opacity: 0; }
   .entry-eye-frame-1 { opacity: 1; }
 }
+
+.entry-defeat-overlay { position: fixed; inset: 0; z-index: 10000; overflow: auto; overscroll-behavior: contain; }
+.entry-big-eye { position: relative; width: min(65vw, 320px); aspect-ratio: 1; margin: -30px auto -40px; }
+.entry-punishment h1 { overflow-wrap: anywhere; }
+.entry-card .entry-exit { margin-top: 22px; font-size: 14px; background: #0f172a; }
+.entry-punishment .entry-equation { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.entry-term { position: relative; display: grid; justify-items: center; }
+.entry-term-plus { position: absolute; right: -7px; top: 35%; font-size: 22px; }
+.entry-punishment .entry-equation > .entry-plus { grid-column: 1 / -1; }
+.entry-punishment .entry-equation .entry-clock { width: min(100%, 84px); }
+@media (max-width: 540px) {
+  .entry-punishment .entry-equation { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .entry-punishment .entry-card { padding: 16px; }
+}
