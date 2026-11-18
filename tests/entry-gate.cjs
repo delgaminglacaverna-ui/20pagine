@@ -180,12 +180,12 @@ test('blocked storage, malformed data and future-dated passes cannot bypass the 
     h.all('entry-no')[0].click(); assert.equal(await result, false);
   }
 });
-test('decorative eyes use all three uploaded frames and stay behind the controls', async () => {
+test('decorative eyes use all four original frames and stay behind the controls', async () => {
   const h = harness(), result = h.begin();
   assert.equal(h.all('entry-eyes')[0].attrs['aria-hidden'], 'true');
   assert.equal(h.all('entry-eye').length, 8);
   for (const eye of h.all('entry-eye')) {
-    assert.equal(eye.children.length, 3);
+    assert.equal(eye.children.length, 4);
     eye.children.forEach((image, index) => {
       assert.equal(image.src, `/assets/eyes/frame-${index + 1}.webp`);
       assert(fs.existsSync(image.src.slice(1)));
@@ -234,7 +234,7 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   const storage = new Map([['20pagine.chronos.pass.v3', existing]]);
   const h = harness(false, { storage, at }), result = h.begin({ punishment: true });
   assert(h.all('entry-card')[0].children.some(node => node.textContent === 'BROO'));
-  assert.equal(h.all('entry-big-eye')[0].children.length, 3);
+  assert.equal(h.all('entry-big-eye')[0].children.length, 4);
   assert.equal(h.all('entry-choice').length, 0);
   h.advance(16000);
   for (let i = 0; i < 300; i++) {
@@ -312,11 +312,11 @@ test('quiz plays question, correct and wrong cues and tolerates blocked audio', 
   for (const audioMode of ['allowed', 'blocked']) {
     const h = harness(false, { audioMode }), result = h.begin({ punishment: true });
     h.advance(17000);
-    assert.deepEqual(h.played, ['/assets/sounds/Chronos_math_sound.mp3']);
+    assert.deepEqual(h.played, ['/assets/sounds/chronos_math_sound.mp3.MPEG']);
     h.answer();
-    assert.deepEqual(h.played.slice(-2), ['/assets/sounds/Chronos_Clock_Question_Correct.mp3', '/assets/sounds/Chronos_math_sound.mp3']);
+    assert.deepEqual(h.played.slice(-2), ['/assets/sounds/Chronos_Clock_Question_Correct.mp3.MPEG', '/assets/sounds/chronos_math_sound.mp3.MPEG']);
     h.advance(1000); h.answer(false);
-    assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Incorrect.mp3');
+    assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Incorrect.mp3.MPEG');
     assert.equal(h.closeCalls, 0);
     h.advance(899); assert.equal(h.closeCalls, 0);
     h.advance(1); assert.equal(await result, false); assert.equal(h.closeCalls, 1);
@@ -325,10 +325,24 @@ test('quiz plays question, correct and wrong cues and tolerates blocked audio', 
 });
 
 test('all referenced quiz sound files are bundled MP3 assets', () => {
-  for (const name of ['Chronos_math_sound', 'Chronos_Clock_Question_Correct', 'Chronos_Clock_Question_Incorrect']) {
-    const bytes = fs.readFileSync(`assets/sounds/${name}.mp3`);
+  for (const name of ['chronos_math_sound', 'Chronos_Clock_Question_Correct', 'Chronos_Clock_Question_Incorrect']) {
+    const bytes = fs.readFileSync(`assets/sounds/${name}.mp3.MPEG`);
     assert(bytes.length > 1000);
     assert(bytes.subarray(0, 3).toString() === 'ID3' || (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0));
-    assert(!fs.existsSync(`${name}.mp3.mpeg`));
   }
+});
+
+test('mouths appear only after a failed answer, not during the defeat introduction or questions', async () => {
+  const h = harness(), result = h.begin({ punishment: true });
+  assert.equal(h.all('entry-mouth-frame').length, 0);
+  assert(h.all('entry-eye-frame').every(node => node.src.startsWith('/assets/eyes/')));
+  h.advance(17000);
+  assert.equal(h.all('entry-mouth-frame').length, 0);
+  h.answer(false);
+  assert.equal(h.all('entry-eye-frame').length, 0);
+  const frames = h.all('entry-mouth-frame');
+  assert.equal(frames.length, 27);
+  for (const node of frames) assert(fs.existsSync(node.src.slice(1)));
+  assert.equal(h.all('entry-big-eye')[0].hidden, false);
+  h.advance(900); assert.equal(await result, false);
 });
