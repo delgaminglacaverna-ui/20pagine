@@ -1215,6 +1215,7 @@ function a1() {
     onlRef = ul.useRef(null),
     onlPending = ul.useRef(0),
     onlVer = ul.useRef(-1),
+    defeatSeen = ul.useRef(false),
     R = o.pos,
     V = ul.useMemo(() => Fh(o), [h]),
     rl = ul.useMemo(() => hr(R), [h]),
@@ -1270,6 +1271,14 @@ function a1() {
       const B = window.setTimeout(() => $l(null), 2200);
       return () => window.clearTimeout(B);
     }, [Gl]));
+  ul.useEffect(() => {
+    if (typeof EntryGate === "undefined" || defeatSeen.current) return;
+    if (!EntryGate.isDefeat({ mode: z, kind: V.kind, turn: R.turn, online: onl })) return;
+    defeatSeen.current = true;
+    const controller = new AbortController();
+    EntryGate.punish({ french: FRENCH_MODE, signal: controller.signal }).catch(() => {});
+    return () => controller.abort();
+  }, [z, V.kind, R.turn, onl?.id, onl?.status, onl?.winner, onl?.color, onl?.reason]);
   onlRef.current = onl;
   ul.useEffect(() => {
     if (z !== "online" || !onl?.id || onl.status === "over") return;
@@ -1416,6 +1425,7 @@ function a1() {
     (I.piece > 0 && !ol && (ol = I), I.piece < 0 && !Hl && (Hl = I));
   }
   function El(B, I) {
+    defeatSeen.current = false;
     if (
       (R.setup(),
       (o.notes = []),

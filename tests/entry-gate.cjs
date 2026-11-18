@@ -8,19 +8,27 @@ function harness(french = false, { storage = new Map(), at = Date.parse('2026-07
   const timers = new Map();
   class Element {
     constructor(tag) { this.tag = tag; this.children = []; this.style = {}; this.attrs = {}; this.events = {}; this.textContent = ''; }
-    append(...nodes) { this.children.push(...nodes); }
-    replaceChildren(...nodes) { this.children = nodes; }
+    append(...nodes) { nodes.forEach(node => { node.parent = this; this.children.push(node); }); }
+    replaceChildren(...nodes) { this.children.forEach(node => { node.parent = null; }); this.children = []; this.append(...nodes); }
     setAttribute(key, value) { this.attrs[key] = value; }
     addEventListener(name, fn) { this.events[name] = fn; }
-    focus() {}
+    removeEventListener(name) { delete this.events[name]; }
+    remove() { if (this.parent) this.parent.children = this.parent.children.filter(node => node !== this); this.parent = null; }
+    querySelectorAll(selector) {
+      const matches = node => selector.startsWith('.') ? node.className?.split(' ').includes(selector.slice(1)) : node.tag === 'button' && !node.disabled;
+      return this.children.flatMap(node => [...(matches(node) ? [node] : []), ...node.querySelectorAll(selector)]);
+    }
+    querySelector(selector) { return this.querySelectorAll(selector)[0]; }
+    focus() { doc.activeElement = this; }
     get firstElementChild() { return this.children[0]; }
     click() { this.events.click?.(); }
   }
-  const root = new Element('div');
+  const root = new Element('div'), body = new Element('body'); body.append(root);
+  const doc = { body, activeElement: root, createElement: tag => new Element(tag), getElementById: () => root };
   class ClockDate extends Date { constructor(...args) { super(...(args.length ? args : [time])); } static now() { return time; } }
   const addTimer = (fn, delay, repeat) => { const id = ++nextTimer; timers.set(id, { fn, at: time + delay, delay, repeat }); return id; };
   const context = vm.createContext({
-    Date: ClockDate, Intl, document: { createElement: tag => new Element(tag), getElementById: () => root },
+    Date: ClockDate, Intl, document: doc,
     localStorage: {
       getItem: key => { if (storageBlocked) throw Error('Storage blocked'); return storage.get(key); },
       setItem: (key, value) => { if (storageBlocked) throw Error('Storage blocked'); storage.set(key, value); },
@@ -48,13 +56,13 @@ function harness(french = false, { storage = new Map(), at = Date.parse('2026-07
   }
   const minute = node => parseFloat(all('entry-minute', node)[0].style.transform.slice(7)) / 30;
   function answer(correct = true) {
-    const target = all('entry-equation')[0].children.filter(node => node.className?.includes('entry-clock')).reduce((sum, node) => sum + minute(node), 0) % 12;
+    const target = all('entry-clock', all('entry-equation')[0]).reduce((sum, node) => sum + minute(node), 0) % 12;
     const choice = all('entry-choice').find(node => (minute(node) === target) === correct);
     assert(choice); choice.click();
   }
-  return { gate: context.EntryGate, root, storage, timers, advance, all, answer,
+  return { gate: context.EntryGate, root, body, doc, storage, timers, advance, all, answer,
     get now() { return time; },
-    begin: () => context.EntryGate.start({ container: root, french }),
+    begin: (options = {}) => context.EntryGate.start({ container: root, french, ...options }),
     get closeCalls() { return closeCalls; }, get destination() { return destination; } };
 }
 
@@ -184,4 +192,80 @@ test('decorative eyes use all four uploaded frames and stay behind the controls'
   assert(css.includes('.entry-eye-frame { animation: none; opacity: 0; }'));
   assert.equal(h.all('entry-roman').length, 0);
   h.all('entry-no')[0].click(); assert.equal(await result, false);
+});
+test('defeat detection distinguishes losers, winners, draws, spectators and AI-only games', () => {
+  const { isDefeat } = harness().gate;
+  assert(isDefeat({ mode: 'pvc', kind: 'mate', turn: 1 }));
+  assert(!isDefeat({ mode: 'pvc', kind: 'mate', turn: -1 }));
+  assert(isDefeat({ mode: 'pvp', kind: 'mate', turn: 1 }));
+  assert(isDefeat({ mode: 'pvp', kind: 'mate', turn: -1 }));
+  assert(!isDefeat({ mode: 'cvc', kind: 'mate', turn: 1 }));
+  for (const kind of ['none', 'check', 'stalemate', 'insufficient', 'repetition', 'fifty']) assert(!isDefeat({ mode: 'pvc', kind, turn: 1 }));
+  for (const color of [1, -1]) {
+    const online = { status: 'over', reason: 'mate', color, winner: color === 1 ? 'black' : 'white' };
+    assert(isDefeat({ mode: 'online', online }));
+    assert(isDefeat({ mode: 'online', online: { ...online, reason: 'resign' } }));
+    assert(!isDefeat({ mode: 'online', online: { ...online, winner: color === 1 ? 'white' : 'black' } }));
+    assert(!isDefeat({ mode: 'online', online: { ...online, color: 0 } }));
+    assert(!isDefeat({ mode: 'online', online: { ...online, winner: 'draw', reason: 'repetition' } }));
+    assert(!isDefeat({ mode: 'online', online: { ...online, reason: 'cancel' } }));
+    assert(!isDefeat({ mode: 'online', online: { ...online, status: 'active' } }));
+  }
+});
+test('punishment questions add fifteen clocks modulo twelve with one correct answer', () => {
+  const h = harness(); let seed = 123;
+  const random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 2 ** 32);
+  for (let i = 0; i < 500; i++) {
+    const question = h.gate.makeQuestion(random, 15);
+    assert.equal(question.clocks.length, 15);
+    assert.equal(question.options[question.correctIndex].minute, question.clocks.reduce((sum, clock) => sum + clock.minute, 0) % 12);
+    assert.equal(new Set(question.options.map(clock => clock.minute)).size, 4);
+  }
+  for (const invalid of [0, 16, 1.5]) assert.throws(() => h.gate.makeQuestion(random, invalid));
+});
+test('eye taunt precedes all 300 questions, ignoring but preserving the daily entrance pass', async () => {
+  const at = Date.parse('2026-07-01T12:00:00Z'), existing = JSON.stringify({ passedAt: at, expiresAt: at + 86400000 });
+  const storage = new Map([['20pagine.chronos.pass.v3', existing]]);
+  const h = harness(false, { storage, at }), result = h.begin({ punishment: true });
+  assert(h.all('entry-card')[0].children.some(node => node.textContent === 'SON SEI FINITO AHHHHHHHHHHH\nNON HAI STUDIATO, DOVRESTI VERGOGNARTI'));
+  assert.equal(h.all('entry-big-eye')[0].children.length, 4);
+  assert.equal(h.all('entry-choice').length, 0);
+  h.all('entry-punishment-begin')[0].click();
+  for (let i = 0; i < 300; i++) {
+    assert.equal(h.all('entry-term').length, 15);
+    assert.equal(h.all('entry-progress')[0].attrs['aria-label'], `Domanda ${i + 1} di 300`);
+    if (i === 299) assert.equal(h.all('entry-progress')[0].textContent, 'CCC / CCC');
+    h.advance(1000); h.answer();
+  }
+  assert.equal(await result, true); assert.equal(h.timers.size, 0);
+  assert.equal(h.storage.get('20pagine.chronos.pass.v3'), existing);
+  assert.equal(h.closeCalls, 0);
+});
+test('punishment can be dismissed, aborted or failed without closing the site or changing the pass', async () => {
+  for (const mode of ['exit', 'abort', 'wrong', 'timeout']) {
+    const h = harness(), controller = new AbortController(), result = h.begin({ punishment: true, signal: controller.signal });
+    if (mode === 'exit') h.all('entry-exit')[0].click();
+    else if (mode === 'abort') controller.abort();
+    else {
+      h.all('entry-punishment-begin')[0].click(); h.advance(1000);
+      if (mode === 'wrong') h.answer(false); else h.advance(12000);
+      assert(h.all('entry-card')[0].children.some(node => node.textContent === 'CHRONOS HA VINTO.'));
+      assert.equal(h.timers.size, 0);
+      h.all('entry-exit')[0].click();
+    }
+    assert.equal(await result, false); assert.equal(h.timers.size, 0); assert.equal(h.closeCalls, 0);
+    assert.equal(h.destination, undefined); assert.equal(h.storage.size, 0);
+  }
+});
+test('loss overlay supports Escape and restores background interaction and scroll', async () => {
+  const h = harness(), controller = new AbortController();
+  h.body.style.overflow = 'auto'; h.root.inert = false;
+  const result = h.gate.punish({ signal: controller.signal });
+  const overlay = h.body.children.find(node => node.className === 'entry-defeat-overlay');
+  assert(overlay); assert.equal(h.root.inert, true); assert.equal(h.body.style.overflow, 'hidden');
+  assert.equal(overlay.attrs['role'], 'dialog');
+  overlay.events.keydown({ key: 'Escape', preventDefault() {} });
+  assert.equal(await result, false);
+  assert.equal(h.root.inert, false); assert.equal(h.body.style.overflow, 'auto');
+  assert(!h.body.children.includes(overlay)); assert.equal(h.timers.size, 0);
 });

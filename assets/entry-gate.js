@@ -2,6 +2,7 @@
 (function (root) {
   const TEXT = {
     it: {
+      taunt: 'SON SEI FINITO AHHHHHHHHHHH', rebuke: 'NON HAI STUDIATO, DOVRESTI VERGOGNARTI', exit: 'Esci dalla sfida', punishRound: 'Domanda {0} di 300', punishFailed: 'CHRONOS HA VINTO.',
       title: 'HAI FATTO I COMPITI?', yes: 'SÌ', no: 'NO', challenge: 'RISPONDI',
       round: 'Prova {0} di 3', remaining: 'Tempo rimasto: {0} secondi',
       denied: 'CHRONOS: tempo scaduto. Torna ai compiti!',
@@ -10,6 +11,7 @@
       failed: 'Accesso non consentito. Torna ai compiti!', live: 'Ora italiana: {0}',
     },
     fr: {
+      taunt: 'TU ES FINI AHHHHHHHHHHH', rebuke: 'TU N’AS PAS ÉTUDIÉ, TU DEVRAIS AVOIR HONTE', exit: 'Quitter le défi', punishRound: 'Question {0} sur 300', punishFailed: 'CHRONOS A GAGNÉ.',
       title: 'AS-TU FAIT TES DEVOIRS ?', yes: 'OUI', no: 'NON', challenge: 'RÉPONDS',
       round: 'Épreuve {0} sur 3', remaining: 'Temps restant : {0} secondes',
       denied: 'CHRONOS : temps écoulé. Retourne faire tes devoirs !',
@@ -18,8 +20,14 @@
       failed: 'Accès refusé. Retourne faire tes devoirs !', live: 'Heure italienne : {0}',
     },
   };
-  const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-  const roman = value => ROMAN[value - 1] || '';
+  function roman(value) {
+    if (!Number.isInteger(value) || value <= 0 || value > 3999) return '';
+    let result = '';
+    for (const [number, symbol] of [[1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'], [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']]) {
+      while (value >= number) { result += symbol; value -= number; }
+    }
+    return result;
+  }
   function italyTime(date = new Date()) {
     const parts = new Intl.DateTimeFormat('en-GB', {
       timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
@@ -30,9 +38,10 @@
       hourAngle: (hour % 12 + minute / 60 + second / 3600) * 30,
       minuteAngle: (minute + second / 60) * 6 };
   }
-  function makeQuestion(random = Math.random) {
+  function makeQuestion(random = Math.random, count = 2) {
+    if (!Number.isInteger(count) || count < 1 || count > 15) throw RangeError('Invalid clock count');
     const next = () => Math.floor(random() * 12);
-    const clocks = Array.from({ length: 2 }, () => ({ minute: next(), hour: next() }));
+    const clocks = Array.from({ length: count }, () => ({ minute: next(), hour: next() }));
     const answer = clocks.reduce((sum, clock) => sum + clock.minute, 0) % 12;
     const positions = Array.from({ length: 12 }, (_, i) => i).filter(i => i !== answer);
     const shuffle = list => { for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; } return list; };
@@ -53,8 +62,10 @@
     } catch { /* Storage may be blocked, full or malformed: show the quiz normally. */ }
     return false;
   }
-  function start({ container = document.getElementById('root'), french = false } = {}) {
-    if (hasPass()) return Promise.resolve(true);
+  function start({ container = document.getElementById('root'), french = false, punishment = false, signal } = {}) {
+    if (signal?.aborted) return Promise.resolve(false);
+    const totalRounds = punishment ? 300 : 3;
+    if (!punishment && hasPass()) return Promise.resolve(true);
     const words = TEXT[french ? 'fr' : 'it'];
     const t = (key, ...values) => {
       const original = words[key];
@@ -67,7 +78,7 @@
         const node = document.createElement(tag); if (className) node.className = className;
         if (text !== undefined) node.textContent = text; return node;
       };
-      const screen = el('main', 'entry-gate'), card = el('section', 'entry-card');
+      const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '')), card = el('section', 'entry-card');
       const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', 'true');
       for (let index = 0; index < 8; index++) {
         const eye = el('span', 'entry-eye');
@@ -80,8 +91,18 @@
         }
         eyes.append(eye);
       }
-      const heading = el('h1', '', t('title')); heading.tabIndex = -1;
+      const heading = el('h1', '', t(punishment ? 'taunt' : 'title')); heading.tabIndex = -1;
+      if (punishment) heading.textContent += '\n' + t('rebuke');
       const clockBox = el('div', 'entry-italy');
+      const bigEye = el('div', 'entry-big-eye'); bigEye.setAttribute('aria-hidden', 'true');
+      if (punishment) {
+        for (let frame = 1; frame <= 4; frame++) {
+          const image = el('img', 'entry-eye-frame entry-eye-frame-' + frame);
+          image.src = '/assets/eyes/frame-' + frame + '.webp'; image.alt = ''; image.draggable = false;
+          image.style.animationDelay = `${-(frame - 1) * 0.18}s`; bigEye.append(image);
+        }
+        card.append(bigEye); clockBox.hidden = true;
+      }
       function face(className, minute, hour) {
         const clock = el('span', 'entry-clock ' + className);
         clock.setAttribute('role', 'img');
@@ -108,10 +129,23 @@
       }
       updateTime(); const liveTimer = root.setInterval(updateTime, 1000);
       function clearRound() { root.clearTimeout(previewTimer); root.clearInterval(roundTimer); }
-      function cleanup() { clearRound(); root.clearInterval(liveTimer); root.removeEventListener('pagehide', cleanup); }
+      function cleanup() {
+        clearRound(); root.clearInterval(liveTimer); root.removeEventListener('pagehide', cleanup);
+        signal?.removeEventListener('abort', dismiss);
+      }
+      function dismiss() {
+        if (closed) return;
+        closed = true; cleanup(); resolve(false);
+      }
+      signal?.addEventListener('abort', dismiss, { once: true });
       root.addEventListener('pagehide', cleanup);
       function fail(timedOut = false) {
         if (closed) return;
+        if (punishment) {
+          phase = 'denied'; clearRound(); root.clearInterval(liveTimer);
+          heading.textContent = t('punishFailed'); stage.replaceChildren(); bigEye.hidden = false;
+          exit.focus(); return;
+        }
         closed = true; phase = 'denied'; cleanup();
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
         heading.textContent = t(timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
@@ -124,8 +158,10 @@
         if (closed) return;
         closed = true; cleanup();
         try {
-          const passedAt = Date.now();
-          root.localStorage.setItem(PASS_KEY, JSON.stringify({ passedAt, expiresAt: passedAt + PASS_DURATION }));
+          if (!punishment) {
+            const passedAt = Date.now();
+            root.localStorage.setItem(PASS_KEY, JSON.stringify({ passedAt, expiresAt: passedAt + PASS_DURATION }));
+          }
         } catch { /* Passing still unlocks this page when persistence is unavailable. */ }
         container.replaceChildren(); resolve(true);
       }
@@ -135,17 +171,23 @@
         phase = 'checking'; clearRound();
         if (index !== question.correctIndex) { fail(); return; }
         round++;
-        if (round === 3) pass(); else showQuestion();
+        if (round === totalRounds) pass(); else showQuestion();
       }
       function showQuestion() {
-        clearRound(); phase = 'preview'; question = makeQuestion();
-        heading.textContent = t('challenge'); clockBox.hidden = true; stage.replaceChildren();
-        const progress = el('h2', 'entry-progress', `${roman(round + 1)} / III`); progress.tabIndex = -1;
-        progress.setAttribute('aria-label', t('round', round + 1));
+        clearRound(); phase = 'preview'; question = makeQuestion(Math.random, punishment ? 15 : 2);
+        heading.textContent = t('challenge'); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
+        const progress = el('h2', 'entry-progress', `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
+        progress.setAttribute('aria-label', t(punishment ? 'punishRound' : 'round', round + 1));
         const equation = el('div', 'entry-equation');
         question.clocks.forEach((clock, index) => {
-          if (index) equation.append(el('span', 'entry-plus', '+'));
-          equation.append(face('', clock.minute, clock.hour).clock);
+          if (punishment) {
+            const term = el('span', 'entry-term'); term.append(face('', clock.minute, clock.hour).clock);
+            if (index < question.clocks.length - 1) term.append(el('span', 'entry-term-plus', '+'));
+            equation.append(term);
+          } else {
+            if (index) equation.append(el('span', 'entry-plus', '+'));
+            equation.append(face('', clock.minute, clock.hour).clock);
+          }
         });
         equation.append(el('span', 'entry-plus', '= ?'));
         const countdown = el('p', 'entry-countdown', '…');
@@ -172,6 +214,13 @@
           tick(); roundTimer = root.setInterval(tick, 100); choices.firstElementChild.focus();
         }, 1000);
       }
+      const exit = el('button', 'entry-exit', t('exit')); exit.type = 'button';
+      if (punishment) {
+        exit.addEventListener('click', dismiss); card.append(exit);
+        const begin = el('button', 'entry-punishment-begin', t('challenge')); begin.type = 'button';
+        begin.addEventListener('click', () => { if (phase === 'welcome' && !closed) showQuestion(); });
+        stage.append(begin); begin.focus(); return;
+      }
       const buttons = el('div', 'entry-actions'), yes = el('button', 'entry-yes', t('yes')), no = el('button', 'entry-no', t('no'));
       yes.type = no.type = 'button';
       yes.addEventListener('click', () => { if (phase === 'welcome' && !closed) showQuestion(); });
@@ -180,5 +229,42 @@
       stage.append(buttons);
     });
   }
-  root.EntryGate = { start, italyTime, makeQuestion, TEXT };
+  function isDefeat({ mode, kind, turn, online }) {
+    if (mode === 'online') {
+      if (!online || online.status !== 'over' || ![1, -1].includes(online.color)) return false;
+      if (!['mate', 'resign'].includes(online.reason)) return false;
+      return online.winner === (online.color === 1 ? 'black' : 'white');
+    }
+    if (kind !== 'mate') return false;
+    return (mode === 'pvc' && turn === 1) || mode === 'pvp';
+  }
+  async function punish({ french = false, signal } = {}) {
+    if (signal?.aborted) return false;
+    const overlay = document.createElement('div'); overlay.className = 'entry-defeat-overlay';
+    overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', french ? TEXT.fr.taunt : TEXT.it.taunt);
+    const previousFocus = document.activeElement, overflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden'; document.body.append(overlay);
+    // Native inert prevents keyboard and screen-reader navigation behind the overlay.
+    const background = document.getElementById('root'), wasInert = background?.inert;
+    if (background) background.inert = true;
+    const escape = event => {
+      if (event.key === 'Escape') { event.preventDefault(); overlay.querySelector('.entry-exit')?.click(); }
+      if (event.key === 'Tab') {
+        const buttons = [...overlay.querySelectorAll('button:not([disabled])')];
+        const first = buttons[0], last = buttons[buttons.length - 1];
+        if ((event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+          event.preventDefault(); (event.shiftKey ? last : first)?.focus();
+        }
+      }
+    };
+    overlay.addEventListener('keydown', escape);
+    try { return await start({ container: overlay, french, punishment: true, signal }); }
+    finally {
+      overlay.removeEventListener('keydown', escape); overlay.remove(); document.body.style.overflow = overflow;
+      if (background) background.inert = wasInert;
+      previousFocus?.focus?.();
+    }
+  }
+  root.EntryGate = { start, punish, isDefeat, italyTime, makeQuestion, TEXT };
 })(typeof globalThis !== 'undefined' ? globalThis : window);
