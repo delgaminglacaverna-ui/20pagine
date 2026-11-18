@@ -166,7 +166,9 @@ Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'
 ### Immagini e suoni del quiz
 
 Lo sfondo e il jumpscare usano le tre nuove immagini in `assets/eyes/frame-{1,2,3}.webp`.
-Aggiungere gli effetti audio in `assets/sounds/` con i nomi esatti `Clock.mp3`,
-`Correct.mp3` e `Wrong.mp3`: domanda, risposta giusta, errore/timeout.
-Il quiz funziona anche prima di caricarli o se l'autoplay è bloccato.
+Gli effetti audio sono inclusi in `assets/sounds/`:
+- `Chronos_math_sound.mp3`: nuova domanda.
+- `Chronos_Clock_Question_Correct.mp3`: risposta giusta.
+- `Chronos_Clock_Question_Incorrect.mp3`: errore o timeout.
+Il quiz funziona anche se l’autoplay è bloccato.
 Dopo un errore nella sfida attende 900 ms per il suono prima di uscire.
