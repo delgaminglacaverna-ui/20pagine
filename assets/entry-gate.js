@@ -53,6 +53,7 @@
     Correct: 'Chronos_Clock_Question_Correct.mp3.MPEG',
     Wrong: 'Chronos_Clock_Question_Incorrect.mp3.MPEG',
   };
+  const RETRY_KEY = '20pagine.chronos.retry-eye.v1';
   const PASS_KEY = '20pagine.chronos.pass.v3';
   const PASS_DURATION = 24 * 60 * 60 * 1000;
   function hasPass() {
@@ -91,15 +92,20 @@
             sounds.delete(audio);
             audio.removeEventListener('ended', finish);
             audio.removeEventListener('error', finish);
+            audio.removeEventListener('timeupdate', progress);
             try { audio.pause(); } catch {}
           }
           if (continueQuiz) done();
+        }
+        function progress() {
+          if (name === 'Wrong' && Number.isFinite(audio.duration) && audio.duration > 0 && audio.currentTime >= audio.duration * 0.6) finish();
         }
         try {
           if (typeof root.Audio !== 'function') { finish(); return; }
           audio = new root.Audio('/assets/sounds/' + SOUND_FILES[name]);
           audio.volume = 0.7;
           sounds.set(audio, () => finish(false));
+          audio.addEventListener('timeupdate', progress);
           audio.addEventListener('ended', finish, { once: true });
           audio.addEventListener('error', finish, { once: true });
           // Watchdog only for failed loads/stalled playback, not normal clip duration.
@@ -113,14 +119,20 @@
         const node = document.createElement(tag); if (className) node.className = className;
         if (text !== undefined) node.textContent = text; return node;
       };
+      let retryAllowed = false;
+      try { retryAllowed = !punishment && root.localStorage.getItem(RETRY_KEY) === '1'; } catch {}
       const creature = punishment ? 'mouth' : 'eye';
       const frameCount = punishment ? 3 : 4;
       const frameFolder = punishment ? 'mouths' : 'eyes';
       const frameDuration = 0.72 / frameCount;
       const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '')), card = el('section', 'entry-card');
-      const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', 'true');
+      const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', retryAllowed ? 'false' : 'true');
       for (let index = 0; index < 8; index++) {
-        const eye = el('span', 'entry-eye');
+        const eye = el(retryAllowed ? 'button' : 'span', 'entry-eye' + (retryAllowed ? ' entry-retry-eye' : ''));
+        if (retryAllowed) {
+          eye.type = 'button'; eye.setAttribute('aria-label', french ? 'Entrer' : 'Entra');
+          eye.addEventListener('click', () => { if (!closed && phase === 'welcome') pass(); });
+        }
         for (let frame = 1; frame <= frameCount; frame++) {
           const image = el('img', 'entry-' + creature + '-frame entry-' + creature + '-frame-' + frame);
           image.src = '/assets/' + frameFolder + '/frame-' + frame + '.webp';
@@ -179,13 +191,15 @@
       }
       signal?.addEventListener('abort', dismiss, { once: true });
       root.addEventListener('pagehide', cleanup);
-      function fail(timedOut = false) {
+      function fail(timedOut = false, wrongIndex) {
         if (closed || phase === 'denied') return;
         phase = 'denied'; cleanup();
         signal?.addEventListener('abort', dismiss, { once: true });
         root.addEventListener('pagehide', cleanup);
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
-        heading.textContent = t(punishment ? 'punishFailed' : timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
+        if (!punishment && question) { try { root.localStorage.setItem(RETRY_KEY, '1'); } catch {} }
+        heading.textContent = '';
+        clockBox.hidden = true;
         // Both chess defeat and homework failure use mouths.
         screen.className = 'entry-gate entry-failed';
         for (const eye of [...eyes.children, bigEye]) {
@@ -197,14 +211,20 @@
           }
         }
         if (punishment) bigEye.hidden = false;
-        const cross = el('div', 'entry-wrong');
-        cross.setAttribute('role', 'img'); cross.setAttribute('aria-label', t('failed'));
-        for (let frame = 1; frame <= 3; frame++) {
-          const image = el('img', 'entry-wrong-frame entry-wrong-frame-' + frame);
-          image.src = '/assets/wrong/frame-' + frame + (frame === 3 ? '.png' : '.webp');
-          image.alt = ''; cross.append(image);
+        function markClock(target) {
+          const cross = el('span', 'entry-wrong'); cross.setAttribute('aria-hidden', 'true');
+          for (let frame = 1; frame <= 3; frame++) {
+            const image = el('img', 'entry-wrong-frame entry-wrong-frame-' + frame);
+            image.src = '/assets/wrong/frame-' + frame + (frame === 3 ? '.png' : '.webp');
+            image.alt = ''; cross.append(image);
+          }
+          target.append(cross);
         }
-        stage.append(cross);
+        const choices = stage.querySelectorAll('.entry-choice');
+        for (const [index, button] of [...choices].entries()) {
+          button.disabled = true;
+          if (timedOut || index === wrongIndex) markClock(button.querySelector('.entry-clock'));
+        }
         function leave() {
           if (closed) return;
           closed = true; cleanup(); resolve(false);
@@ -219,6 +239,7 @@
         closed = true; cleanup();
         try {
           if (!punishment) {
+            root.localStorage.removeItem(RETRY_KEY);
             const passedAt = Date.now();
             root.localStorage.setItem(PASS_KEY, JSON.stringify({ passedAt, expiresAt: passedAt + PASS_DURATION }));
           }
@@ -229,7 +250,7 @@
         if (closed || phase !== 'answer') return;
         if (Date.now() >= deadline) { fail(true); return; }
         phase = 'checking'; clearRound();
-        if (index !== question.correctIndex) { fail(); return; }
+        if (index !== question.correctIndex) { fail(false, index); return; }
         round++;
         stopSounds();
         playSound('Correct', () => {

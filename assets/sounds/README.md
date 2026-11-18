@@ -7,5 +7,5 @@ Bundled files, with case-sensitive names and `.mp3.MPEG` extensions:
 
 The mapping lives in `SOUND_FILES` in `assets/entry-gate.js`. Audio bytes are unchanged.
 Files are copied automatically by `npm run build`. Missing files or browser autoplay
-restrictions do not block the quiz. Correct feedback completes before advancing; wrong feedback completes before closing.
-Playback completion uses the ended event, with error/autoplay handling and a 60-second stalled-playback watchdog.
+restrictions do not block the quiz. Correct feedback completes before advancing; wrong feedback reaches 60% of its duration before closing.
+Playback uses timeupdate/duration for Wrong and the ended event for Correct, with error/autoplay handling and a 60-second stalled-playback watchdog.

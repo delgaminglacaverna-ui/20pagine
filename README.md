@@ -175,7 +175,15 @@ Gli effetti audio sono inclusi in `assets/sounds/`:
 - `Chronos_Clock_Question_Correct.mp3.MPEG`: risposta giusta.
 - `Chronos_Clock_Question_Incorrect.mp3.MPEG`: errore o timeout.
 Il quiz funziona anche se l’autoplay è bloccato.
-Una risposta sbagliata mostra le tre X animate in `assets/wrong/`.
+Una risposta sbagliata sovrappone le tre X animate di `assets/wrong/` al quadrante
+selezionato; al timeout vengono segnate tutte le opzioni. Nessun messaggio di sconfitta.
 Il quiz aspetta la fine di Correct prima della domanda successiva (o dell’accesso finale)
-e la fine di Wrong prima di chiudere, anche nel quiz iniziale. Errori audio o autoplay
+e il 60% di Wrong prima di chiudere, anche nel quiz iniziale. Errori audio o autoplay
 bloccato non fermano il quiz; un watchdog di 60 secondi gestisce caricamenti/playback bloccati.
+
+Dopo un errore/timeout del quiz iniziale, al rientro nello stesso browser gli occhi
+sono cliccabili: un clic permette di entrare, salva il normale pass di 24 ore
+e consuma il permesso di rientro (`20pagine.chronos.retry-eye.v1` in localStorage).
+La sconfitta a scacchi non concede questo permesso. Storage bloccato: nessun rientro persistente.
+Il timer delle pubblicità, quando pronto per saltare, mostra le stesse X animate
+sopra il quadrante anziché diventare verde; i 30 secondi e il click restano invariati.
