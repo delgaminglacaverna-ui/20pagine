@@ -113,11 +113,14 @@ password lunga e unica. Non esiste una password predefinita nel codice.
 
 Prima di montare il gioco (quindi prima di avviare video, IA o auto-join delle
 lobby), il sito mostra un ingresso con i tre quadranti già presenti e l’ora
-italiana in tempo reale. Il fuso è `Europe/Rome`, con cambio automatico tra ora
+italiana in tempo reale, con sole lancette di ore e minuti e numeri romani. La
+schermata iniziale mostra soltanto la domanda e i pulsanti SÌ/NO, senza istruzioni. Il fuso è `Europe/Rome`, con cambio automatico tra ora
 solare e legale; l’ora deriva dall’orologio del dispositivo.
 
-- **Sì:** tre prove consecutive. Ogni prova mostra tre orologi da sommare,
-  un secondo di osservazione e quattro risposte, con 12 secondi per rispondere.
+- **Sì:** tre prove consecutive. Il titolo diventa **RISPONDI**. Ogni prova mostra due orologi da sommare,
+  un secondo di osservazione e quattro risposte (I–IV), con 12 secondi per rispondere.
+  Anche avanzamento e conto alla rovescia usano numeri romani; l’orologio italiano
+  viene nascosto durante le prove. Le descrizioni accessibili restano disponibili.
 - Si sommano solo le posizioni delle lancette lunghe modulo 12; le corte sono
   distrattori. Le quattro alternative hanno posizioni lunghe distinte e una sola
   è corretta. Domande e alternative sono generate casualmente.
