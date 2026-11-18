@@ -70,6 +70,7 @@ const FRENCH_TEXT = {
   ": sfida il tempo contro 20 Pagine o contro un amico. Estremo nel gioco, estremo nel tempo.": " : défiez le temps contre 20 Pagine ou un ami. Extrême dans le jeu, extrême dans le temps.",
   "Puoi giocare solo se studi 20 pagine": "Tu ne peux jouer que si tu étudies 20 pages",
   "Bianco": "Blanc",
+  "Stai prendendo il tuo tempo": "Tu prends ton temps",
   "Il Bianco sta prendendo il suo tempo": "Les Blancs prennent leur temps",
   "Il Nero sta prendendo il suo tempo": "Les Noirs prennent leur temps",
   "Nero": "Noir",
@@ -1714,12 +1715,12 @@ function a1() {
                                 : onl.color === 0
                                   ? `Spettatore · tempo del ${zc(R.turn)}`
                                   : onl.color === R.turn
-                                    ? `Tocca a te (${zc(R.turn)})`
+                                    ? "Stai prendendo il tuo tempo"
                                     : `L'avversario (${zc(R.turn)}) sta pensando…`
                               : "Online 1v1: crea o entra in una partita"
                           : d
                             ? (R.turn === 1 ? "Il Bianco sta prendendo il suo tempo" : "Il Nero sta prendendo il suo tempo")
-                            : `Tempo del ${zc(R.turn)}: tocca a te`,
+                            : "Stai prendendo il tuo tempo",
                       }),
                       Gl &&
                         v.jsx("span", {
@@ -2243,12 +2244,17 @@ function startSkipCountdown(setRemaining) {
   }, 100);
   return () => window.clearInterval(timer);
 }
-function SkipClock({ remaining }) {
-  const seconds = Math.ceil(Math.max(0, remaining));
-  return v.jsxs("span", {
-    className: "skip-clock",
-    role: "timer",
-    "aria-label": FRENCH_MODE ? `Passer dans ${seconds} secondes` : `Salta tra ${seconds} secondi`,
+function SkipClock({ remaining, onSkip }) {
+  const seconds = Math.ceil(Math.max(0, remaining)), ready = remaining <= 0;
+  return v.jsxs("button", {
+    type: "button",
+    className: "skip-clock" + (ready ? " skip-clock-ready" : ""),
+    disabled: !ready,
+    onClick: () => { if (ready) onSkip?.(); },
+    role: ready ? undefined : "timer",
+    title: ready ? (FRENCH_MODE ? "Passer la vidéo" : "Salta video") : undefined,
+    "aria-label": ready ? (FRENCH_MODE ? "Passer la vidéo" : "Salta video")
+      : FRENCH_MODE ? `Passer dans ${seconds} secondes` : `Salta tra ${seconds} secondi`,
     "aria-live": "off",
     children: [
       ...[1, 2, 3].map((frame) => v.jsx("img", {
@@ -2388,11 +2394,7 @@ function i1() {
                 }),
               ],
             }),
-            b > 0 ? v.jsx(SkipClock, { remaining: b }) : v.jsx("button", {
-              className: `${ln} shrink-0 border-slate-700 bg-slate-800 px-2 py-0.5 text-xs text-white hover:bg-slate-900`,
-              onClick: il,
-              children: "Salta ⏭",
-            }),
+            v.jsx(SkipClock, { remaining: b, onSkip: il }),
           ],
         }),
         v.jsx("div", {
@@ -2443,7 +2445,13 @@ else mountSite();
       .chess-piece[data-piece-side="black"] { color: #111111 !important; -webkit-text-fill-color: #111111 !important; }
       .skip-clock { position: relative; display: inline-block; flex-shrink: 0;
         width: 54px; height: 54px; border-radius: 50%; background: #000;
-        overflow: hidden; pointer-events: none; }
+        overflow: hidden; border: 0; padding: 0; appearance: none; }
+      .skip-clock:disabled { opacity: 1; cursor: default; }
+      .skip-clock-ready { background: #16a34a; cursor: pointer; }
+      .skip-clock-ready:hover { background: #15803d; }
+      .skip-clock:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+      .skip-clock-ready .skip-clock-face { animation: none; opacity: 0; }
+      .skip-clock-ready .skip-clock-face-1 { opacity: 1; }
       .skip-clock-face { position: absolute; inset: 0; width: 100%; height: 100%;
         object-fit: contain; opacity: 0; animation: clock-sketch .6s step-end infinite; }
       .skip-clock-face-2 { animation-delay: -.4s; }

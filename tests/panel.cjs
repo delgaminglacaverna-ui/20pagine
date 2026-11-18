@@ -43,7 +43,7 @@ test('content presentation supports literals, empty values, templates and regex 
 test('catalog includes both languages, dynamic templates and updated turn message', () => {
   const html = fs.readFileSync('index.html', 'utf8');
   const catalog = require('../scripts/text-catalog.cjs')(html);
-  for (const key of ['Il Bianco sta prendendo il suo tempo', 'Les Blancs prennent leur temps', 'Tempo del {0}: tocca a te', 'Scacchi Estremi 10×10 con L\'estremo · 20 Pagine']) assert(catalog.includes(key), key);
+  for (const key of ['Il Bianco sta prendendo il suo tempo', 'Les Blancs prennent leur temps', 'Stai prendendo il tuo tempo', 'Tu prends ton temps', 'Scacchi Estremi 10×10 con L\'estremo · 20 Pagine']) assert(catalog.includes(key), key);
   assert(!catalog.includes('pvc'));
   assert(!catalog.some(value => value.includes('PANEL_PASSWORD')));
   assert(!html.includes('20 Pagine (${zc(R.turn)}) si prende il suo tempo'));
