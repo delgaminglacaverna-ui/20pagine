@@ -79,3 +79,12 @@
   .entry-mouth-frame { animation: none; opacity: 0; }
   .entry-mouth-frame-1 { opacity: 1; }
 }
+
+.entry-wrong { position: relative; width: min(50vw, 240px); aspect-ratio: 1; margin: 16px auto; }
+.entry-wrong-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; animation: entry-clock-frame-1 .6s step-end infinite; }
+.entry-wrong-frame-2 { animation-name: entry-clock-frame-2; }
+.entry-wrong-frame-3 { animation-name: entry-clock-frame-3; }
+@media (prefers-reduced-motion: reduce) {
+  .entry-wrong-frame { animation: none; opacity: 0; }
+  .entry-wrong-frame-1 { opacity: 1; }
+}

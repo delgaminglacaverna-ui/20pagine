@@ -5,10 +5,13 @@ const vm = require('node:vm');
 const source = fs.readFileSync('assets/entry-gate.js', 'utf8');
 function harness(french = false, { storage = new Map(), at = Date.parse('2026-07-01T12:00:00Z'), storageBlocked = false, audioMode } = {}) {
   let time = at, nextTimer = 0, closeCalls = 0, destination;
-  const timers = new Map(), played = [];
+  const timers = new Map(), played = [], audioClips = [];
   class AudioMock {
-    constructor(src) { this.src = src; }
-    addEventListener() {}
+    constructor(src) { this.src = src; this.events = {}; audioClips.push(this); }
+    addEventListener(name, fn) { this.events[name] = fn; }
+    removeEventListener(name) { delete this.events[name]; }
+    end() { this.events.ended?.(); }
+    error() { this.events.error?.(); }
     play() { played.push(this.src); return audioMode === 'blocked' ? Promise.reject(Error('Autoplay denied')) : Promise.resolve(); }
     pause() {}
   }
@@ -66,7 +69,7 @@ function harness(french = false, { storage = new Map(), at = Date.parse('2026-07
     const choice = all('entry-choice').find(node => (minute(node) === target) === correct);
     assert(choice); choice.click();
   }
-  return { gate: context.EntryGate, root, body, doc, storage, timers, played, advance, all, answer,
+  return { gate: context.EntryGate, root, body, doc, storage, timers, played, audioClips, advance, all, answer,
     get now() { return time; },
     begin: (options = {}) => context.EntryGate.start({ container: root, french, ...options }),
     get closeCalls() { return closeCalls; }, get destination() { return destination; } };
@@ -308,20 +311,49 @@ test('blocked storage cannot prevent punishment failure from exiting', async () 
   assert.equal(await result, false); assert.equal(h.closeCalls, 1);
   assert.equal(h.destination, 'about:blank'); assert.equal(h.timers.size, 0);
 });
-test('quiz plays question, correct and wrong cues and tolerates blocked audio', async () => {
-  for (const audioMode of ['allowed', 'blocked']) {
+test('feedback waits for ended events and locks repeated clicks until audio completes', async () => {
+  const h = harness(false, { audioMode: 'allowed' }), result = h.begin({ punishment: true });
+  h.advance(17000);
+  h.audioClips.at(-1).end();
+  h.answer();
+  assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Correct.mp3.MPEG');
+  const correct = h.audioClips.at(-1), playedCount = h.played.length;
+  h.answer(); h.advance(5000);
+  assert.equal(h.played.length, playedCount);
+  correct.end();
+  assert.equal(h.played.at(-1), '/assets/sounds/chronos_math_sound.mp3.MPEG');
+  h.advance(1000); h.answer(false);
+  assert.equal(h.all('entry-wrong-frame').length, 3);
+  h.all('entry-wrong-frame').forEach(node => assert(fs.existsSync(node.src.slice(1))));
+  assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Incorrect.mp3.MPEG');
+  h.advance(5000); assert.equal(h.closeCalls, 0);
+  h.audioClips.at(-1).end();
+  assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+  assert.equal(h.timers.size, 0);
+});
+test('blocked or failed feedback audio does not leave the quiz stuck', async () => {
+  for (const audioMode of ['blocked', 'allowed']) {
     const h = harness(false, { audioMode }), result = h.begin({ punishment: true });
-    h.advance(17000);
-    assert.deepEqual(h.played, ['/assets/sounds/chronos_math_sound.mp3.MPEG']);
-    h.answer();
-    assert.deepEqual(h.played.slice(-2), ['/assets/sounds/Chronos_Clock_Question_Correct.mp3.MPEG', '/assets/sounds/chronos_math_sound.mp3.MPEG']);
+    h.advance(17000); h.answer();
+    if (audioMode === 'allowed') h.audioClips.at(-1).error();
+    await Promise.resolve(); await Promise.resolve();
     h.advance(1000); h.answer(false);
-    assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Incorrect.mp3.MPEG');
-    assert.equal(h.closeCalls, 0);
-    h.advance(899); assert.equal(h.closeCalls, 0);
-    h.advance(1); assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+    if (audioMode === 'allowed') h.audioClips.at(-1).error();
     await Promise.resolve();
+    assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+    assert.equal(h.timers.size, 0);
   }
+});
+test('the final correct clip finishes before entrance access is granted', async () => {
+  const h = harness(false, { audioMode: 'allowed' }), result = h.begin();
+  h.all('entry-yes')[0].click();
+  for (let i = 0; i < 3; i++) {
+    h.advance(1000); h.answer();
+    assert.equal(h.storage.size, 0);
+    h.audioClips.at(-1).end();
+  }
+  assert.equal(await result, true); assert.equal(h.storage.size, 1);
+  assert.equal(h.timers.size, 0);
 });
 
 test('all referenced quiz sound files are bundled MP3 assets', () => {
@@ -371,4 +403,15 @@ test('quiz clocks contain all three drawings with explicit equal animation phase
   assert(css.includes('.entry-clock-face-3 { animation-name: entry-clock-frame-3; }'));
   assert(css.includes('33.333% { opacity: 1; } 66.666% { opacity: 0; }'));
   assert(css.includes('.entry-clock-face-1 { opacity: 1; }'));
+});
+test('aborting during correct or wrong feedback cancels pending continuation', async () => {
+  for (const correct of [true, false]) {
+    const h = harness(false, { audioMode: 'allowed' }), controller = new AbortController();
+    const result = h.begin({ punishment: true, signal: controller.signal });
+    h.advance(17000); h.answer(correct);
+    const clip = h.audioClips.at(-1);
+    controller.abort(); assert.equal(await result, false);
+    clip.end(); h.advance(70000);
+    assert.equal(h.closeCalls, 0); assert.equal(h.timers.size, 0);
+  }
 });
