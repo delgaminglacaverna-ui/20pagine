@@ -78,20 +78,36 @@
       return custom.replace(/\{(\d+)\}/g, (_, index) => String(values[Number(index)] ?? ''));
     };
     return new Promise(resolve => {
-      const sounds = new Set();
-      function playSound(name) {
-        try {
-          if (typeof root.Audio !== 'function') return;
-          const audio = new root.Audio('/assets/sounds/' + SOUND_FILES[name]);
-          audio.volume = 0.7; sounds.add(audio);
-          const release = () => sounds.delete(audio);
-          audio.addEventListener('ended', release, { once: true });
-          audio.addEventListener('error', release, { once: true });
-          const playing = audio.play();
-          if (playing?.catch) playing.catch(release);
-        } catch { /* Missing files and autoplay restrictions must not break the quiz. */ }
+      const sounds = new Map();
+      function stopSounds() {
+        for (const cancel of [...sounds.values()]) cancel();
       }
-      let closeTimer;
+      function playSound(name, done = () => {}) {
+        let audio, timer, settled = false;
+        function finish(continueQuiz = true) {
+          if (settled) return;
+          settled = true; root.clearTimeout(timer);
+          if (audio) {
+            sounds.delete(audio);
+            audio.removeEventListener('ended', finish);
+            audio.removeEventListener('error', finish);
+            try { audio.pause(); } catch {}
+          }
+          if (continueQuiz) done();
+        }
+        try {
+          if (typeof root.Audio !== 'function') { finish(); return; }
+          audio = new root.Audio('/assets/sounds/' + SOUND_FILES[name]);
+          audio.volume = 0.7;
+          sounds.set(audio, () => finish(false));
+          audio.addEventListener('ended', finish, { once: true });
+          audio.addEventListener('error', finish, { once: true });
+          // Watchdog only for failed loads/stalled playback, not normal clip duration.
+          timer = root.setTimeout(finish, 60000);
+          const playing = audio.play();
+          if (playing?.catch) playing.catch(() => finish());
+        } catch { finish(); }
+      }
       let closed = false, round = 0, question, phase = 'welcome', previewTimer, roundTimer, introTimer, deadline;
       const el = (tag, className, text) => {
         const node = document.createElement(tag); if (className) node.className = className;
@@ -153,8 +169,7 @@
       updateTime(); const liveTimer = root.setInterval(updateTime, 1000);
       function clearRound() { root.clearTimeout(previewTimer); root.clearInterval(roundTimer); }
       function cleanup() {
-        root.clearTimeout(closeTimer);
-        for (const audio of sounds) { try { audio.pause(); } catch {} } sounds.clear();
+        stopSounds();
         clearRound(); root.clearTimeout(introTimer); root.clearInterval(liveTimer); root.removeEventListener('pagehide', cleanup);
         signal?.removeEventListener('abort', dismiss);
       }
@@ -165,8 +180,10 @@
       signal?.addEventListener('abort', dismiss, { once: true });
       root.addEventListener('pagehide', cleanup);
       function fail(timedOut = false) {
-        if (closed) return;
-        closed = true; phase = 'denied'; cleanup();
+        if (closed || phase === 'denied') return;
+        phase = 'denied'; cleanup();
+        signal?.addEventListener('abort', dismiss, { once: true });
+        root.addEventListener('pagehide', cleanup);
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
         heading.textContent = t(punishment ? 'punishFailed' : timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
         // Both chess defeat and homework failure use mouths.
@@ -180,15 +197,22 @@
           }
         }
         if (punishment) bigEye.hidden = false;
-        playSound('Wrong');
+        const cross = el('div', 'entry-wrong');
+        cross.setAttribute('role', 'img'); cross.setAttribute('aria-label', t('failed'));
+        for (let frame = 1; frame <= 3; frame++) {
+          const image = el('img', 'entry-wrong-frame entry-wrong-frame-' + frame);
+          image.src = '/assets/wrong/frame-' + frame + (frame === 3 ? '.png' : '.webp');
+          image.alt = ''; cross.append(image);
+        }
+        stage.append(cross);
         function leave() {
-          resolve(false);
+          if (closed) return;
+          closed = true; cleanup(); resolve(false);
           try { root.close(); } catch {}
           // Browsers normally forbid closing tabs not opened by a script.
           try { if (!root.closed) root.location.replace('about:blank'); } catch { /* denied screen remains */ }
         }
-        // Give the failure cue time to play before navigating away.
-        if (punishment) closeTimer = root.setTimeout(leave, 900); else leave();
+        playSound('Wrong', leave);
       }
       function pass() {
         if (closed) return;
@@ -207,8 +231,11 @@
         phase = 'checking'; clearRound();
         if (index !== question.correctIndex) { fail(); return; }
         round++;
-        if (round === totalRounds) { pass(); playSound('Correct'); }
-        else { playSound('Correct'); showQuestion(); }
+        stopSounds();
+        playSound('Correct', () => {
+          if (closed || phase !== 'checking') return;
+          if (round === totalRounds) pass(); else showQuestion();
+        });
       }
       function showQuestion() {
         playSound('Clock');

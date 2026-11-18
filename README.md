@@ -175,4 +175,7 @@ Gli effetti audio sono inclusi in `assets/sounds/`:
 - `Chronos_Clock_Question_Correct.mp3.MPEG`: risposta giusta.
 - `Chronos_Clock_Question_Incorrect.mp3.MPEG`: errore o timeout.
 Il quiz funziona anche se l’autoplay è bloccato.
-Dopo un errore nella sfida attende 900 ms per il suono prima di uscire.
+Una risposta sbagliata mostra le tre X animate in `assets/wrong/`.
+Il quiz aspetta la fine di Correct prima della domanda successiva (o dell’accesso finale)
+e la fine di Wrong prima di chiudere, anche nel quiz iniziale. Errori audio o autoplay
+bloccato non fermano il quiz; un watchdog di 60 secondi gestisce caricamenti/playback bloccati.
