@@ -58,6 +58,133 @@ const Qt = (o, h) => o >= 0 && o < 10 && h >= 0 && h < 10,
   Ge = (o) => String.fromCharCode(97 + ia(o)) + (10 - ca(o)),
   nr = (o) => (10 - parseInt(o.slice(1), 10)) * 10 + (o.charCodeAt(0) - 97),
   cr = [oe, _t, Zt, Vt, Lt, Rt, Vt, Zt, _t, oe];
+// French is a separate local ruleset; reload when switching to reset the game safely.
+const FRENCH_MODE = new URLSearchParams(location.search).get("version") === "french";
+const FRENCH_TEXT = {
+  "Scacchi Estremi 10×10 · 20 Pagine": "Échecs extrêmes 10×10 · 20 Pagine",
+  "Scacchiera 10×10 con il nuovo pezzo ": "Échiquier 10×10 avec la nouvelle pièce ",
+  "L'estremo": "L’extrême",
+  ": sfida il tempo contro 20 Pagine o contro un amico. Estremo nel gioco, estremo nel tempo.": " : défiez le temps contre 20 Pagine ou un ami. Extrême dans le jeu, extrême dans le temps.",
+  "Puoi giocare solo se studi 20 pagine": "Tu ne peux jouer que si tu étudies 20 pages",
+  "Bianco": "Blanc",
+  "Nero": "Noir",
+  "Nessuno": "Aucun",
+  "Modalità di gioco estremo": "Mode de jeu extrême",
+  "Giocatore vs 20 Pagine": "Joueur contre 20 Pagine",
+  "Giocatore vs Giocatore": "Joueur contre joueur",
+  "20 Pagine vs 20 Pagine": "20 Pagine contre 20 Pagine",
+  "Online 1v1": "En ligne 1 contre 1",
+  "Aperture estreme": "Ouvertures extrêmes",
+  "Ritorno al tempo zero": "Retour au temps zéro",
+  "Impostazioni del tempo": "Réglages du temps",
+  "Profondità Bianco": "Profondeur des Blancs",
+  "Profondità Nero": "Profondeur des Noirs",
+  "Profondità di ricerca": "Profondeur de recherche",
+  "Mostra il suggerimento (mossa migliore)": "Afficher le conseil (meilleur coup)",
+  "Profondità 4 è la più estrema e richiede più tempo: 20 Pagine si ferma comunque dopo circa 7 secondi.": "La profondeur 4 est la plus extrême et demande plus de temps : 20 Pagine s’arrête après environ 7 secondes.",
+  "⟲ Torna indietro nel tempo": "⟲ Remonter le temps",
+  "Avanti nel tempo ⟳": "Avancer dans le temps ⟳",
+  "⇅ Ruota scacchiera": "⇅ Retourner l’échiquier",
+  "Reset estremo": "Réinitialisation extrême",
+  "Statistiche di 20 Pagine": "Statistiques de 20 Pagine",
+  "Posizioni valutate: ": "Positions évaluées : ",
+  "Tempo di riflessione: ": "Temps de réflexion : ",
+  "Mosse nel tempo": "Coups dans le temps",
+  "Notazione algebrica (breve)": "Notation algébrique (courte)",
+  "Notazione algebrica estesa": "Notation algébrique longue",
+  "Algebrica": "Algébrique",
+  "Estesa": "Longue",
+  "Nessuna mossa: il tempo non è ancora iniziato": "Aucun coup : le temps n’a pas encore commencé",
+  "Notazione copiata in tempo record!": "Notation copiée en un temps record !",
+  "Impossibile copiare la notazione.": "Impossible de copier la notation.",
+  "Copia la notazione algebrica": "Copier la notation algébrique",
+  "Il nuovo pezzo: L'estremo (X)": "La nouvelle pièce : L’extrême (X)",
+  " vale ": " vaut ",
+  "4 punti": "4 points",
+  " e parte agli ": " et commence aux ",
+  "estremi": "extrémités",
+  " della scacchiera, nelle colonne": " de l’échiquier, sur les colonnes",
+  " e ": " et ",
+  ", accanto alle torri. In notazione algebrica si scrive ": ", à côté des tours. En notation algébrique, on écrit ",
+  ", da ": ", de ",
+  " (es.": " (ex.",
+  "Si muove come una torre, ma al massimo di ": "Se déplace comme une tour, mais au maximum de ",
+  "3 case": "3 cases",
+  " per tempo (in tutte e 4 le direzioni) e": " par coup (sauf vers la gauche en mode français) et",
+  "non salta": "ne saute pas",
+  " i pezzi.": " par-dessus les pièces.",
+  "Se la ": "Si la ",
+  "terza casa è libera": "troisième case est libre",
+  ", può fare un ulteriore passo di una casa a": ", peut faire un pas supplémentaire d’une case à",
+  " destra o sinistra": " droite ou à gauche",
+  "destra o sinistra": "droite (jamais à gauche en mode français)",
+  ", disegnando una “T” come ": ", dessinant un « T » comme ",
+  "Tempo": "Temps",
+  "Tempo ": "Temps ",
+  "di ": "de ",
+  "Posizioni/s: ": "Positions/s : ",
+  " (non è un cavallo!).": " (ce n’est pas un cavalier !).",
+  "Gioca ": "Jouez ",
+  " al momento giusto: chi controlla gli estremi controlla il tempo.": " au bon moment : qui contrôle les extrémités contrôle le temps.",
+  "mosse dritte ·": "coups droits ·",
+  "svolta in “T”": "virage en « T »",
+  "Scegli il pezzo per la promozione": "Choisissez la pièce de promotion",
+  "Partita terminata": "Partie terminée",
+  "Vantaggio estremo: ": "Avantage extrême : ",
+  "Scacco matto estremo!": "Échec et mat extrême !",
+  " Il tempo del ": " Le temps des ",
+  " è finito: ha perso.": " est écoulé : ils ont perdu.",
+  "È una ": "C’est une ",
+  "patta!": "partie nulle !",
+  " (Stallo: il tempo si è fermato)": " (Pat : le temps s’est arrêté)",
+  " (Materiale insufficiente, anche per un estremo)": " (Matériel insuffisant, même pour un extrême)",
+  " (Triplice ripetizione: un loop temporale)": " (Triple répétition : une boucle temporelle)",
+  " (Regola delle 50 mosse: tempo scaduto)": " (Règle des 50 coups : temps écoulé)",
+  "Attenzione, il ": "Attention, les ",
+  " è sotto ": " sont en ",
+  "scacco": "échec",
+  ": rimedia in tempo!": " : réagissez à temps !",
+  "Nessuno scacco: c'è ancora tempo per una mossa estrema.": "Pas d’échec : il reste du temps pour un coup extrême.",
+  "Niente da annullare: il tempo è già all'inizio.": "Rien à annuler : le temps est déjà au début.",
+  "Niente da ripetere: sei all'estremo della partita.": "Rien à refaire : vous êtes à la fin de la partie.",
+  "Apertura del Re (fuori tempo)": "Ouverture du roi (hors du temps)",
+  "Gambetto del Tempo": "Gambit du temps",
+  "Attacco dell'Estremo": "Attaque de l’extrême",
+  "Partita del Centro Estremo": "Partie du centre extrême",
+  "Doppio Estremo": "Double extrême",
+  "Cavalli del Tempo": "Cavaliers du temps",
+  "Fianchetto Estremo": "Fianchetto extrême",
+  "Svolta a T": "Virage en T",
+  "Arrocco Lampo": "Roque éclair",
+  "Difesa del Tempo Fermo": "Défense du temps arrêté",
+  "Salta ⏭": "Passer ⏭",
+  "Trascina per spostare la TBB AD": "Faites glisser pour déplacer TBB AD"
+};
+function frenchText(text) {
+  if (!FRENCH_MODE || typeof text !== "string") return text;
+  if (Object.hasOwn(FRENCH_TEXT, text)) return FRENCH_TEXT[text];
+  return text;
+}
+// Translate presentation props only, never game identifiers, URLs or notation.
+for (const method of ["jsx", "jsxs"]) {
+  const render = v[method];
+  v[method] = (type, props, key) => {
+    if (FRENCH_MODE && props) {
+      props = { ...props };
+      const translate = value => Array.isArray(value) ? value.map(translate) : frenchText(value);
+      props.children = translate(props.children);
+      for (const attr of ["title", "placeholder", "aria-label"]) {
+        if (attr in props) props[attr] = frenchText(props[attr]);
+      }
+    }
+    return render(type, props, key);
+  };
+}
+if (FRENCH_MODE) {
+  document.documentElement.lang = "fr";
+  document.title = "Échecs extrêmes 10×10 · Version française · 20 Pagine";
+}
+
 class rr {
   b = new Int8Array(100);
   turn = 1;
@@ -91,6 +218,15 @@ class rr {
     );
   }
   attacked(h, b) {
+    if (FRENCH_MODE) {
+      const turn = this.turn;
+      try {
+        this.turn = b;
+        return this.pseudo(true).some(move => move.to === h);
+      } finally {
+        this.turn = turn;
+      }
+    }
     const f = this.b,
       z = ca(h),
       x = ia(h),
@@ -173,6 +309,8 @@ class rr {
       f = this.b,
       z = this.turn,
       x = (j, D, M, y, U = 0, H = 0) => {
+        // Castling also moves a rook left, so neither castle is allowed.
+        if (FRENCH_MODE && (ia(D) < ia(j) || H === 3 || H === 4)) return;
         b.push({ from: j, to: D, piece: M, captured: y, promo: U, flag: H });
       };
     for (let j = 0; j < 100; j++) {
@@ -593,11 +731,13 @@ function wh(o) {
             (D.from === U || D.to === U) &&
             q.push("inset 0 0 0.5cqw 0.6cqw #3b82f6"),
           f === U && q.push("inset 0 0 0 0.6cqw #ef4444"));
-        let $ = k ? "#b58863" : "#f0d9b5";
+        let $ = FRENCH_MODE
+          ? ((b ? 9 - C : C) < 3 ? "#002395" : (b ? 9 - C : C) > 6 ? "#ed2939" : "#ffffff")
+          : k ? "#b58863" : "#f0d9b5";
         z !== null && (z === U || x.has(U)) && ($ = k ? "#696969" : "#a9a9a9");
         const il = b ? C === 9 : C === 0,
           Q = b ? H === 0 : H === 9,
-          K = k ? "#f0d9b5" : "#b58863";
+          K = FRENCH_MODE ? ((b ? 9 - C : C) >= 3 && (b ? 9 - C : C) <= 6 ? "#334155" : "#ffffff") : k ? "#f0d9b5" : "#b58863";
         return v.jsxs(
           "div",
           {
@@ -1078,7 +1218,7 @@ function a1() {
   }, [z, onl?.id, onl?.status, onl?.token]);
   ul.useEffect(() => {
     const code = new URLSearchParams(location.search).get("partita");
-    code && onlJoin(code);
+    !FRENCH_MODE && code && onlJoin(code);
   }, []);
   function onlSync(st) {
     if (!st || typeof st.version != "number" || st.version <= onlVer.current)
@@ -1383,6 +1523,7 @@ function a1() {
         className: z === B ? l1 : Pu,
         onClick: () => (onlLeave(), El(B)),
         children: I,
+        disabled: FRENCH_MODE && B === "online",
       });
   return v.jsxs("div", {
     className: "min-h-screen bg-slate-100 pb-72 text-slate-800",
@@ -1395,6 +1536,21 @@ function a1() {
             v.jsx("h1", {
               className: "text-2xl font-semibold",
               children: "Scacchi Estremi 10×10 · 20 Pagine",
+            }),
+            v.jsx("button", {
+              className: "rounded border px-3 py-1 text-sm",
+              onClick: () => {
+                const url = new URL(location.href);
+                url.searchParams.delete("partita");
+                if (FRENCH_MODE) url.searchParams.delete("version");
+                else url.searchParams.set("version", "french");
+                location.href = url.href;
+              },
+              children: FRENCH_MODE ? "🇮🇹 Versione italiana" : "🇫🇷 French / Français",
+            }),
+            FRENCH_MODE && v.jsx("p", {
+              className: "text-sm",
+              children: "Version française : aucun déplacement vers la colonne a, même après rotation. Roque interdit. Jeu local uniquement. Changer de version recommence la partie.",
             }),
             v.jsxs("p", {
               className: "text-sm text-slate-300",
