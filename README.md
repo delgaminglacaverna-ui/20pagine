@@ -165,8 +165,11 @@ Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'
 
 ### Immagini e suoni del quiz
 
-Lo sfondo e il jumpscare usano i quattro occhi originali in `assets/eyes/frame-{1,2,3,4}.webp`.
-Solo dopo un errore o timeout vengono sostituiti dalle tre bocche in `assets/mouths/frame-{1,2,3}.webp`.
+Il quiz normale usa i quattro occhi originali in `assets/eyes/frame-{1,2,3,4}.webp`.
+Una sconfitta a scacchi mostra subito le tre bocche in `assets/mouths/frame-{1,2,3}.webp`,
+sia nel jumpscare sia durante la sfida successiva. Anche un errore/timeout nel quiz normale
+trasforma gli occhi in bocche. I quadranti del quiz alternano tutte e tre le immagini
+`assets/clock/face-{1,2,3}.png`, 200 ms ciascuna (solo la prima con movimento ridotto).
 Gli effetti audio sono inclusi in `assets/sounds/`:
 - `chronos_math_sound.mp3.MPEG`: nuova domanda.
 - `Chronos_Clock_Question_Correct.mp3.MPEG`: risposta giusta.

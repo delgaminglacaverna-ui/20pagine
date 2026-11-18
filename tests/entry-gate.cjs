@@ -234,7 +234,7 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   const storage = new Map([['20pagine.chronos.pass.v3', existing]]);
   const h = harness(false, { storage, at }), result = h.begin({ punishment: true });
   assert(h.all('entry-card')[0].children.some(node => node.textContent === 'BROO'));
-  assert.equal(h.all('entry-big-eye')[0].children.length, 4);
+  assert.equal(h.all('entry-big-eye')[0].children.length, 3);
   assert.equal(h.all('entry-choice').length, 0);
   h.advance(16000);
   for (let i = 0; i < 300; i++) {
@@ -332,12 +332,12 @@ test('all referenced quiz sound files are bundled MP3 assets', () => {
   }
 });
 
-test('mouths appear only after a failed answer, not during the defeat introduction or questions', async () => {
+test('chess defeat shows mouths throughout the introduction and questions', async () => {
   const h = harness(), result = h.begin({ punishment: true });
-  assert.equal(h.all('entry-mouth-frame').length, 0);
-  assert(h.all('entry-eye-frame').every(node => node.src.startsWith('/assets/eyes/')));
+  assert.equal(h.all('entry-mouth-frame').length, 27);
+  assert.equal(h.all('entry-eye-frame').length, 0);
   h.advance(17000);
-  assert.equal(h.all('entry-mouth-frame').length, 0);
+  assert.equal(h.all('entry-mouth-frame').length, 27);
   h.answer(false);
   assert.equal(h.all('entry-eye-frame').length, 0);
   const frames = h.all('entry-mouth-frame');
@@ -345,4 +345,30 @@ test('mouths appear only after a failed answer, not during the defeat introducti
   for (const node of frames) assert(fs.existsSync(node.src.slice(1)));
   assert.equal(h.all('entry-big-eye')[0].hidden, false);
   h.advance(900); assert.equal(await result, false);
+});
+
+test('normal entrance keeps eyes until homework failure', async () => {
+  const h = harness(), result = h.begin();
+  assert.equal(h.all('entry-eye-frame').length, 32);
+  assert.equal(h.all('entry-mouth-frame').length, 0);
+  h.all('entry-yes')[0].click(); h.advance(1000);
+  assert.equal(h.all('entry-eye-frame').length, 32);
+  h.answer(false);
+  assert.equal(h.all('entry-eye-frame').length, 0);
+  assert.equal(h.all('entry-mouth-frame').length, 24);
+  assert.equal(await result, false);
+});
+test('quiz clocks contain all three drawings with explicit equal animation phases', () => {
+  const h = harness(); h.begin(); h.all('entry-yes')[0].click(); h.advance(1000);
+  for (const clock of h.all('entry-clock')) {
+    const frames = clock.children.filter(node => node.className?.startsWith('entry-clock-face '));
+    assert.equal(frames.length, 3);
+    frames.forEach((node, index) => assert.equal(node.src, `/assets/clock/face-${index + 1}.png`));
+  }
+  const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
+  for (let i = 1; i <= 3; i++) assert(css.includes(`@keyframes entry-clock-frame-${i}`));
+  assert(css.includes('.entry-clock-face-2 { animation-name: entry-clock-frame-2; }'));
+  assert(css.includes('.entry-clock-face-3 { animation-name: entry-clock-frame-3; }'));
+  assert(css.includes('33.333% { opacity: 1; } 66.666% { opacity: 0; }'));
+  assert(css.includes('.entry-clock-face-1 { opacity: 1; }'));
 });
