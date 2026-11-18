@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="color-scheme" content="light">
+  <title>Gestione testi · 20 Pagine</title>
+  <link rel="stylesheet" href="/assets/panel.css">
+  <script src="/assets/panel.js" defer></script>
+</head>
+<body>
+  <main>
+    <header><h1>Gestione testi</h1><a href="/" target="_blank" rel="noopener">Apri il sito ↗</a></header>
+    <p id="message" role="status" aria-live="polite"></p>
+    <section id="login">
+      <h2>Accesso riservato</h2>
+      <form id="login-form">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required maxlength="1024">
+        <button type="submit">Accedi</button>
+      </form>
+    </section>
+    <section id="editor" hidden>
+      <p>Modifica i testi italiani e francesi separatamente. Mantieni spazi e segnaposto <code>{0}</code>, <code>{1}</code>: rappresentano valori variabili. Le modifiche valgono per tutti dopo aver ricaricato il sito. È testo semplice, non HTML.</p>
+      <div class="toolbar">
+        <button id="save" type="button">Salva modifiche</button>
+        <button id="reload" type="button">Ricarica</button>
+        <button id="reset" type="button">Ripristina tutti gli originali</button>
+        <button id="logout" type="button">Esci</button>
+      </div>
+      <label for="search">Cerca un testo</label>
+      <input id="search" type="search" placeholder="Cerca nell’originale o nella modifica…">
+      <label class="check"><input id="only-changed" type="checkbox"> Solo testi modificati</label>
+      <p id="count"></p>
+      <div id="entries"></div>
+      <details>
+        <summary>Aggiungi un testo non in elenco</summary>
+        <p>Per messaggi visibili solo in certe situazioni: copia esattamente il testo originale (anche gli spazi), oppure usa {0} per la parte variabile. Non inserire codice, URL o nomi delle variabili.</p>
+        <form id="add-form">
+          <label for="original">Testo originale esatto</label><textarea id="original" maxlength="3000" required></textarea>
+          <label for="replacement">Nuovo testo</label><textarea id="replacement" maxlength="6000"></textarea>
+          <button type="submit">Aggiungi alla bozza</button>
+        </form>
+      </details>
+    </section>
+  </main>
+</body>
+</html>

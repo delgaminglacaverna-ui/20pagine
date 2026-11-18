@@ -1,0 +1,15 @@
+:root { color-scheme: light; font: 16px/1.5 system-ui, sans-serif; color: #172033; background: #f1f5f9; }
+* { box-sizing: border-box; }
+body { margin: 0; } main { max-width: 960px; margin: auto; padding: 24px; }
+header, .toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+header { justify-content: space-between; } h1 { margin-bottom: 8px; }
+section, details { background: white; border: 1px solid #cbd5e1; border-radius: 12px; padding: 20px; margin: 16px 0; }
+label { display: block; font-weight: 600; margin: 12px 0 6px; }
+input:not([type=checkbox]), textarea { width: 100%; padding: 10px; font: inherit; border: 1px solid #94a3b8; border-radius: 6px; }
+textarea { min-height: 76px; resize: vertical; white-space: pre-wrap; }
+button { cursor: pointer; padding: 10px 14px; border: 1px solid #94a3b8; border-radius: 6px; background: #fff; font: inherit; }
+button:disabled { opacity: .5; cursor: wait; } button[type=submit], #save { color: white; background: #1d4ed8; border-color: #1d4ed8; }
+form button { margin-top: 12px; } .entry { border-top: 1px solid #e2e8f0; padding: 16px 0; }
+.entry pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f8fafc; padding: 10px; margin: 6px 0; font-size: 14px; }
+.check { font-weight: 400; } #message { min-height: 24px; overflow-wrap: anywhere; } #message.error { color: #b91c1c; }
+summary { cursor: pointer; font-weight: 600; } [hidden] { display: none !important; }
