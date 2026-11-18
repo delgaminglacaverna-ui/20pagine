@@ -719,9 +719,7 @@ function Ff({ code: o, size: h }) {
     },
     children: FRENCH_MODE ? [
       Jh[b],
-      v.jsx("span", { className: "french-cigarette", "aria-hidden": true, children: "🚬" }),
-      v.jsx("span", { className: "french-smoke", "aria-hidden": true, children: "〰" }),
-      v.jsx("span", { className: "french-stink", "aria-hidden": true, children: "♨" }),
+      v.jsx("span", { className: "french-cigarette", "aria-hidden": true }),
     ] : Jh[b],
   });
 }
@@ -2355,19 +2353,11 @@ Lh.createRoot(document.getElementById("root")).render(
       .french-piece > span { position: absolute; pointer-events: none; font-family: sans-serif;
         font-weight: 700; -webkit-text-stroke: 0; text-shadow: none; line-height: 1;
         -webkit-text-fill-color: currentColor; }
-      .french-cigarette { font-size: .26em; right: -.13em; top: 48%; transform: rotate(-18deg); }
-      .french-smoke { font-size: .35em; right: -.15em; top: 10%; color: #cbd5e1;
-        filter: drop-shadow(0 0 1px #475569); animation: french-waft 2.8s ease-out infinite; }
-      .french-stink { font-size: .38em; left: -.08em; top: 28%; color: #84cc16;
-        filter: drop-shadow(0 0 1px #365314); animation: french-waft 3.4s ease-out -1.3s infinite; }
-      @keyframes french-waft {
-        0% { transform: translate(0, .12em) rotate(-12deg); opacity: .25; }
-        40% { opacity: .85; }
-        100% { transform: translate(.12em, -.55em) rotate(14deg); opacity: 0; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .french-smoke, .french-stink { animation: none; opacity: .7; }
-      }
+      /* Draw the cigarette without an emoji, which can include its own smoke. */
+      .french-cigarette { width: .32em; height: .065em; right: -.08em; top: 27%;
+        border: 1px solid #64748b; border-radius: .015em;
+        background: linear-gradient(to right, #d69a51 0 28%, #fff 28% 90%, #ef5b28 90%);
+        transform: rotate(-12deg); transform-origin: left center; }
     </style>
   </head>
   <body>

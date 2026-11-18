@@ -35,5 +35,18 @@ for (const french of [false, true]) {
   const piece = Ff({ code: 1 });
   assert.equal(piece.props.className.includes('french-piece'), french);
   assert.equal(Array.isArray(piece.props.children), french);
+  for (const code of [1, 2, 3, 4, 5, 6, 7, -1, -2, -3, -4, -5, -6, -7]) {
+    const rendered = Ff({ code });
+    if (french) {
+      assert.equal(rendered.props.children.length, 2, 'only piece and cigarette');
+      const cigarette = rendered.props.children[1];
+      assert.equal(cigarette.props.className, 'french-cigarette');
+      assert.equal(cigarette.props['aria-hidden'], true);
+      assert.equal(cigarette.props.children, undefined, 'no smoky emoji');
+    } else assert.equal(typeof rendered.props.children, 'string');
+  }
+  assert(!html.includes('french-smoke'));
+  assert(!html.includes('french-stink'));
+  assert(!html.includes('french-waft'));
 }
 console.log('AI repetition avoidance, history restoration, draw scoring, and French effects passed.');
