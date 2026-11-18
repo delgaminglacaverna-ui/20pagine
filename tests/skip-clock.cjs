@@ -38,6 +38,7 @@ for (const french of [false, true]) {
   assert.equal(ready.props.role, undefined, 'ready clock has native button semantics');
   assert.equal(ready.props['aria-label'], french ? 'Passer la vidéo' : 'Salta video');
   assert.equal(ready.props.children[3].props.style.transform, 'rotate(360deg)');
+  assert.equal(ready.props.children.filter(child => child.props.className?.startsWith('skip-clock-cross')).length, 3);
   ready.props.onClick(); assert.equal(skipped, 1);
   const restarted = context.api.SkipClock({ remaining: 30, onSkip: () => skipped++ });
   assert.equal(restarted.props.disabled, true);
@@ -50,7 +51,8 @@ for (const french of [false, true]) {
 }
 assert(!html.includes('children: b > 0 ? `Salta tra'));
 assert(!html.includes('b > 0 ? v.jsx(SkipClock'));
-assert(html.includes('.skip-clock-ready { background: #16a34a;'));
+assert(!html.includes('.skip-clock-ready { background: #16a34a;'));
+assert(html.includes('.skip-clock-cross'));
 assert(html.includes('.skip-clock-ready .skip-clock-face { animation: none; opacity: 0; }'));
 assert(html.includes('.skip-clock-ready .skip-clock-face-1 { opacity: 1; }'));
 console.log('Clock assets, hand angle, translations, deadline, cleanup and restart passed.');

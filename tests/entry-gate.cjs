@@ -103,7 +103,7 @@ test('No and wrong answers exit the site, clean up timers and never grant access
     if (wrongAnswer) { h.all('entry-yes')[0].click(); h.advance(1000); h.answer(false); }
     else h.all('entry-no')[0].click();
     assert.equal(await result, false); assert.equal(h.closeCalls, 1); assert.equal(h.destination, 'about:blank');
-    assert.equal(h.storage.size, 0); assert.equal(h.timers.size, 0);
+    assert.equal(h.storage.has('20pagine.chronos.pass.v3'), false); assert.equal(h.timers.size, 0);
   }
 });
 test('one second preview, twelve second limit and no automatic pass on timeout', async () => {
@@ -259,7 +259,7 @@ test('punishment dismissal preserves the pass, but errors and timeouts revoke it
     else {
       h.advance(17000);
       if (mode === 'wrong') h.answer(false); else h.advance(12000);
-      assert(h.all('entry-card')[0].children.some(node => node.textContent === 'CHRONOS HA VINTO.'));
+      assert(!h.all('entry-card')[0].children.some(node => node.textContent === 'CHRONOS HA VINTO.'));
       h.advance(900);
       assert.equal(h.timers.size, 0);
     }
@@ -414,4 +414,35 @@ test('aborting during correct or wrong feedback cancels pending continuation', a
     clip.end(); h.advance(70000);
     assert.equal(h.closeCalls, 0); assert.equal(h.timers.size, 0);
   }
+});
+
+test('wrong feedback closes at sixty percent rather than waiting for ended', async () => {
+  const h = harness(false, { audioMode: 'allowed' }), result = h.begin();
+  h.all('entry-yes')[0].click(); h.advance(1000); h.answer(false);
+  const wrong = h.audioClips.at(-1);
+  wrong.duration = 10; wrong.currentTime = 5.9; wrong.events.timeupdate();
+  assert.equal(h.closeCalls, 0);
+  wrong.currentTime = 6; wrong.events.timeupdate();
+  assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+  assert.equal(h.timers.size, 0);
+});
+test('wrong-answer X is attached to the selected clock, with no loss message', async () => {
+  const h = harness(false, { audioMode: 'allowed' }), result = h.begin();
+  h.all('entry-yes')[0].click(); h.advance(1000); h.answer(false);
+  assert.equal(h.all('entry-choice').length, 4);
+  assert.equal(h.all('entry-choice').filter(button => h.all('entry-wrong', button).length).length, 1);
+  const marked = h.all('entry-choice').find(button => h.all('entry-wrong', button).length);
+  assert.equal(h.all('entry-wrong', h.all('entry-clock', marked)[0]).length, 1);
+  h.audioClips.at(-1).end(); assert.equal(await result, false);
+});
+test('after entrance failure, clicking an eye on return grants a daily pass and consumes retry', async () => {
+  const storage = new Map(), first = harness(false, { storage });
+  const failed = first.begin(); first.all('entry-yes')[0].click(); first.advance(1000); first.answer(false);
+  assert.equal(await failed, false);
+  const retry = harness(false, { storage }), unlocked = retry.begin();
+  assert.equal(retry.all('entry-retry-eye').length, 8);
+  retry.all('entry-retry-eye')[0].click();
+  assert.equal(await unlocked, true);
+  assert(storage.has('20pagine.chronos.pass.v3'));
+  assert(!storage.has('20pagine.chronos.retry-eye.v1'));
 });
