@@ -43,7 +43,7 @@ for (const french of [false, true]) {
       assert.equal(cigarette.props.className, 'french-cigarette');
       assert.equal(cigarette.props['aria-hidden'], true);
       assert.equal(cigarette.props.children, undefined, 'no smoky emoji');
-    } else assert.equal(typeof rendered.props.children, 'string');
+    } else assert.equal(rendered.props.children.type, 'img');
   }
   assert(!html.includes('french-smoke'));
   assert(!html.includes('french-stink'));
