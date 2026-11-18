@@ -39,9 +39,22 @@
     const options = shuffle([answer, ...shuffle(positions).slice(0, 3)]).map(minute => ({ minute, hour: next() }));
     return { clocks, options, correctIndex: options.findIndex(clock => clock.minute === answer) };
   }
-  const PASS_KEY = '20pagine.chronos.passed.v2';
+  const PASS_KEY = '20pagine.chronos.pass.v3';
+  const PASS_DURATION = 24 * 60 * 60 * 1000;
+  function hasPass() {
+    try {
+      const raw = root.localStorage.getItem(PASS_KEY);
+      if (!raw) return false;
+      const pass = JSON.parse(raw), now = Date.now();
+      if (pass && Number.isFinite(pass.passedAt) && Number.isFinite(pass.expiresAt)
+          && pass.expiresAt - pass.passedAt === PASS_DURATION
+          && pass.passedAt <= now && pass.expiresAt > now) return true;
+      root.localStorage.removeItem(PASS_KEY);
+    } catch { /* Storage may be blocked, full or malformed: show the quiz normally. */ }
+    return false;
+  }
   function start({ container = document.getElementById('root'), french = false } = {}) {
-    try { if (root.sessionStorage.getItem(PASS_KEY) === 'yes') return Promise.resolve(true); } catch { /* private storage may be disabled */ }
+    if (hasPass()) return Promise.resolve(true);
     const words = TEXT[french ? 'fr' : 'it'];
     const t = (key, ...values) => {
       const original = words[key];
@@ -55,6 +68,18 @@
         if (text !== undefined) node.textContent = text; return node;
       };
       const screen = el('main', 'entry-gate'), card = el('section', 'entry-card');
+      const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', 'true');
+      for (let index = 0; index < 8; index++) {
+        const eye = el('span', 'entry-eye');
+        for (let frame = 1; frame <= 4; frame++) {
+          const image = el('img', 'entry-eye-frame entry-eye-frame-' + frame);
+          image.src = '/assets/eyes/frame-' + frame + '.webp';
+          image.alt = ''; image.draggable = false; image.width = image.height = 420;
+          image.style.animationDelay = `${-(index * 0.09 + (frame - 1) * 0.18)}s`;
+          eye.append(image);
+        }
+        eyes.append(eye);
+      }
       const heading = el('h1', '', t('title')); heading.tabIndex = -1;
       const clockBox = el('div', 'entry-italy');
       function face(className, minute, hour) {
@@ -66,13 +91,6 @@
           image.src = '/assets/clock/face-' + frame + '.png'; image.alt = ''; image.draggable = false;
           clock.append(image);
         });
-        ROMAN.forEach((numeral, index) => {
-          const angle = (index + 1) * Math.PI / 6;
-          const number = el('span', 'entry-roman', numeral);
-          number.style.left = `${50 + Math.sin(angle) * 29}%`;
-          number.style.top = `${50 - Math.cos(angle) * 29}%`;
-          number.setAttribute('aria-hidden', 'true'); clock.append(number);
-        });
         const short = el('span', 'entry-hand entry-hour'), long = el('span', 'entry-hand entry-minute');
         short.style.transform = `rotate(${hour * 30}deg)`; long.style.transform = `rotate(${minute * 30}deg)`;
         clock.append(short, long);
@@ -81,7 +99,7 @@
       const live = face('entry-live', 0, 0);
       clockBox.append(live.clock);
       const stage = el('div', 'entry-stage');
-      card.append(clockBox, heading, stage); screen.append(card); container.replaceChildren(screen); heading.focus();
+      card.append(clockBox, heading, stage); screen.append(eyes, card); container.replaceChildren(screen); heading.focus();
       function updateTime() {
         const time = italyTime();
         live.short.style.transform = `rotate(${time.hourAngle}deg)`;
@@ -95,7 +113,7 @@
       function fail(timedOut = false) {
         if (closed) return;
         closed = true; phase = 'denied'; cleanup();
-        try { root.sessionStorage.removeItem(PASS_KEY); } catch {}
+        try { root.localStorage.removeItem(PASS_KEY); } catch {}
         heading.textContent = t(timedOut ? 'denied' : 'failed'); stage.replaceChildren(el('p', '', t('close')));
         resolve(false);
         try { root.close(); } catch {}
@@ -105,7 +123,10 @@
       function pass() {
         if (closed) return;
         closed = true; cleanup();
-        try { root.sessionStorage.setItem(PASS_KEY, 'yes'); } catch {}
+        try {
+          const passedAt = Date.now();
+          root.localStorage.setItem(PASS_KEY, JSON.stringify({ passedAt, expiresAt: passedAt + PASS_DURATION }));
+        } catch { /* Passing still unlocks this page when persistence is unavailable. */ }
         container.replaceChildren(); resolve(true);
       }
       function choose(index) {
