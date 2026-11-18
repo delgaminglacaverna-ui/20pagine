@@ -63,3 +63,9 @@
   .entry-punishment .entry-equation { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .entry-punishment .entry-card { padding: 16px; }
 }
+
+/* A single zoom, without flashing; retain the dialogue for reduced motion. */
+.entry-jumpscare .entry-big-eye { width: min(85vw, 560px); margin: -30px auto; animation: entry-eye-scare 650ms cubic-bezier(.12,.85,.25,1) both; }
+.entry-jumpscare h1 { white-space: pre-line; color: #ffb0a3; text-shadow: 0 2px 20px #a31515; }
+@keyframes entry-eye-scare { from { transform: scale(.08) rotate(-12deg); } 65% { transform: scale(1.12) rotate(3deg); } to { transform: scale(1) rotate(0); } }
+@media (prefers-reduced-motion: reduce) { .entry-jumpscare .entry-big-eye { animation: none; } }

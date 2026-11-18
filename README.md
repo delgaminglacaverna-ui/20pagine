@@ -149,12 +149,15 @@ https://thebattlebricks.miraheze.org/wiki/Chronos
 
 ### Sfida dopo una sconfitta
 
-Lo scacco matto subito contro l'IA o in 1v1 locale mostra un occhio con la frase
-«SON SEI FINITO AHHHHHHHHHHH» e
-«NON HAI STUDIATO, DOVRESTI VERGOGNARTI». In locale lo schermo è condiviso: la sfida è per
-chi ha perso. Online compare solo al perdente (anche in caso di resa), non al
-vincitore, agli spettatori o nelle patte; esclusa la modalità IA contro IA.
-Dopo **RISPONDI** partono 300 domande da 15 orologi ciascuna, con le stesse
-regole del quiz iniziale. **Esci dalla sfida** oppure Escape riportano alla
-partita; un errore/timeout termina la sfida senza chiudere la pagina. Il pass
-iniziale di 24 ore non viene né consultato né modificato da questa sfida.
+Lo scacco matto subito contro l'IA o in 1v1 locale mostra un jumpscare dell'occhio
+(un solo zoom, senza lampeggi, disattivato con movimento ridotto) e la sequenza:
+«BROO», «AVEVI DETTO DI AVER STUDIATO», «ORA BASTA»,
+«INVECE DI ESSERE IL PROFESSORE ECCEZIONALE CHE SONO», «ASSEGNERÒ E BASTA»,
+«È FINITA PER TE!!!», «VERGOGNATI». I messaggi sono testuali, tradotti anche in francese.
+Poi partono automaticamente 300 domande da 15 orologi ciascuna.
+In locale lo schermo è condiviso: la sfida è per chi ha perso. Online compare
+solo al perdente (anche per resa), non al vincitore, agli spettatori o nelle patte;
+esclusa la modalità IA contro IA. **Esci dalla sfida** o Escape annullano la sfida.
+Errore o timeout cancellano solo il pass d'ingresso di 24 ore e tentano di chiudere
+la scheda; se il browser lo vieta si apre `about:blank`. Gli altri dati restano intatti.
+Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'uscita.
