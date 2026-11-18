@@ -55,18 +55,18 @@ function harness(french = false) {
 
 test('Italian time follows Europe/Rome in winter, summer and DST transition', () => {
   const { gate } = harness();
-  assert.equal(gate.italyTime(new Date('2026-01-15T12:34:56Z')).label, '13:34:56');
-  assert.equal(gate.italyTime(new Date('2026-07-15T12:34:56Z')).label, '14:34:56');
-  assert.equal(gate.italyTime(new Date('2026-03-29T00:59:59Z')).label, '01:59:59');
-  assert.equal(gate.italyTime(new Date('2026-03-29T01:00:00Z')).label, '03:00:00');
-  assert.equal(gate.italyTime(new Date('2026-07-01T22:00:00Z')).label, '00:00:00');
+  assert.equal(gate.italyTime(new Date('2026-01-15T12:34:56Z')).label, '13:34');
+  assert.equal(gate.italyTime(new Date('2026-07-15T12:34:56Z')).label, '14:34');
+  assert.equal(gate.italyTime(new Date('2026-03-29T00:59:59Z')).label, '01:59');
+  assert.equal(gate.italyTime(new Date('2026-03-29T01:00:00Z')).label, '03:00');
+  assert.equal(gate.italyTime(new Date('2026-07-01T22:00:00Z')).label, '00:00');
 });
-test('questions contain three clocks, four unique options and modulo-12 arithmetic', () => {
+test('questions contain two clocks, four unique options and modulo-12 arithmetic', () => {
   const { gate } = harness(); let seed = 42;
   const random = () => ((seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0) / 2 ** 32);
   for (let i = 0; i < 1000; i++) {
     const question = gate.makeQuestion(random);
-    assert.equal(question.clocks.length, 3); assert.equal(question.options.length, 4);
+    assert.equal(question.clocks.length, 2); assert.equal(question.options.length, 4);
     assert.equal(new Set(question.options.map(clock => clock.minute)).size, 4);
     const sum = question.clocks.reduce((total, clock) => total + clock.minute, 0) % 12;
     assert.equal(question.options[question.correctIndex].minute, sum);
@@ -95,7 +95,7 @@ test('one second preview, twelve second limit and no automatic pass on timeout',
 test('three correct answers unlock only this tab session, in Italian and French', async () => {
   for (const french of [false, true]) {
     const h = harness(french), result = h.begin();
-    assert.equal(h.all('entry-digital')[0].textContent, '14:00:00');
+    assert.equal(h.all('entry-live')[0].attrs['aria-label'], french ? 'Heure italienne : 14:00' : 'Ora italiana: 14:00');
     assert(h.all('entry-card')[0].children.some(node => node.textContent.includes(french ? 'DEVOIRS' : 'COMPITI')));
     h.all('entry-yes')[0].click();
     for (let i = 0; i < 3; i++) { h.advance(1000); h.answer(); }
@@ -103,4 +103,25 @@ test('three correct answers unlock only this tab session, in Italian and French'
     assert.equal(h.root.children.length, 0);
     assert.equal(await h.begin(), true);
   }
+});
+test('minimal entrance, no second hand, Roman numerals and two-clock equations', async () => {
+  const h = harness(), result = h.begin();
+  assert.equal(h.all('entry-yes')[0].textContent, 'SÌ');
+  assert.equal(h.all('entry-no')[0].textContent, 'NO');
+  assert.equal(h.all('entry-stage')[0].children.length, 1, 'welcome contains only the buttons');
+  assert.equal(h.all('entry-second').length, 0);
+  assert.equal(h.all('entry-digital').length, 0);
+  assert.equal(h.all('entry-zone').length, 0);
+  assert.deepEqual(h.all('entry-roman').map(node => node.textContent), ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']);
+  h.all('entry-yes')[0].click();
+  assert.equal(h.all('entry-italy')[0].hidden, true, 'live clock hidden during the quiz');
+  assert(h.all('entry-card')[0].children.some(node => node.textContent === 'RISPONDI'));
+  assert.equal(h.all('entry-equation')[0].children.filter(node => node.className?.split(' ').includes('entry-clock')).length, 2);
+  assert.equal(h.all('entry-progress')[0].textContent, 'I / III');
+  h.advance(1000);
+  assert.deepEqual(h.all('entry-answer-letter').map(node => node.textContent), ['I', 'II', 'III', 'IV']);
+  assert.equal(h.all('entry-countdown')[0].textContent, 'XII');
+  h.advance(1000); assert.equal(h.all('entry-countdown')[0].textContent, 'XI');
+  assert.equal(h.all('entry-second').length, 0);
+  h.answer(false); assert.equal(await result, false);
 });
