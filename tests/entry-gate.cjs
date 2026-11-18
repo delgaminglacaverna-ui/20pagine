@@ -3,9 +3,9 @@ const { test } = require('node:test');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const source = fs.readFileSync('assets/entry-gate.js', 'utf8');
-function harness(french = false) {
-  let time = Date.parse('2026-07-01T12:00:00Z'), nextTimer = 0, closeCalls = 0, destination;
-  const timers = new Map(), storage = new Map();
+function harness(french = false, { storage = new Map(), at = Date.parse('2026-07-01T12:00:00Z'), storageBlocked = false } = {}) {
+  let time = at, nextTimer = 0, closeCalls = 0, destination;
+  const timers = new Map();
   class Element {
     constructor(tag) { this.tag = tag; this.children = []; this.style = {}; this.attrs = {}; this.events = {}; this.textContent = ''; }
     append(...nodes) { this.children.push(...nodes); }
@@ -21,7 +21,11 @@ function harness(french = false) {
   const addTimer = (fn, delay, repeat) => { const id = ++nextTimer; timers.set(id, { fn, at: time + delay, delay, repeat }); return id; };
   const context = vm.createContext({
     Date: ClockDate, Intl, document: { createElement: tag => new Element(tag), getElementById: () => root },
-    sessionStorage: { getItem: key => storage.get(key), setItem: (key, value) => storage.set(key, value), removeItem: key => storage.delete(key) },
+    localStorage: {
+      getItem: key => { if (storageBlocked) throw Error('Storage blocked'); return storage.get(key); },
+      setItem: (key, value) => { if (storageBlocked) throw Error('Storage blocked'); storage.set(key, value); },
+      removeItem: key => { if (storageBlocked) throw Error('Storage blocked'); storage.delete(key); },
+    },
     setTimeout: (fn, delay) => addTimer(fn, delay, false), clearTimeout: id => timers.delete(id),
     setInterval: (fn, delay) => addTimer(fn, delay, true), clearInterval: id => timers.delete(id),
     addEventListener() {}, removeEventListener() {}, close: () => closeCalls++, closed: false,
@@ -49,6 +53,7 @@ function harness(french = false) {
     assert(choice); choice.click();
   }
   return { gate: context.EntryGate, root, storage, timers, advance, all, answer,
+    get now() { return time; },
     begin: () => context.EntryGate.start({ container: root, french }),
     get closeCalls() { return closeCalls; }, get destination() { return destination; } };
 }
@@ -92,7 +97,7 @@ test('one second preview, twelve second limit and no automatic pass on timeout',
   h.advance(1); assert.equal(await result, false); assert.equal(h.destination, 'about:blank');
   assert.equal(h.timers.size, 0);
 });
-test('three correct answers unlock only this tab session, in Italian and French', async () => {
+test('three correct answers save a browser pass, in Italian and French', async () => {
   for (const french of [false, true]) {
     const h = harness(french), result = h.begin();
     assert.equal(h.all('entry-live')[0].attrs['aria-label'], french ? 'Heure italienne : 14:00' : 'Ora italiana: 14:00');
@@ -104,7 +109,7 @@ test('three correct answers unlock only this tab session, in Italian and French'
     assert.equal(await h.begin(), true);
   }
 });
-test('minimal entrance, no second hand, Roman numerals and two-clock equations', async () => {
+test('minimal entrance, unnumbered clocks, Roman answers and two-clock equations', async () => {
   const h = harness(), result = h.begin();
   assert.equal(h.all('entry-yes')[0].textContent, 'SÌ');
   assert.equal(h.all('entry-no')[0].textContent, 'NO');
@@ -112,7 +117,7 @@ test('minimal entrance, no second hand, Roman numerals and two-clock equations',
   assert.equal(h.all('entry-second').length, 0);
   assert.equal(h.all('entry-digital').length, 0);
   assert.equal(h.all('entry-zone').length, 0);
-  assert.deepEqual(h.all('entry-roman').map(node => node.textContent), ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']);
+  assert.equal(h.all('entry-roman').length, 0, 'clockfaces have no Roman numerals');
   h.all('entry-yes')[0].click();
   assert.equal(h.all('entry-italy')[0].hidden, true, 'live clock hidden during the quiz');
   assert(h.all('entry-card')[0].children.some(node => node.textContent === 'RISPONDI'));
@@ -124,4 +129,59 @@ test('minimal entrance, no second hand, Roman numerals and two-clock equations',
   h.advance(1000); assert.equal(h.all('entry-countdown')[0].textContent, 'XI');
   assert.equal(h.all('entry-second').length, 0);
   h.answer(false); assert.equal(await result, false);
+});
+test('a complete pass lasts exactly 24 hours across tabs and does not renew on access', async () => {
+  const h = harness(), result = h.begin(); h.all('entry-yes')[0].click();
+  for (let i = 0; i < 2; i++) {
+    h.advance(1000); h.answer(); assert.equal(h.storage.size, 0, 'partial success is not remembered');
+  }
+  h.advance(1000); h.answer(); assert.equal(await result, true);
+  assert.equal(h.storage.size, 1);
+  const original = [...h.storage.values()][0], pass = JSON.parse(original);
+  assert.equal(pass.passedAt, h.now);
+  assert.equal(pass.expiresAt - pass.passedAt, 86400000);
+  const otherTab = harness(true, { storage: h.storage, at: pass.expiresAt - 1 });
+  assert.equal(await otherTab.begin(), true);
+  assert.equal(otherTab.root.children.length, 0); assert.equal(otherTab.timers.size, 0);
+  assert.equal([...h.storage.values()][0], original, 'reading does not prolong the pass');
+  const expired = harness(false, { storage: h.storage, at: pass.expiresAt });
+  const expiredResult = expired.begin();
+  assert.equal(expired.all('entry-yes').length, 1, 'quiz returns exactly at expiry');
+  assert.equal(h.storage.size, 0);
+  expired.all('entry-no')[0].click(); assert.equal(await expiredResult, false);
+  const anotherBrowser = harness(false, { at: pass.passedAt + 1 });
+  const freshResult = anotherBrowser.begin();
+  assert.equal(anotherBrowser.all('entry-yes').length, 1, 'different browser has no pass');
+  anotherBrowser.all('entry-no')[0].click(); assert.equal(await freshResult, false);
+});
+test('blocked storage, malformed data and future-dated passes cannot bypass the quiz', async () => {
+  const blocked = harness(false, { storageBlocked: true }), result = blocked.begin();
+  blocked.all('entry-yes')[0].click();
+  for (let i = 0; i < 3; i++) { blocked.advance(1000); blocked.answer(); }
+  assert.equal(await result, true, 'passing still works without storage'); assert.equal(blocked.storage.size, 0);
+  const now = Date.parse('2026-07-01T12:00:00Z');
+  for (const raw of ['bad json', 'null', '"yes"', '{}', JSON.stringify({ passedAt: now + 1000, expiresAt: now + 86401000 }), JSON.stringify({ passedAt: now, expiresAt: now + 999999999 })]) {
+    const h = harness(false, { storage: new Map([['20pagine.chronos.pass.v3', raw]]), at: now });
+    const result = h.begin(); assert.equal(h.all('entry-yes').length, 1);
+    h.all('entry-no')[0].click(); assert.equal(await result, false);
+  }
+});
+test('decorative eyes use all four uploaded frames and stay behind the controls', async () => {
+  const h = harness(), result = h.begin();
+  assert.equal(h.all('entry-eyes')[0].attrs['aria-hidden'], 'true');
+  assert.equal(h.all('entry-eye').length, 8);
+  for (const eye of h.all('entry-eye')) {
+    assert.equal(eye.children.length, 4);
+    eye.children.forEach((image, index) => {
+      assert.equal(image.src, `/assets/eyes/frame-${index + 1}.webp`);
+      assert(fs.existsSync(image.src.slice(1)));
+      assert.equal(image.alt, ''); assert.equal(image.draggable, false);
+    });
+  }
+  const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
+  assert(css.includes('pointer-events: none'));
+  assert(css.includes('@keyframes entry-eye-sketch'));
+  assert(css.includes('.entry-eye-frame { animation: none; opacity: 0; }'));
+  assert.equal(h.all('entry-roman').length, 0);
+  h.all('entry-no')[0].click(); assert.equal(await result, false);
 });

@@ -113,7 +113,7 @@ password lunga e unica. Non esiste una password predefinita nel codice.
 
 Prima di montare il gioco (quindi prima di avviare video, IA o auto-join delle
 lobby), il sito mostra un ingresso con i tre quadranti già presenti e l’ora
-italiana in tempo reale, con sole lancette di ore e minuti e numeri romani. La
+italiana in tempo reale, con sole lancette di ore e minuti e quadranti senza numeri. La
 schermata iniziale mostra soltanto la domanda e i pulsanti SÌ/NO, senza istruzioni. Il fuso è `Europe/Rome`, con cambio automatico tra ora
 solare e legale; l’ora deriva dall’orologio del dispositivo.
 
@@ -127,9 +127,16 @@ solare e legale; l’ora deriva dall’orologio del dispositivo.
 - **No**, errore o tempo scaduto: si tenta `window.close()`. Molti browser lo
   vietano sulle schede aperte normalmente; in quel caso si esce su `about:blank`.
   Se anche la navigazione è bloccata, resta una schermata di accesso negato.
-- Tre risposte corrette sbloccano la sessione della scheda (`sessionStorage`),
-  così ricaricare o cambiare lingua non obbliga a ripetere il quiz. Nessun dato
-  viene inviato a Redis. Con storage disabilitato il quiz riappare al caricamento.
+- Tre risposte corrette salvano un lasciapassare in `localStorage` valido per
+  **24 ore esatte dal completamento**, anche tra schede e riaperture dello stesso
+  browser/profilo. Ricaricare o cambiare lingua non rinnova la scadenza. Non vengono
+  usati IP né inviati dati a Redis. Eliminare i dati del sito o usare un altro
+  browser richiede di ripetere il quiz; con storage bloccato si entra comunque dopo
+  aver risposto correttamente, ma il successo non può essere ricordato.
+- I quadranti non mostrano numeri romani; risposte, avanzamento e countdown sì.
+  Sullo sfondo dell’ingresso e del quiz ci sono occhi decorativi che alternano
+  le quattro immagini caricate. Restano dietro ai controlli, non intercettano
+  tocchi/click e diventano statici con `prefers-reduced-motion`.
 - `/panel` resta raggiungibile direttamente, con la sua autenticazione server.
   Questo ingresso è un gioco, **non un controllo di sicurezza**: è lato client.
 - I nuovi testi italiani e francesi sono inclusi nel catalogo del pannello.

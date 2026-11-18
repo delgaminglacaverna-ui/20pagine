@@ -1,7 +1,7 @@
-.entry-gate { min-height: 100vh; min-height: 100dvh; padding: 24px 16px; display: grid; place-items: center;
+.entry-gate { position: relative; isolation: isolate; min-height: 100vh; min-height: 100dvh; padding: 24px 16px; display: grid; place-items: center;
   background: #080d18; color: #f8fafc; font: 16px/1.5 system-ui, sans-serif; color-scheme: dark; }
 .entry-gate * { box-sizing: border-box; }
-.entry-card { width: min(100%, 850px); text-align: center; padding: clamp(16px, 4vw, 40px);
+.entry-card { position: relative; z-index: 1; width: min(100%, 850px); text-align: center; padding: clamp(16px, 4vw, 40px);
   background: #111b2e; border: 1px solid #334155; border-radius: 24px; box-shadow: 0 24px 80px #0007; }
 .entry-card h1 { font-size: clamp(25px, 5vw, 42px); font-weight: 900; margin: 12px 0; line-height: 1.15; }
 .entry-card h2 { font-size: 20px; font-weight: 700; margin: 16px 0; }
@@ -16,8 +16,6 @@
 .entry-hand { position: absolute; left: calc(50% - 2px); bottom: 50%; width: 4px; border-radius: 4px;
   transform-origin: 50% 100%; background: #fff; }
 .entry-hour { height: 21%; } .entry-minute { height: 35%; width: 3px; left: calc(50% - 1.5px); }
-.entry-roman { position: absolute; transform: translate(-50%, -50%); font: 700 9px/1 Georgia, serif;
-  color: #fff; text-shadow: 0 1px 2px #000, 0 0 2px #000; pointer-events: none; }
 .entry-actions, .entry-equation { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 22px; }
 .entry-actions { flex-wrap: wrap; } .entry-plus { font-size: clamp(20px, 5vw, 36px); font-weight: 800; white-space: nowrap; }
 .entry-card button { cursor: pointer; border: 2px solid #64748b; border-radius: 12px; padding: 12px 18px; font: inherit; color: white; background: #1e293b; }
@@ -31,3 +29,23 @@
 @keyframes entry-sketch { 0% { opacity: 1; } 33.333% { opacity: 0; } }
 @media (max-width: 420px) { .entry-equation { gap: 4px; } .entry-equation .entry-clock { width: clamp(72px, 24vw, 100px); } .entry-plus { font-size: 18px; } .entry-choices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .entry-clock-face { animation: none; opacity: 0; } .entry-clock-face-1 { opacity: 1; } }
+
+/* Decorative background only: never covers controls or intercepts touches. */
+.entry-eyes { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.entry-eye { position: absolute; width: clamp(110px, 19vw, 260px); aspect-ratio: 1;
+  opacity: .26; mix-blend-mode: screen; transform: translate(-50%, -50%); }
+.entry-eye:nth-child(1) { left: 9%; top: 12%; rotate: -14deg; }
+.entry-eye:nth-child(2) { left: 50%; top: 5%; rotate: 6deg; }
+.entry-eye:nth-child(3) { left: 91%; top: 17%; rotate: 13deg; }
+.entry-eye:nth-child(4) { left: 3%; top: 51%; rotate: -8deg; }
+.entry-eye:nth-child(5) { left: 97%; top: 58%; rotate: 10deg; }
+.entry-eye:nth-child(6) { left: 12%; top: 87%; rotate: 14deg; }
+.entry-eye:nth-child(7) { left: 50%; top: 96%; rotate: -5deg; }
+.entry-eye:nth-child(8) { left: 89%; top: 88%; rotate: -12deg; }
+.entry-eye-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  opacity: 0; animation: entry-eye-sketch .72s step-end infinite; }
+@keyframes entry-eye-sketch { 0% { opacity: 1; } 25% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .entry-eye-frame { animation: none; opacity: 0; }
+  .entry-eye-frame-1 { opacity: 1; }
+}
