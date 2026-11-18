@@ -48,6 +48,11 @@
     const options = shuffle([answer, ...shuffle(positions).slice(0, 3)]).map(minute => ({ minute, hour: next() }));
     return { clocks, options, correctIndex: options.findIndex(clock => clock.minute === answer) };
   }
+  const SOUND_FILES = {
+    Clock: 'Chronos_math_sound.mp3',
+    Correct: 'Chronos_Clock_Question_Correct.mp3',
+    Wrong: 'Chronos_Clock_Question_Incorrect.mp3',
+  };
   const PASS_KEY = '20pagine.chronos.pass.v3';
   const PASS_DURATION = 24 * 60 * 60 * 1000;
   function hasPass() {
@@ -77,7 +82,7 @@
       function playSound(name) {
         try {
           if (typeof root.Audio !== 'function') return;
-          const audio = new root.Audio('/assets/sounds/' + name + '.mp3');
+          const audio = new root.Audio('/assets/sounds/' + SOUND_FILES[name]);
           audio.volume = 0.7; sounds.add(audio);
           const release = () => sounds.delete(audio);
           audio.addEventListener('ended', release, { once: true });

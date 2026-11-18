@@ -312,14 +312,23 @@ test('quiz plays question, correct and wrong cues and tolerates blocked audio', 
   for (const audioMode of ['allowed', 'blocked']) {
     const h = harness(false, { audioMode }), result = h.begin({ punishment: true });
     h.advance(17000);
-    assert.deepEqual(h.played, ['/assets/sounds/Clock.mp3']);
+    assert.deepEqual(h.played, ['/assets/sounds/Chronos_math_sound.mp3']);
     h.answer();
-    assert.deepEqual(h.played.slice(-2), ['/assets/sounds/Correct.mp3', '/assets/sounds/Clock.mp3']);
+    assert.deepEqual(h.played.slice(-2), ['/assets/sounds/Chronos_Clock_Question_Correct.mp3', '/assets/sounds/Chronos_math_sound.mp3']);
     h.advance(1000); h.answer(false);
-    assert.equal(h.played.at(-1), '/assets/sounds/Wrong.mp3');
+    assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Incorrect.mp3');
     assert.equal(h.closeCalls, 0);
     h.advance(899); assert.equal(h.closeCalls, 0);
     h.advance(1); assert.equal(await result, false); assert.equal(h.closeCalls, 1);
     await Promise.resolve();
+  }
+});
+
+test('all referenced quiz sound files are bundled MP3 assets', () => {
+  for (const name of ['Chronos_math_sound', 'Chronos_Clock_Question_Correct', 'Chronos_Clock_Question_Incorrect']) {
+    const bytes = fs.readFileSync(`assets/sounds/${name}.mp3`);
+    assert(bytes.length > 1000);
+    assert(bytes.subarray(0, 3).toString() === 'ID3' || (bytes[0] === 0xff && (bytes[1] & 0xe0) === 0xe0));
+    assert(!fs.existsSync(`${name}.mp3.mpeg`));
   }
 });
