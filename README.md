@@ -166,7 +166,7 @@ Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'
 ### Immagini e suoni del quiz
 
 Il quiz normale usa i quattro occhi originali in `assets/eyes/frame-{1,2,3,4}.webp`.
-Una sconfitta a scacchi mostra subito le tre bocche in `assets/mouths/frame-{1,2,3}.webp`,
+Una sconfitta a scacchi mostra subito le due bocche in `assets/mouths/frame-{1,2}.webp`,
 sia nel jumpscare sia durante la sfida successiva. Anche un errore/timeout nel quiz normale
 trasforma gli occhi in bocche. I quadranti del quiz alternano tutte e tre le immagini
 `assets/clock/face-{1,2,3}.png`, 200 ms ciascuna (solo la prima con movimento ridotto).
@@ -189,5 +189,5 @@ si applicano alla sfida dopo sconfitta a scacchi. Nessun rientro automatico dopo
 Il timer delle pubblicità, quando pronto per saltare, mostra le stesse X animate
 sopra il quadrante anziché diventare verde; i 30 secondi e il click restano invariati.
 
-La bocca conserva i tre fotogrammi originali, alternati ogni 80 ms (ciclo di 240 ms);
+La bocca alterna solo i primi due fotogrammi originali ogni 80 ms (ciclo di 160 ms);
 la velocità degli occhi resta invariata e il movimento ridotto resta rispettato.
