@@ -73,7 +73,7 @@
 @keyframes entry-eye-scare { from { transform: scale(.08) rotate(-12deg); } 65% { transform: scale(1.12) rotate(3deg); } to { transform: scale(1) rotate(0); } }
 @media (prefers-reduced-motion: reduce) { .entry-jumpscare .entry-big-eye { animation: none; } }
 
-.entry-mouth-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; animation: entry-mouth-sketch .72s step-end infinite; }
+.entry-mouth-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; animation: entry-mouth-sketch .24s step-end infinite; }
 @keyframes entry-mouth-sketch { 0% { opacity: 1; } 33.333% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   .entry-mouth-frame { animation: none; opacity: 0; }
@@ -90,5 +90,14 @@
 }
 
 .entry-clock .entry-wrong { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; z-index: 3; }
-.entry-eyes .entry-retry-eye { pointer-events: auto; cursor: pointer; padding: 0; border: 0; background: transparent; }
-.entry-retry-eye:focus-visible { outline: 3px solid #fbbf24; opacity: 1; }
+.entry-eyes .entry-hint-eye { pointer-events: auto; cursor: pointer; padding: 0; border: 0; background: transparent; }
+.entry-hint-eye:focus-visible { outline: 3px solid #fbbf24; opacity: 1; }
+
+.entry-closed-frame { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; animation: entry-clock-frame-1 .24s step-end infinite; }
+.entry-closed-frame-2 { animation-name: entry-clock-frame-2; }
+.entry-closed-frame-3 { animation-name: entry-clock-frame-3; }
+.entry-choice:disabled { cursor: default; }
+@media (prefers-reduced-motion: reduce) {
+  .entry-closed-frame { animation: none; opacity: 0; }
+  .entry-closed-frame-1 { opacity: 1; }
+}

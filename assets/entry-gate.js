@@ -53,7 +53,6 @@
     Correct: 'Chronos_Clock_Question_Correct.mp3.MPEG',
     Wrong: 'Chronos_Clock_Question_Incorrect.mp3.MPEG',
   };
-  const RETRY_KEY = '20pagine.chronos.retry-eye.v1';
   const PASS_KEY = '20pagine.chronos.pass.v3';
   const PASS_DURATION = 24 * 60 * 60 * 1000;
   function hasPass() {
@@ -119,19 +118,28 @@
         const node = document.createElement(tag); if (className) node.className = className;
         if (text !== undefined) node.textContent = text; return node;
       };
-      let retryAllowed = false;
-      try { retryAllowed = !punishment && root.localStorage.getItem(RETRY_KEY) === '1'; } catch {}
+      const clickedEyes = new Set();
       const creature = punishment ? 'mouth' : 'eye';
       const frameCount = punishment ? 3 : 4;
       const frameFolder = punishment ? 'mouths' : 'eyes';
-      const frameDuration = 0.72 / frameCount;
+      const frameDuration = (punishment ? 0.24 : 0.72) / frameCount;
       const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '')), card = el('section', 'entry-card');
-      const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', retryAllowed ? 'false' : 'true');
+      const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', punishment ? 'true' : 'false');
       for (let index = 0; index < 8; index++) {
-        const eye = el(retryAllowed ? 'button' : 'span', 'entry-eye' + (retryAllowed ? ' entry-retry-eye' : ''));
-        if (retryAllowed) {
-          eye.type = 'button'; eye.setAttribute('aria-label', french ? 'Entrer' : 'Entra');
-          eye.addEventListener('click', () => { if (!closed && phase === 'welcome') pass(); });
+        const eye = el(punishment ? 'span' : 'button', 'entry-eye' + (!punishment ? ' entry-hint-eye' : ''));
+        if (!punishment) {
+          eye.type = 'button'; eye.setAttribute('aria-label', (french ? 'Fermer l’œil ' : 'Chiudi occhio ') + (index + 1));
+          eye.setAttribute('aria-pressed', 'false');
+          eye.addEventListener('click', () => {
+            if (closed || phase === 'denied' || clickedEyes.has(index)) return;
+            clickedEyes.add(index); eye.setAttribute('aria-pressed', 'true');
+            eye.replaceChildren();
+            for (let frame = 1; frame <= 3; frame++) {
+              const image = el('img', 'entry-closed-frame entry-closed-frame-' + frame);
+              image.src = '/assets/closed-eyes/frame-' + frame + '.webp'; image.alt = ''; eye.append(image);
+            }
+            applyHints();
+          });
         }
         for (let frame = 1; frame <= frameCount; frame++) {
           const image = el('img', 'entry-' + creature + '-frame entry-' + creature + '-frame-' + frame);
@@ -191,26 +199,6 @@
       }
       signal?.addEventListener('abort', dismiss, { once: true });
       root.addEventListener('pagehide', cleanup);
-      function fail(timedOut = false, wrongIndex) {
-        if (closed || phase === 'denied') return;
-        phase = 'denied'; cleanup();
-        signal?.addEventListener('abort', dismiss, { once: true });
-        root.addEventListener('pagehide', cleanup);
-        try { root.localStorage.removeItem(PASS_KEY); } catch {}
-        if (!punishment && question) { try { root.localStorage.setItem(RETRY_KEY, '1'); } catch {} }
-        heading.textContent = '';
-        clockBox.hidden = true;
-        // Both chess defeat and homework failure use mouths.
-        screen.className = 'entry-gate entry-failed';
-        for (const eye of [...eyes.children, bigEye]) {
-          eye.replaceChildren();
-          for (let frame = 1; frame <= 3; frame++) {
-            const image = el('img', 'entry-mouth-frame entry-mouth-frame-' + frame);
-            image.src = '/assets/mouths/frame-' + frame + '.webp'; image.alt = '';
-            image.style.animationDelay = `${-(frame - 1) * 0.24}s`; eye.append(image);
-          }
-        }
-        if (punishment) bigEye.hidden = false;
         function markClock(target) {
           const cross = el('span', 'entry-wrong'); cross.setAttribute('aria-hidden', 'true');
           for (let frame = 1; frame <= 3; frame++) {
@@ -220,10 +208,40 @@
           }
           target.append(cross);
         }
+      function applyHints() {
+        if (punishment || !question || phase !== 'answer') return;
+        const count = clickedEyes.size === 8 ? 3 : clickedEyes.size >= 6 ? 2 : clickedEyes.size >= 3 ? 1 : 0;
+        let removed = 0;
+        for (const [index, button] of [...stage.querySelectorAll('.entry-choice')].entries()) {
+          if (index === question.correctIndex || removed >= count) continue;
+          removed++;
+          button.disabled = true;
+          if (!button.querySelector('.entry-wrong')) markClock(button.querySelector('.entry-clock'));
+        }
+      }
+      function fail(timedOut = false, wrongIndex) {
+        if (closed || phase === 'denied') return;
+        phase = 'denied'; cleanup();
+        signal?.addEventListener('abort', dismiss, { once: true });
+        root.addEventListener('pagehide', cleanup);
+        try { root.localStorage.removeItem(PASS_KEY); } catch {}
+        heading.textContent = '';
+        clockBox.hidden = true;
+        // Both chess defeat and homework failure use mouths.
+        screen.className = 'entry-gate entry-failed';
+        for (const eye of [...eyes.children, bigEye]) {
+          eye.replaceChildren();
+          for (let frame = 1; frame <= 3; frame++) {
+            const image = el('img', 'entry-mouth-frame entry-mouth-frame-' + frame);
+            image.src = '/assets/mouths/frame-' + frame + '.webp'; image.alt = '';
+            image.style.animationDelay = `${-(frame - 1) * 0.08}s`; eye.append(image);
+          }
+        }
+        if (punishment) bigEye.hidden = false;
         const choices = stage.querySelectorAll('.entry-choice');
         for (const [index, button] of [...choices].entries()) {
           button.disabled = true;
-          if (timedOut || index === wrongIndex) markClock(button.querySelector('.entry-clock'));
+          if (question && index !== question.correctIndex && !button.querySelector('.entry-wrong')) markClock(button.querySelector('.entry-clock'));
         }
         function leave() {
           if (closed) return;
@@ -239,7 +257,6 @@
         closed = true; cleanup();
         try {
           if (!punishment) {
-            root.localStorage.removeItem(RETRY_KEY);
             const passedAt = Date.now();
             root.localStorage.setItem(PASS_KEY, JSON.stringify({ passedAt, expiresAt: passedAt + PASS_DURATION }));
           }
@@ -249,6 +266,7 @@
       function choose(index) {
         if (closed || phase !== 'answer') return;
         if (Date.now() >= deadline) { fail(true); return; }
+        if (stage.querySelectorAll('.entry-choice')[index]?.disabled) return;
         phase = 'checking'; clearRound();
         if (index !== question.correctIndex) { fail(false, index); return; }
         round++;
@@ -290,6 +308,7 @@
             button.append(el('span', 'entry-answer-letter', roman(index + 1)), illustration);
             button.addEventListener('click', () => choose(index)); choices.append(button);
           });
+          applyHints();
           function tick() {
             if (closed || phase !== 'answer') return;
             const seconds = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));

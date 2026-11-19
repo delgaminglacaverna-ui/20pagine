@@ -175,15 +175,19 @@ Gli effetti audio sono inclusi in `assets/sounds/`:
 - `Chronos_Clock_Question_Correct.mp3.MPEG`: risposta giusta.
 - `Chronos_Clock_Question_Incorrect.mp3.MPEG`: errore o timeout.
 Il quiz funziona anche se l’autoplay è bloccato.
-Una risposta sbagliata sovrappone le tre X animate di `assets/wrong/` al quadrante
-selezionato; al timeout vengono segnate tutte le opzioni. Nessun messaggio di sconfitta.
+Una risposta sbagliata sovrappone le tre X animate di `assets/wrong/` a tutti e tre i quadranti
+con risposta errata, anche al timeout; la risposta corretta resta senza X. Nessun messaggio di sconfitta.
 Il quiz aspetta la fine di Correct prima della domanda successiva (o dell’accesso finale)
 e il 60% di Wrong prima di chiudere, anche nel quiz iniziale. Errori audio o autoplay
 bloccato non fermano il quiz; un watchdog di 60 secondi gestisce caricamenti/playback bloccati.
 
-Dopo un errore/timeout del quiz iniziale, al rientro nello stesso browser gli occhi
-sono cliccabili: un clic permette di entrare, salva il normale pass di 24 ore
-e consuma il permesso di rientro (`20pagine.chronos.retry-eye.v1` in localStorage).
-La sconfitta a scacchi non concede questo permesso. Storage bloccato: nessun rientro persistente.
+Gli otto occhi del quiz iniziale sono cliccabili fin dalla prima visita e diventano
+le nuove immagini di occhi chiusi in `assets/closed-eyes/`. Ogni occhio conta una sola volta:
+3 su 8 eliminano una risposta sbagliata, 6 su 8 ne eliminano due, 8 su 8 tutte e tre.
+Gli aiuti restano per tutte le domande di quel quiz; non saltano l'ingresso e non
+si applicano alla sfida dopo sconfitta a scacchi. Nessun rientro automatico dopo errore.
 Il timer delle pubblicità, quando pronto per saltare, mostra le stesse X animate
 sopra il quadrante anziché diventare verde; i 30 secondi e il click restano invariati.
+
+La bocca conserva i tre fotogrammi originali, alternati ogni 80 ms (ciclo di 240 ms);
+la velocità degli occhi resta invariata e il movimento ridotto resta rispettato.

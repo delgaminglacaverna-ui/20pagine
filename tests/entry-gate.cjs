@@ -185,7 +185,7 @@ test('blocked storage, malformed data and future-dated passes cannot bypass the 
 });
 test('decorative eyes use all four original frames and stay behind the controls', async () => {
   const h = harness(), result = h.begin();
-  assert.equal(h.all('entry-eyes')[0].attrs['aria-hidden'], 'true');
+  assert.equal(h.all('entry-eyes')[0].attrs['aria-hidden'], 'false');
   assert.equal(h.all('entry-eye').length, 8);
   for (const eye of h.all('entry-eye')) {
     assert.equal(eye.children.length, 4);
@@ -323,7 +323,7 @@ test('feedback waits for ended events and locks repeated clicks until audio comp
   correct.end();
   assert.equal(h.played.at(-1), '/assets/sounds/chronos_math_sound.mp3.MPEG');
   h.advance(1000); h.answer(false);
-  assert.equal(h.all('entry-wrong-frame').length, 3);
+  assert.equal(h.all('entry-wrong-frame').length, 9);
   h.all('entry-wrong-frame').forEach(node => assert(fs.existsSync(node.src.slice(1))));
   assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Incorrect.mp3.MPEG');
   h.advance(5000); assert.equal(h.closeCalls, 0);
@@ -426,23 +426,45 @@ test('wrong feedback closes at sixty percent rather than waiting for ended', asy
   assert.equal(await result, false); assert.equal(h.closeCalls, 1);
   assert.equal(h.timers.size, 0);
 });
-test('wrong-answer X is attached to the selected clock, with no loss message', async () => {
+test('wrong-answer X marks all three incorrect clocks but leaves the correct one clear', async () => {
   const h = harness(false, { audioMode: 'allowed' }), result = h.begin();
   h.all('entry-yes')[0].click(); h.advance(1000); h.answer(false);
   assert.equal(h.all('entry-choice').length, 4);
-  assert.equal(h.all('entry-choice').filter(button => h.all('entry-wrong', button).length).length, 1);
+  assert.equal(h.all('entry-choice').filter(button => h.all('entry-wrong', button).length).length, 3);
   const marked = h.all('entry-choice').find(button => h.all('entry-wrong', button).length);
   assert.equal(h.all('entry-wrong', h.all('entry-clock', marked)[0]).length, 1);
   h.audioClips.at(-1).end(); assert.equal(await result, false);
 });
-test('after entrance failure, clicking an eye on return grants a daily pass and consumes retry', async () => {
-  const storage = new Map(), first = harness(false, { storage });
-  const failed = first.begin(); first.all('entry-yes')[0].click(); first.advance(1000); first.answer(false);
-  assert.equal(await failed, false);
-  const retry = harness(false, { storage }), unlocked = retry.begin();
-  assert.equal(retry.all('entry-retry-eye').length, 8);
-  retry.all('entry-retry-eye')[0].click();
-  assert.equal(await unlocked, true);
-  assert(storage.has('20pagine.chronos.pass.v3'));
-  assert(!storage.has('20pagine.chronos.retry-eye.v1'));
+test('eyes give cumulative hints immediately without bypassing entrance', async () => {
+  const h = harness(), result = h.begin();
+  const eyes = h.all('entry-hint-eye'); assert.equal(eyes.length, 8);
+  eyes[0].click(); eyes[0].click(); eyes[1].click();
+  assert.equal(h.all('entry-closed-frame').length, 6);
+  assert.equal(h.storage.size, 0);
+  h.all('entry-yes')[0].click(); h.advance(1000);
+  assert.equal(h.all('entry-choice').filter(node => node.disabled).length, 0);
+  eyes[2].click();
+  assert.equal(h.all('entry-choice').filter(node => node.disabled).length, 1);
+  for (let i = 3; i < 6; i++) eyes[i].click();
+  assert.equal(h.all('entry-choice').filter(node => node.disabled).length, 2);
+  eyes[6].click(); eyes[7].click();
+  assert.equal(h.all('entry-choice').filter(node => node.disabled).length, 3);
+  assert.equal(h.all('entry-wrong-frame').length, 9);
+  for (let i = 0; i < 3; i++) {
+    h.answer();
+    if (i < 2) { h.advance(1000); assert.equal(h.all('entry-choice').filter(node => node.disabled).length, 3); }
+  }
+  assert.equal(await result, true);
+});
+
+test('mouth frames run at 80ms each while eye speed remains unchanged', async () => {
+  const h = harness(), controller = new AbortController();
+  const result = h.begin({ punishment: true, signal: controller.signal });
+  const frames = h.all('entry-big-eye')[0].children;
+  frames.forEach((node, i) => assert.equal(node.style.animationDelay, `${-i * 0.08}s`));
+  const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
+  assert(css.includes('animation: entry-mouth-sketch .24s step-end infinite'));
+  assert(css.includes('animation: entry-eye-sketch .72s step-end infinite'));
+  assert(css.includes('.entry-mouth-frame { animation: none; opacity: 0; }'));
+  controller.abort(); assert.equal(await result, false);
 });
