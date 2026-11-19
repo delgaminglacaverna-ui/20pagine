@@ -149,15 +149,14 @@ https://thebattlebricks.miraheze.org/wiki/Chronos
 
 ### Sfida dopo una sconfitta
 
-Lo scacco matto subito contro l'IA o in 1v1 locale mostra un jumpscare dell'occhio
+Lo scacco matto subito contro l'IA mostra un jumpscare della bocca
 (un solo zoom, senza lampeggi, disattivato con movimento ridotto) e la sequenza:
 «BROO», «AVEVI DETTO DI AVER STUDIATO», «ORA BASTA»,
 «INVECE DI ESSERE IL PROFESSORE ECCEZIONALE CHE SONO», «ASSEGNERÒ E BASTA»,
 «È FINITA PER TE!!!», «VERGOGNATI». I messaggi sono testuali, tradotti anche in francese.
 Poi partono automaticamente 300 domande da 15 orologi ciascuna.
-In locale lo schermo è condiviso: la sfida è per chi ha perso. Online compare
-solo al perdente (anche per resa), non al vincitore, agli spettatori o nelle patte;
-esclusa la modalità IA contro IA. Non ci sono pulsanti di uscita dalla sfida né scorciatoie Escape; i normali comandi del browser restano disponibili.
+La sfida si attiva solo perdendo contro l'IA. È disattivata in PvP locale,
+online (anche per resa), nelle patte e in IA contro IA. Non ci sono pulsanti di uscita dalla sfida né scorciatoie Escape; i normali comandi del browser restano disponibili.
 Errore o timeout cancellano solo il pass d'ingresso di 24 ore e tentano di chiudere
 la scheda; se il browser lo vieta si apre `about:blank`. Gli altri dati restano intatti.
 Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'uscita.
@@ -166,7 +165,7 @@ Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'
 ### Immagini e suoni del quiz
 
 Il quiz normale usa i quattro occhi originali in `assets/eyes/frame-{1,2,3,4}.webp`.
-Una sconfitta a scacchi mostra subito le due bocche in `assets/mouths/frame-{1,2}.webp`,
+Una sconfitta contro l'IA mostra subito le due bocche in `assets/mouths/frame-{1,2}.webp`,
 sia nel jumpscare sia durante la sfida successiva. Anche un errore/timeout nel quiz normale
 trasforma gli occhi in bocche. I quadranti del quiz alternano tutte e tre le immagini
 `assets/clock/face-{1,2,3}.png`, 200 ms ciascuna (solo la prima con movimento ridotto).

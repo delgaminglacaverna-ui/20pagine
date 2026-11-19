@@ -340,14 +340,9 @@
       stage.append(buttons);
     });
   }
-  function isDefeat({ mode, kind, turn, online }) {
-    if (mode === 'online') {
-      if (!online || online.status !== 'over' || ![1, -1].includes(online.color)) return false;
-      if (!['mate', 'resign'].includes(online.reason)) return false;
-      return online.winner === (online.color === 1 ? 'black' : 'white');
-    }
-    if (kind !== 'mate') return false;
-    return (mode === 'pvc' && turn === 1) || mode === 'pvp';
+  function isDefeat({ mode, kind, turn }) {
+    // Chronos punishes only a human losing to the AI, never PvP results.
+    return mode === 'pvc' && kind === 'mate' && turn === 1;
   }
   async function punish({ french = false, signal } = {}) {
     if (signal?.aborted) return false;

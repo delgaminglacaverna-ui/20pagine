@@ -206,14 +206,14 @@ test('defeat detection distinguishes losers, winners, draws, spectators and AI-o
   const { isDefeat } = harness().gate;
   assert(isDefeat({ mode: 'pvc', kind: 'mate', turn: 1 }));
   assert(!isDefeat({ mode: 'pvc', kind: 'mate', turn: -1 }));
-  assert(isDefeat({ mode: 'pvp', kind: 'mate', turn: 1 }));
-  assert(isDefeat({ mode: 'pvp', kind: 'mate', turn: -1 }));
+  assert(!isDefeat({ mode: 'pvp', kind: 'mate', turn: 1 }));
+  assert(!isDefeat({ mode: 'pvp', kind: 'mate', turn: -1 }));
   assert(!isDefeat({ mode: 'cvc', kind: 'mate', turn: 1 }));
   for (const kind of ['none', 'check', 'stalemate', 'insufficient', 'repetition', 'fifty']) assert(!isDefeat({ mode: 'pvc', kind, turn: 1 }));
   for (const color of [1, -1]) {
     const online = { status: 'over', reason: 'mate', color, winner: color === 1 ? 'black' : 'white' };
-    assert(isDefeat({ mode: 'online', online }));
-    assert(isDefeat({ mode: 'online', online: { ...online, reason: 'resign' } }));
+    assert(!isDefeat({ mode: 'online', online }));
+    assert(!isDefeat({ mode: 'online', online: { ...online, reason: 'resign' } }));
     assert(!isDefeat({ mode: 'online', online: { ...online, winner: color === 1 ? 'white' : 'black' } }));
     assert(!isDefeat({ mode: 'online', online: { ...online, color: 0 } }));
     assert(!isDefeat({ mode: 'online', online: { ...online, winner: 'draw', reason: 'repetition' } }));
