@@ -237,7 +237,7 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   const storage = new Map([['20pagine.chronos.pass.v3', existing]]);
   const h = harness(false, { storage, at }), result = h.begin({ punishment: true });
   assert(h.all('entry-card')[0].children.some(node => node.textContent === 'BROO'));
-  assert.equal(h.all('entry-big-eye')[0].children.length, 3);
+  assert.equal(h.all('entry-big-eye')[0].children.length, 2);
   assert.equal(h.all('entry-choice').length, 0);
   h.advance(16000);
   for (let i = 0; i < 300; i++) {
@@ -366,14 +366,14 @@ test('all referenced quiz sound files are bundled MP3 assets', () => {
 
 test('chess defeat shows mouths throughout the introduction and questions', async () => {
   const h = harness(), result = h.begin({ punishment: true });
-  assert.equal(h.all('entry-mouth-frame').length, 27);
+  assert.equal(h.all('entry-mouth-frame').length, 18);
   assert.equal(h.all('entry-eye-frame').length, 0);
   h.advance(17000);
-  assert.equal(h.all('entry-mouth-frame').length, 27);
+  assert.equal(h.all('entry-mouth-frame').length, 18);
   h.answer(false);
   assert.equal(h.all('entry-eye-frame').length, 0);
   const frames = h.all('entry-mouth-frame');
-  assert.equal(frames.length, 27);
+  assert.equal(frames.length, 18);
   for (const node of frames) assert(fs.existsSync(node.src.slice(1)));
   assert.equal(h.all('entry-big-eye')[0].hidden, false);
   h.advance(900); assert.equal(await result, false);
@@ -387,7 +387,7 @@ test('normal entrance keeps eyes until homework failure', async () => {
   assert.equal(h.all('entry-eye-frame').length, 32);
   h.answer(false);
   assert.equal(h.all('entry-eye-frame').length, 0);
-  assert.equal(h.all('entry-mouth-frame').length, 24);
+  assert.equal(h.all('entry-mouth-frame').length, 16);
   assert.equal(await result, false);
 });
 test('quiz clocks contain all three drawings with explicit equal animation phases', () => {
@@ -461,9 +461,13 @@ test('mouth frames run at 80ms each while eye speed remains unchanged', async ()
   const h = harness(), controller = new AbortController();
   const result = h.begin({ punishment: true, signal: controller.signal });
   const frames = h.all('entry-big-eye')[0].children;
-  frames.forEach((node, i) => assert.equal(node.style.animationDelay, `${-i * 0.08}s`));
+  assert.equal(frames.length, 2);
+  frames.forEach((node, i) => {
+    assert.equal(node.src, `/assets/mouths/frame-${i + 1}.webp`);
+    assert.equal(node.style.animationDelay, `${-i * 0.08}s`);
+  });
   const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
-  assert(css.includes('animation: entry-mouth-sketch .24s step-end infinite'));
+  assert(css.includes('animation: entry-mouth-sketch .16s step-end infinite'));
   assert(css.includes('animation: entry-eye-sketch .72s step-end infinite'));
   assert(css.includes('.entry-mouth-frame { animation: none; opacity: 0; }'));
   controller.abort(); assert.equal(await result, false);

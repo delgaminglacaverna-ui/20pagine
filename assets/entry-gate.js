@@ -120,9 +120,9 @@
       };
       const clickedEyes = new Set();
       const creature = punishment ? 'mouth' : 'eye';
-      const frameCount = punishment ? 3 : 4;
+      const frameCount = punishment ? 2 : 4;
       const frameFolder = punishment ? 'mouths' : 'eyes';
-      const frameDuration = (punishment ? 0.24 : 0.72) / frameCount;
+      const frameDuration = (punishment ? 0.16 : 0.72) / frameCount;
       const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '')), card = el('section', 'entry-card');
       const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', punishment ? 'true' : 'false');
       for (let index = 0; index < 8; index++) {
@@ -231,7 +231,7 @@
         screen.className = 'entry-gate entry-failed';
         for (const eye of [...eyes.children, bigEye]) {
           eye.replaceChildren();
-          for (let frame = 1; frame <= 3; frame++) {
+          for (let frame = 1; frame <= 2; frame++) {
             const image = el('img', 'entry-mouth-frame entry-mouth-frame-' + frame);
             image.src = '/assets/mouths/frame-' + frame + '.webp'; image.alt = '';
             image.style.animationDelay = `${-(frame - 1) * 0.08}s`; eye.append(image);
