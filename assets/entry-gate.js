@@ -120,9 +120,9 @@
       };
       const clickedEyes = new Set();
       const creature = punishment ? 'mouth' : 'eye';
-      const frameCount = punishment ? 2 : 4;
+      const frameCount = punishment ? 3 : 4;
       const frameFolder = punishment ? 'mouths' : 'eyes';
-      const frameDuration = (punishment ? 0.16 : 0.72) / frameCount;
+      const frameDuration = 0.72 / frameCount;
       const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '')), card = el('section', 'entry-card');
       const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', punishment ? 'true' : 'false');
       for (let index = 0; index < 8; index++) {
@@ -225,16 +225,17 @@
         signal?.addEventListener('abort', dismiss, { once: true });
         root.addEventListener('pagehide', cleanup);
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
+        if (punishment) { leave(); return; }
         heading.textContent = '';
         clockBox.hidden = true;
         // Both chess defeat and homework failure use mouths.
         screen.className = 'entry-gate entry-failed';
         for (const eye of [...eyes.children, bigEye]) {
           eye.replaceChildren();
-          for (let frame = 1; frame <= 2; frame++) {
+          for (let frame = 1; frame <= 3; frame++) {
             const image = el('img', 'entry-mouth-frame entry-mouth-frame-' + frame);
             image.src = '/assets/mouths/frame-' + frame + '.webp'; image.alt = '';
-            image.style.animationDelay = `${-(frame - 1) * 0.08}s`; eye.append(image);
+            image.style.animationDelay = `${-(frame - 1) * 0.24}s`; eye.append(image);
           }
         }
         if (punishment) bigEye.hidden = false;
@@ -340,8 +341,12 @@
       stage.append(buttons);
     });
   }
-  function isDefeat({ mode, kind, turn }) {
-    // Chronos punishes only a human losing to the AI, never PvP results.
+  function isDefeat({ mode, kind, turn, online }) {
+    if (mode === 'online') {
+      return !!online && online.status === 'over' && [1, -1].includes(online.color)
+        && ['mate', 'resign'].includes(online.reason)
+        && online.winner === (online.color === 1 ? 'black' : 'white');
+    }
     return mode === 'pvc' && kind === 'mate' && turn === 1;
   }
   async function punish({ french = false, signal } = {}) {

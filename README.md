@@ -155,8 +155,8 @@ Lo scacco matto subito contro l'IA mostra un jumpscare della bocca
 «INVECE DI ESSERE IL PROFESSORE ECCEZIONALE CHE SONO», «ASSEGNERÒ E BASTA»,
 «È FINITA PER TE!!!», «VERGOGNATI». I messaggi sono testuali, tradotti anche in francese.
 Poi partono automaticamente 300 domande da 15 orologi ciascuna.
-La sfida si attiva solo perdendo contro l'IA. È disattivata in PvP locale,
-online (anche per resa), nelle patte e in IA contro IA. Non ci sono pulsanti di uscita dalla sfida né scorciatoie Escape; i normali comandi del browser restano disponibili.
+La sfida si attiva perdendo contro l'IA oppure online (anche per resa), solo per il perdente.
+È disattivata in PvP locale, nelle patte e in IA contro IA. Non ci sono pulsanti di uscita dalla sfida né scorciatoie Escape; i normali comandi del browser restano disponibili.
 Errore o timeout cancellano solo il pass d'ingresso di 24 ore e tentano di chiudere
 la scheda; se il browser lo vieta si apre `about:blank`. Gli altri dati restano intatti.
 Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'uscita.
@@ -165,7 +165,7 @@ Completare la sfida non rinnova il pass. Timer e animazione si interrompono all'
 ### Immagini e suoni del quiz
 
 Il quiz normale usa i quattro occhi originali in `assets/eyes/frame-{1,2,3,4}.webp`.
-Una sconfitta contro l'IA mostra subito le due bocche in `assets/mouths/frame-{1,2}.webp`,
+Una sconfitta contro l'IA mostra subito le tre bocche in `assets/mouths/frame-{1,2,3}.webp`,
 sia nel jumpscare sia durante la sfida successiva. Anche un errore/timeout nel quiz normale
 trasforma gli occhi in bocche. I quadranti del quiz alternano tutte e tre le immagini
 `assets/clock/face-{1,2,3}.png`, 200 ms ciascuna (solo la prima con movimento ridotto).
@@ -188,5 +188,8 @@ si applicano alla sfida dopo sconfitta a scacchi. Nessun rientro automatico dopo
 Il timer delle pubblicità, quando pronto per saltare, mostra le stesse X animate
 sopra il quadrante anziché diventare verde; i 30 secondi e il click restano invariati.
 
-La bocca alterna solo i primi due fotogrammi originali ogni 80 ms (ciclo di 160 ms);
+La bocca alterna i tre fotogrammi originali ogni 240 ms (ciclo di 720 ms);
 la velocità degli occhi resta invariata e il movimento ridotto resta rispettato.
+
+Errore o timeout nella sfida da 15 orologi chiudono subito la pagina (fallback `about:blank`),
+senza far riapparire Chronos e senza attendere Wrong. Il quiz iniziale mantiene il feedback al 60%.
