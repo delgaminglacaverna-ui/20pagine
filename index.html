@@ -1615,17 +1615,6 @@ function a1() {
   return v.jsxs("div", {
     className: "min-h-screen bg-slate-100 pb-72 text-slate-800",
     children: [
-      v.jsx("button", {
-        className: "review-launch",
-        disabled: reviewActive,
-        onClick: async () => {
-          if (reviewActive || typeof EntryGate === "undefined") return;
-          setReviewActive(true);
-          try { await EntryGate.review({ french: FRENCH_MODE }); } catch {}
-          finally { setReviewActive(false); }
-        },
-        children: FRENCH_MODE ? "Réviser" : "Ripassa",
-      }),
       v.jsx("header", {
         className: "bg-[#343a40] px-4 py-4 text-white shadow",
         children: v.jsxs("div", {
@@ -1843,6 +1832,17 @@ function a1() {
                       Ll("pvp", "Giocatore vs Giocatore"),
                       Ll("cvc", "20 Pagine vs 20 Pagine"),
                       Ll("online", "Online 1v1"),
+                      v.jsx("button", {
+                        className: Pu + " review-launch",
+                        disabled: reviewActive,
+                        onClick: async () => {
+                          if (reviewActive || typeof EntryGate === "undefined") return;
+                          setReviewActive(true);
+                          try { await EntryGate.review({ french: FRENCH_MODE }); } catch {}
+                          finally { setReviewActive(false); }
+                        },
+                        children: FRENCH_MODE ? "Réviser" : "Ripassa",
+                      }),
                     ],
                   }),
                 ],
