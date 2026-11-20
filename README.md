@@ -205,3 +205,22 @@ La scacchiera principale imposta inoltre le dieci righe/colonne esplicitamente,
 limita la dimensione minima delle celle e misura l'altezza quadrata senza dipendere
 da `aspect-ratio`. Il ridimensionamento mantiene il fallback senza ResizeObserver.
 I test coprono CSS generato e misurazioni; la verifica fisica su Philips LIM resta da fare.
+
+### Ripassa
+
+Il pulsante **Ripassa** apre un minigioco separato, senza consumare o modificare
+il pass d'ingresso. Impostazioni: 1–120 secondi per domanda (default 12), 1–15
+orologi (default 2), poi domande infinite. Il contatore mostra la streak corrente;
+errore o timeout la riportano a zero e parte un'altra domanda, dopo Wrong.
+Le risposte corrette mantengono l'attesa della fine del suono Correct.
+
+Gli otto occhi sono inizialmente chiusi. Ogni 2 secondi si apre un occhio chiuso
+scelto a caso; cliccarlo lo richiude e può riaprirsi successivamente. Se un occhio
+resta aperto per 4 secondi, tutti diventano bocche, lo sfondo diventa blu e appare
+«PERCHè è TUTTO BLUE?!?!» per 330 ms prima di tentare la chiusura (fallback
+`about:blank`). I timer usano scadenze reali, anche dopo un cambio scheda.
+Prima di iniziare: «NON FARE I COMPITI IN CLASSE!(o non farti beccare...)».
+
+**Torna agli scacchi** o Escape escono dal minigioco e ripuliscono timer/audio.
+Durante il ripasso IA e cronometri locali sono in pausa; le partite online
+continuano sul server e gli eventuali risultati vengono gestiti al ritorno.

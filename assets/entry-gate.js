@@ -2,6 +2,8 @@
 (function (root) {
   const TEXT = {
     it: {
+      review: 'Ripassa', practiceNote: 'NON FARE I COMPITI IN CLASSE!(o non farti beccare...)', seconds: 'Secondi per domanda', clocks: 'Numero di orologi', begin: 'Inizia', exit: 'Torna agli scacchi', streak: 'Streak: {0}', caught: 'PERCHè è TUTTO BLUE?!?!',
+
       taunt: 'BROO', speech1: 'AVEVI DETTO DI AVER STUDIATO', speech2: 'ORA BASTA', speech3: 'INVECE DI ESSERE IL PROFESSORE ECCEZIONALE CHE SONO', speech4: 'ASSEGNERÒ E BASTA', speech5: 'È FINITA PER TE!!!', speech6: 'VERGOGNATI', punishRound: 'Domanda {0} di 300', punishFailed: 'CHRONOS HA VINTO.',
       title: 'HAI FATTO I COMPITI?', yes: 'SÌ', no: 'NO', challenge: 'RISPONDI',
       round: 'Prova {0} di 3', remaining: 'Tempo rimasto: {0} secondi',
@@ -11,6 +13,8 @@
       failed: 'Accesso non consentito. Torna ai compiti!', live: 'Ora italiana: {0}',
     },
     fr: {
+      review: 'Réviser', practiceNote: 'NE FAIS PAS TES DEVOIRS EN CLASSE !(ou ne te fais pas prendre...)', seconds: 'Secondes par question', clocks: 'Nombre d’horloges', begin: 'Commencer', exit: 'Retour aux échecs', streak: 'Série : {0}', caught: 'POURQUOI TOUT EST BLEU ?!?!',
+
       taunt: 'BROO', speech1: 'TU AVAIS DIT AVOIR ÉTUDIÉ', speech2: 'MAINTENANT ÇA SUFFIT', speech3: 'AU LIEU D’ÊTRE LE PROFESSEUR EXCEPTIONNEL QUE JE SUIS', speech4: 'JE VAIS JUSTE DONNER DES DEVOIRS', speech5: 'C’EST FINI POUR TOI !!!', speech6: 'HONTE À TOI', punishRound: 'Question {0} sur 300', punishFailed: 'CHRONOS A GAGNÉ.',
       title: 'AS-TU FAIT TES DEVOIRS ?', yes: 'OUI', no: 'NON', challenge: 'RÉPONDS',
       round: 'Épreuve {0} sur 3', remaining: 'Temps restant : {0} secondes',
@@ -67,10 +71,10 @@
     } catch { /* Storage may be blocked, full or malformed: show the quiz normally. */ }
     return false;
   }
-  function start({ container = document.getElementById('root'), french = false, punishment = false, signal } = {}) {
+  function start({ container = document.getElementById('root'), french = false, punishment = false, practice = false, signal } = {}) {
     if (signal?.aborted) return Promise.resolve(false);
     const totalRounds = punishment ? 300 : 3;
-    if (!punishment && hasPass()) return Promise.resolve(true);
+    if (!practice && !punishment && hasPass()) return Promise.resolve(true);
     const words = TEXT[french ? 'fr' : 'it'];
     const t = (key, ...values) => {
       const original = words[key];
@@ -118,12 +122,14 @@
         const node = document.createElement(tag); if (className) node.className = className;
         if (text !== undefined) node.textContent = text; return node;
       };
+      let practiceSeconds = 12, practiceClocks = 2, eyeTimer, caughtTimer, nextEyeAt;
+      const openEyes = new Map();
       const clickedEyes = new Set();
       const creature = punishment ? 'mouth' : 'eye';
       const frameCount = punishment ? 3 : 4;
       const frameFolder = punishment ? 'mouths' : 'eyes';
       const frameDuration = 0.72 / frameCount;
-      const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '')), card = el('section', 'entry-card');
+      const screen = el('main', 'entry-gate' + (punishment ? ' entry-punishment' : '') + (practice ? ' entry-practice' : '')), card = el('section', 'entry-card');
       const eyes = el('div', 'entry-eyes'); eyes.setAttribute('aria-hidden', punishment ? 'true' : 'false');
       for (let index = 0; index < 8; index++) {
         const eye = el(punishment ? 'span' : 'button', 'entry-eye' + (!punishment ? ' entry-hint-eye' : ''));
@@ -131,6 +137,11 @@
           eye.type = 'button'; eye.setAttribute('aria-label', (french ? 'Fermer l’œil ' : 'Chiudi occhio ') + (index + 1));
           eye.setAttribute('aria-pressed', 'false');
           eye.addEventListener('click', () => {
+            if (practice) {
+              if (closed || phase === 'caught') return;
+              if (openEyes.has(index) && Date.now() >= openEyes.get(index)) { caught(); return; }
+              openEyes.delete(index); paintEye(eye, 'closed'); return;
+            }
             if (closed || phase === 'denied' || clickedEyes.has(index)) return;
             clickedEyes.add(index); eye.setAttribute('aria-pressed', 'true');
             eye.replaceChildren();
@@ -148,6 +159,7 @@
           image.style.animationDelay = `${-(index * 0.09 + (frame - 1) * frameDuration)}s`;
           eye.append(image);
         }
+        if (practice) paintEye(eye, 'closed');
         eyes.append(eye);
       }
       const heading = el('h1', '', t(punishment ? 'taunt' : 'title')); heading.tabIndex = -1;
@@ -189,6 +201,7 @@
       updateTime(); const liveTimer = root.setInterval(updateTime, 1000);
       function clearRound() { root.clearTimeout(previewTimer); root.clearInterval(roundTimer); }
       function cleanup() {
+        root.clearInterval(eyeTimer); root.clearTimeout(caughtTimer);
         stopSounds();
         clearRound(); root.clearTimeout(introTimer); root.clearInterval(liveTimer); root.removeEventListener('pagehide', cleanup);
         signal?.removeEventListener('abort', dismiss);
@@ -209,7 +222,7 @@
           target.append(cross);
         }
       function applyHints() {
-        if (punishment || !question || phase !== 'answer') return;
+        if (practice || punishment || !question || phase !== 'answer') return;
         const count = clickedEyes.size === 8 ? 3 : clickedEyes.size >= 6 ? 2 : clickedEyes.size >= 3 ? 1 : 0;
         let removed = 0;
         for (const [index, button] of [...stage.querySelectorAll('.entry-choice')].entries()) {
@@ -220,7 +233,13 @@
         }
       }
       function fail(timedOut = false, wrongIndex) {
-        if (closed || phase === 'denied') return;
+        if (closed || phase === 'denied' || phase === 'caught') return;
+        if (practice) {
+          phase = 'checking'; clearRound(); stopSounds(); round = 0;
+          const progress = stage.querySelector('.entry-progress');
+          if (progress) progress.textContent = t('streak', 0);
+          playSound('Wrong', () => { if (!closed && phase === 'checking') showQuestion(); }); return;
+        }
         phase = 'denied'; cleanup();
         signal?.addEventListener('abort', dismiss, { once: true });
         root.addEventListener('pagehide', cleanup);
@@ -274,18 +293,18 @@
         stopSounds();
         playSound('Correct', () => {
           if (closed || phase !== 'checking') return;
-          if (round === totalRounds) pass(); else showQuestion();
+          if (!practice && round === totalRounds) pass(); else showQuestion();
         });
       }
       function showQuestion() {
         playSound('Clock');
-        clearRound(); phase = 'preview'; question = makeQuestion(Math.random, punishment ? 15 : 2);
-        heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment ? ' entry-punishment' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
-        const progress = el('h2', 'entry-progress', `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
-        progress.setAttribute('aria-label', t(punishment ? 'punishRound' : 'round', round + 1));
+        clearRound(); phase = 'preview'; question = makeQuestion(Math.random, practice ? practiceClocks : punishment ? 15 : 2);
+        heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment || practice ? ' entry-punishment' : '') + (practice ? ' entry-practice' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
+        const progress = el('h2', 'entry-progress', practice ? t('streak', round) : `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
+        progress.setAttribute('aria-label', practice ? t('streak', round) : t(punishment ? 'punishRound' : 'round', round + 1));
         const equation = el('div', 'entry-equation');
         question.clocks.forEach((clock, index) => {
-          if (punishment) {
+          if (punishment || practice) {
             const term = el('span', 'entry-term'); term.append(face('', clock.minute, clock.hour).clock);
             if (index < question.clocks.length - 1) term.append(el('span', 'entry-term-plus', '+'));
             equation.append(term);
@@ -301,7 +320,7 @@
         stage.append(progress, equation, countdown, choices); progress.focus();
         previewTimer = root.setTimeout(() => {
           if (closed || phase !== 'preview') return;
-          phase = 'answer'; deadline = Date.now() + 12000;
+          phase = 'answer'; deadline = Date.now() + (practice ? practiceSeconds : 12) * 1000;
           question.options.forEach((clock, index) => {
             const button = el('button', 'entry-choice'); button.type = 'button';
             button.setAttribute('aria-label', t('answer', roman(index + 1)) + ': ' + t('clock', clock.minute || 12, clock.hour || 12));
@@ -319,6 +338,70 @@
           }
           tick(); roundTimer = root.setInterval(tick, 100); choices.firstElementChild.focus();
         }, 1000);
+      }
+      function paintEye(eye, type) {
+        eye.replaceChildren();
+        const folder = type === 'closed' ? 'closed-eyes' : type === 'mouth' ? 'mouths' : 'eyes';
+        const kind = type === 'closed' ? 'closed' : type === 'mouth' ? 'mouth' : 'eye';
+        const count = type === 'open' ? 4 : 3;
+        for (let frame = 1; frame <= count; frame++) {
+          const image = el('img', `entry-${kind}-frame entry-${kind}-frame-${frame}`);
+          image.src = `/assets/${folder}/frame-${frame}.webp`; image.alt = '';
+          image.style.animationDelay = `${-(frame - 1) * (type === 'mouth' ? .24 : type === 'open' ? .18 : .08)}s`;
+          eye.append(image);
+        }
+        eye.setAttribute('aria-pressed', type === 'closed' ? 'true' : 'false');
+      }
+      function caught() {
+        if (closed || phase === 'caught') return;
+        cleanup(); phase = 'caught';
+        signal?.addEventListener('abort', dismiss, { once: true });
+        root.addEventListener('pagehide', cleanup);
+        screen.className = 'entry-gate entry-practice entry-caught';
+        heading.textContent = t('caught'); heading.focus(); stage.replaceChildren();
+        for (const eye of eyes.children) paintEye(eye, 'mouth');
+        caughtTimer = root.setTimeout(() => {
+          if (closed) return;
+          closed = true; cleanup(); resolve(false);
+          try { root.close(); } catch {}
+          try { if (!root.closed) root.location.replace('about:blank'); } catch {}
+        }, 330);
+      }
+      if (practice) {
+        heading.textContent = t('review');
+        const setup = el('form', 'entry-practice-setup');
+        setup.append(el('p', '', t('practiceNote')));
+        function numberInput(key, value, min, max) {
+          const label = el('label', '', t(key)), input = el('input', 'entry-setting-' + key);
+          input.type = 'number'; input.value = String(value); input.min = String(min); input.max = String(max); input.step = '1'; input.required = true;
+          label.append(input); setup.append(label); return input;
+        }
+        const seconds = numberInput('seconds', 12, 1, 120), clocks = numberInput('clocks', 2, 1, 15);
+        const begin = el('button', 'entry-practice-begin', t('begin')); begin.type = 'submit'; setup.append(begin);
+        setup.addEventListener('submit', event => {
+          event.preventDefault();
+          if (closed || phase !== 'welcome') return;
+          const time = Number(seconds.value), count = Number(clocks.value);
+          if (!Number.isInteger(time) || time < 1 || time > 120 || !Number.isInteger(count) || count < 1 || count > 15) return;
+          practiceSeconds = time; practiceClocks = count; nextEyeAt = Date.now() + 2000;
+          eyeTimer = root.setInterval(() => {
+            if (closed || phase === 'caught') return;
+            const now = Date.now();
+            if ([...openEyes.values()].some(deadline => now >= deadline)) { caught(); return; }
+            if (now >= nextEyeAt) {
+              const available = [...eyes.children].map((_, i) => i).filter(i => !openEyes.has(i));
+              if (available.length) {
+                const index = available[Math.floor(Math.random() * available.length)];
+                openEyes.set(index, now + 4000); paintEye(eyes.children[index], 'open');
+              }
+              nextEyeAt = now + 2000;
+            }
+          }, 100);
+          showQuestion();
+        });
+        stage.append(setup);
+        const exit = el('button', 'entry-practice-exit', t('exit')); exit.type = 'button'; exit.addEventListener('click', dismiss); card.append(exit);
+        seconds.focus(); return;
       }
       if (punishment) {
         phase = 'intro';
@@ -349,19 +432,20 @@
     }
     return mode === 'pvc' && kind === 'mate' && turn === 1;
   }
-  async function punish({ french = false, signal } = {}) {
+  async function punish({ french = false, signal, practice = false } = {}) {
     if (signal?.aborted) return false;
     const overlay = document.createElement('div'); overlay.className = 'entry-defeat-overlay';
     overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-label', french ? TEXT.fr.taunt : TEXT.it.taunt);
+    overlay.setAttribute('aria-label', practice ? (french ? TEXT.fr.review : TEXT.it.review) : french ? TEXT.fr.taunt : TEXT.it.taunt);
     const previousFocus = document.activeElement, overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden'; document.body.append(overlay);
     // Native inert prevents keyboard and screen-reader navigation behind the overlay.
     const background = document.getElementById('root'), wasInert = background?.inert;
     if (background) background.inert = true;
     const escape = event => {
+      if (practice && event.key === 'Escape') overlay.querySelector('.entry-practice-exit')?.click();
       if (event.key === 'Tab') {
-        const buttons = [...overlay.querySelectorAll('button:not([disabled])')];
+        const buttons = [...overlay.querySelectorAll('button:not([disabled]), input')];
         const first = buttons[0], last = buttons[buttons.length - 1];
         if ((event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
           event.preventDefault(); (event.shiftKey ? last : first)?.focus();
@@ -369,12 +453,12 @@
       }
     };
     overlay.addEventListener('keydown', escape);
-    try { return await start({ container: overlay, french, punishment: true, signal }); }
+    try { return await start({ container: overlay, french, punishment: !practice, practice, signal }); }
     finally {
       overlay.removeEventListener('keydown', escape); overlay.remove(); document.body.style.overflow = overflow;
       if (background) background.inert = wasInert;
       previousFocus?.focus?.();
     }
   }
-  root.EntryGate = { start, punish, isDefeat, italyTime, makeQuestion, TEXT };
+  root.EntryGate = { start, punish, review: options => punish({ ...options, practice: true }), isDefeat, italyTime, makeQuestion, TEXT };
 })(typeof globalThis !== 'undefined' ? globalThis : window);
