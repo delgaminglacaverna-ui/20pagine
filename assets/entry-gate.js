@@ -347,7 +347,9 @@
         for (let frame = 1; frame <= count; frame++) {
           const image = el('img', `entry-${kind}-frame entry-${kind}-frame-${frame}`);
           image.src = `/assets/${folder}/frame-${frame}.webp`; image.alt = '';
-          image.style.animationDelay = `${-(frame - 1) * (type === 'mouth' ? .24 : type === 'open' ? .18 : .08)}s`;
+          // Closed frames already have distinct, phased CSS keyframes.
+          // Offsetting them again synchronizes their visibility and causes flicker.
+          if (type !== 'closed') image.style.animationDelay = `${-(frame - 1) * (type === 'mouth' ? .24 : .18)}s`;
           eye.append(image);
         }
         eye.setAttribute('aria-pressed', type === 'closed' ? 'true' : 'false');
@@ -383,7 +385,7 @@
           if (closed || phase !== 'welcome') return;
           const time = Number(seconds.value), count = Number(clocks.value);
           if (!Number.isInteger(time) || time < 1 || time > 120 || !Number.isInteger(count) || count < 1 || count > 15) return;
-          practiceSeconds = time; practiceClocks = count; nextEyeAt = Date.now() + 2000;
+          practiceSeconds = time; practiceClocks = count; nextEyeAt = Date.now() + 5000;
           eyeTimer = root.setInterval(() => {
             if (closed || phase === 'caught') return;
             const now = Date.now();
@@ -394,7 +396,7 @@
                 const index = available[Math.floor(Math.random() * available.length)];
                 openEyes.set(index, now + 4000); paintEye(eyes.children[index], 'open');
               }
-              nextEyeAt = now + 2000;
+              nextEyeAt = now + 5000;
             }
           }, 100);
           showQuestion();
