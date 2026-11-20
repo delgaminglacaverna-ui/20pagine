@@ -299,12 +299,12 @@
       function showQuestion() {
         playSound('Clock');
         clearRound(); phase = 'preview'; question = makeQuestion(Math.random, practice ? practiceClocks : punishment ? 15 : 2);
-        heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment || practice ? ' entry-punishment' : '') + (practice ? ' entry-practice' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
+        heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment ? ' entry-punishment' : '') + (practice ? ' entry-practice' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
         const progress = el('h2', 'entry-progress', practice ? t('streak', round) : `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
         progress.setAttribute('aria-label', practice ? t('streak', round) : t(punishment ? 'punishRound' : 'round', round + 1));
-        const equation = el('div', 'entry-equation');
+        const equation = el('div', 'entry-equation' + (practice && practiceClocks > 3 ? ' entry-equation-many' : ''));
         question.clocks.forEach((clock, index) => {
-          if (punishment || practice) {
+          if (punishment) {
             const term = el('span', 'entry-term'); term.append(face('', clock.minute, clock.hour).clock);
             if (index < question.clocks.length - 1) term.append(el('span', 'entry-term-plus', '+'));
             equation.append(term);
@@ -365,7 +365,7 @@
           closed = true; cleanup(); resolve(false);
           try { root.close(); } catch {}
           try { if (!root.closed) root.location.replace('about:blank'); } catch {}
-        }, 330);
+        }, 500);
       }
       if (practice) {
         heading.textContent = t('review');

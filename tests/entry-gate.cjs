@@ -509,7 +509,7 @@ test('practice setup defaults, validation, settings and exit preserve the daily 
   h.all('entry-setting-clocks')[0].value = '16'; launchPractice(h);
   assert.equal(h.all('entry-term').length, 0);
   h.all('entry-setting-clocks')[0].value = '7'; launchPractice(h);
-  assert.equal(h.all('entry-term').length, 7);
+  assert.equal(h.all('entry-clock', h.all('entry-equation')[0]).length, 7);
   h.advance(1000); assert.equal(h.all('entry-countdown')[0].textContent, 'V');
   h.all('entry-practice-exit')[0].click();
   assert.equal(await result, false); assert.equal(h.timers.size, 0);
@@ -541,7 +541,7 @@ test('practice eyes open one by one, can be closed repeatedly, and catch after f
   assert.equal(h.all('entry-mouth-frame').length, 24);
   assert.equal(h.all('entry-caught').length, 1);
   assert(h.all('entry-card')[0].children.some(node => node.textContent === 'PERCHè è TUTTO BLUE?!?!'));
-  h.advance(329); assert.equal(h.closeCalls, 0);
+  h.advance(499); assert.equal(h.closeCalls, 0);
   h.advance(1); assert.equal(await result, false); assert.equal(h.closeCalls, 1);
   assert.equal(h.destination, 'about:blank'); assert.equal(h.timers.size, 0);
 });
@@ -551,4 +551,17 @@ test('practice can be aborted during caught message without closing later', asyn
   h.advance(6000); assert.equal(h.all('entry-caught').length, 1);
   controller.abort(); assert.equal(await result, false);
   h.advance(1000); assert.equal(h.closeCalls, 0); assert.equal(h.timers.size, 0);
+});
+test('default review uses the entrance quiz layout rather than punishment grid', async () => {
+  const h = harness(), result = h.begin({ practice: true }); launchPractice(h);
+  assert.equal(h.all('entry-punishment').length, 0);
+  const equation = h.all('entry-equation')[0];
+  assert.equal(h.all('entry-clock', equation).length, 2);
+  assert.equal(h.all('entry-term', equation).length, 0);
+  assert.equal(h.all('entry-plus', equation).length, 2);
+  assert.equal(h.all('entry-equation-many').length, 0);
+  const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
+  assert(!css.includes('.entry-practice .entry-card'));
+  assert(!css.includes('.entry-practice .entry-eye:nth-child'));
+  h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
 });

@@ -217,10 +217,14 @@ Le risposte corrette mantengono l'attesa della fine del suono Correct.
 Gli otto occhi sono inizialmente chiusi. Ogni 2 secondi si apre un occhio chiuso
 scelto a caso; cliccarlo lo richiude e può riaprirsi successivamente. Se un occhio
 resta aperto per 4 secondi, tutti diventano bocche, lo sfondo diventa blu e appare
-«PERCHè è TUTTO BLUE?!?!» per 330 ms prima di tentare la chiusura (fallback
+«PERCHè è TUTTO BLUE?!?!» per 500 ms prima di tentare la chiusura (fallback
 `about:blank`). I timer usano scadenze reali, anche dopo un cambio scheda.
 Prima di iniziare: «NON FARE I COMPITI IN CLASSE!(o non farti beccare...)».
 
 **Torna agli scacchi** o Escape escono dal minigioco e ripuliscono timer/audio.
 Durante il ripasso IA e cronometri locali sono in pausa; le partite online
 continuano sul server e gli eventuali risultati vengono gestiti al ritorno.
+
+Ripassa è accanto alle modalità di gioco. La scheda, gli occhi decorativi e la
+disposizione dei due orologi usano lo stesso layout del quiz iniziale; con più
+di tre orologi l’equazione va a capo per restare leggibile.
