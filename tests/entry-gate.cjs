@@ -212,8 +212,8 @@ test('defeat detection distinguishes losers, winners, draws, spectators and AI-o
   for (const kind of ['none', 'check', 'stalemate', 'insufficient', 'repetition', 'fifty']) assert(!isDefeat({ mode: 'pvc', kind, turn: 1 }));
   for (const color of [1, -1]) {
     const online = { status: 'over', reason: 'mate', color, winner: color === 1 ? 'black' : 'white' };
-    assert(!isDefeat({ mode: 'online', online }));
-    assert(!isDefeat({ mode: 'online', online: { ...online, reason: 'resign' } }));
+    assert(isDefeat({ mode: 'online', online }));
+    assert(isDefeat({ mode: 'online', online: { ...online, reason: 'resign' } }));
     assert(!isDefeat({ mode: 'online', online: { ...online, winner: color === 1 ? 'white' : 'black' } }));
     assert(!isDefeat({ mode: 'online', online: { ...online, color: 0 } }));
     assert(!isDefeat({ mode: 'online', online: { ...online, winner: 'draw', reason: 'repetition' } }));
@@ -237,7 +237,7 @@ test('eye taunt precedes all 300 questions, ignoring but preserving the daily en
   const storage = new Map([['20pagine.chronos.pass.v3', existing]]);
   const h = harness(false, { storage, at }), result = h.begin({ punishment: true });
   assert(h.all('entry-card')[0].children.some(node => node.textContent === 'BROO'));
-  assert.equal(h.all('entry-big-eye')[0].children.length, 2);
+  assert.equal(h.all('entry-big-eye')[0].children.length, 3);
   assert.equal(h.all('entry-choice').length, 0);
   h.advance(16000);
   for (let i = 0; i < 300; i++) {
@@ -312,8 +312,8 @@ test('blocked storage cannot prevent punishment failure from exiting', async () 
   assert.equal(h.destination, 'about:blank'); assert.equal(h.timers.size, 0);
 });
 test('feedback waits for ended events and locks repeated clicks until audio completes', async () => {
-  const h = harness(false, { audioMode: 'allowed' }), result = h.begin({ punishment: true });
-  h.advance(17000);
+  const h = harness(false, { audioMode: 'allowed' }), result = h.begin();
+  h.all('entry-yes')[0].click(); h.advance(1000);
   h.audioClips.at(-1).end();
   h.answer();
   assert.equal(h.played.at(-1), '/assets/sounds/Chronos_Clock_Question_Correct.mp3.MPEG');
@@ -366,16 +366,16 @@ test('all referenced quiz sound files are bundled MP3 assets', () => {
 
 test('chess defeat shows mouths throughout the introduction and questions', async () => {
   const h = harness(), result = h.begin({ punishment: true });
-  assert.equal(h.all('entry-mouth-frame').length, 18);
+  assert.equal(h.all('entry-mouth-frame').length, 27);
   assert.equal(h.all('entry-eye-frame').length, 0);
   h.advance(17000);
-  assert.equal(h.all('entry-mouth-frame').length, 18);
+  assert.equal(h.all('entry-mouth-frame').length, 27);
   h.answer(false);
   assert.equal(h.all('entry-eye-frame').length, 0);
   const frames = h.all('entry-mouth-frame');
-  assert.equal(frames.length, 18);
+  assert.equal(frames.length, 27);
   for (const node of frames) assert(fs.existsSync(node.src.slice(1)));
-  assert.equal(h.all('entry-big-eye')[0].hidden, false);
+  assert.equal(h.all('entry-big-eye')[0].hidden, true);
   h.advance(900); assert.equal(await result, false);
 });
 
@@ -387,7 +387,7 @@ test('normal entrance keeps eyes until homework failure', async () => {
   assert.equal(h.all('entry-eye-frame').length, 32);
   h.answer(false);
   assert.equal(h.all('entry-eye-frame').length, 0);
-  assert.equal(h.all('entry-mouth-frame').length, 16);
+  assert.equal(h.all('entry-mouth-frame').length, 24);
   assert.equal(await result, false);
 });
 test('quiz clocks contain all three drawings with explicit equal animation phases', () => {
@@ -407,8 +407,8 @@ test('quiz clocks contain all three drawings with explicit equal animation phase
 test('aborting during correct or wrong feedback cancels pending continuation', async () => {
   for (const correct of [true, false]) {
     const h = harness(false, { audioMode: 'allowed' }), controller = new AbortController();
-    const result = h.begin({ punishment: true, signal: controller.signal });
-    h.advance(17000); h.answer(correct);
+    const result = h.begin({ signal: controller.signal });
+    h.all('entry-yes')[0].click(); h.advance(1000); h.answer(correct);
     const clip = h.audioClips.at(-1);
     controller.abort(); assert.equal(await result, false);
     clip.end(); h.advance(70000);
@@ -457,18 +457,32 @@ test('eyes give cumulative hints immediately without bypassing entrance', async 
   assert.equal(await result, true);
 });
 
-test('mouth frames run at 80ms each while eye speed remains unchanged', async () => {
+test('mouth frames run at 240ms each while eye speed remains unchanged', async () => {
   const h = harness(), controller = new AbortController();
   const result = h.begin({ punishment: true, signal: controller.signal });
   const frames = h.all('entry-big-eye')[0].children;
-  assert.equal(frames.length, 2);
+  assert.equal(frames.length, 3);
   frames.forEach((node, i) => {
     assert.equal(node.src, `/assets/mouths/frame-${i + 1}.webp`);
-    assert.equal(node.style.animationDelay, `${-i * 0.08}s`);
+    assert.equal(node.style.animationDelay, `${-i * 0.24}s`);
   });
   const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
-  assert(css.includes('animation: entry-mouth-sketch .16s step-end infinite'));
+  assert(css.includes('animation: entry-mouth-sketch .72s step-end infinite'));
   assert(css.includes('animation: entry-eye-sketch .72s step-end infinite'));
   assert(css.includes('.entry-mouth-frame { animation: none; opacity: 0; }'));
   controller.abort(); assert.equal(await result, false);
+});
+
+test('15-clock wrong answers and timeouts close immediately without another Chronos reveal', async () => {
+  for (const timeout of [false, true]) {
+    const h = harness(false, { audioMode: 'allowed' }), result = h.begin({ punishment: true });
+    h.advance(17000);
+    const big = h.all('entry-big-eye')[0]; assert.equal(big.hidden, true);
+    if (timeout) h.advance(12000); else h.answer(false);
+    assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+    assert.equal(h.destination, 'about:blank'); assert.equal(big.hidden, true);
+    assert.equal(h.all('entry-failed').length, 0);
+    assert.equal(h.played.some(src => src.includes('Incorrect')), false);
+    assert.equal(h.timers.size, 0);
+  }
 });
