@@ -193,3 +193,15 @@ la velocità degli occhi resta invariata e il movimento ridotto resta rispettato
 
 Errore o timeout nella sfida da 15 orologi chiudono subito la pagina (fallback `about:blank`),
 senza far riapparire Chronos e senza attendere Wrong. Il quiz iniziale mantiene il feedback al 60%.
+
+### Browser LIM / display integrati
+
+Il CSS utility incorporato usa cascade layers, ignorati interamente da alcuni
+browser Chromium meno recenti. `assets/legacy-layout.css` replica le stesse utility
+senza `@layer` e converte la palette OKLCH in sRGB; è generato da
+`node scripts/legacy-css.cjs` e rigenerato automaticamente dalla build.
+Non modificarlo a mano. È caricato anche nel sorgente, non solo nel deployment.
+La scacchiera principale imposta inoltre le dieci righe/colonne esplicitamente,
+limita la dimensione minima delle celle e misura l'altezza quadrata senza dipendere
+da `aspect-ratio`. Il ridimensionamento mantiene il fallback senza ResizeObserver.
+I test coprono CSS generato e misurazioni; la verifica fisica su Philips LIM resta da fare.
