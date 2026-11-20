@@ -486,3 +486,69 @@ test('15-clock wrong answers and timeouts close immediately without another Chro
     assert.equal(h.timers.size, 0);
   }
 });
+function launchPractice(h) {
+  h.all('entry-practice-setup')[0].events.submit({ preventDefault() {} });
+}
+function closePracticeEyes(h) {
+  for (const eye of h.all('entry-hint-eye')) {
+    if (eye.attrs['aria-pressed'] === 'false') eye.click();
+  }
+}
+test('practice setup defaults, validation, settings and exit preserve the daily pass', async () => {
+  const storage = new Map([['20pagine.chronos.pass.v3', 'unchanged']]);
+  const h = harness(false, { storage }), result = h.begin({ practice: true });
+  assert.equal(h.all('entry-setting-seconds')[0].value, '12');
+  assert.equal(h.all('entry-setting-clocks')[0].value, '2');
+  assert.equal(h.all('entry-closed-frame').length, 24);
+  assert.equal(h.all('entry-eye-frame').length, 0);
+  for (const value of ['0', '121', '2.5', 'abc']) {
+    h.all('entry-setting-seconds')[0].value = value; launchPractice(h);
+    assert.equal(h.all('entry-term').length, 0);
+  }
+  h.all('entry-setting-seconds')[0].value = '5';
+  h.all('entry-setting-clocks')[0].value = '16'; launchPractice(h);
+  assert.equal(h.all('entry-term').length, 0);
+  h.all('entry-setting-clocks')[0].value = '7'; launchPractice(h);
+  assert.equal(h.all('entry-term').length, 7);
+  h.advance(1000); assert.equal(h.all('entry-countdown')[0].textContent, 'V');
+  h.all('entry-practice-exit')[0].click();
+  assert.equal(await result, false); assert.equal(h.timers.size, 0);
+  assert.equal(storage.get('20pagine.chronos.pass.v3'), 'unchanged');
+});
+test('practice continues past three questions and resets streak on wrong answers and timeout', async () => {
+  const h = harness(), result = h.begin({ practice: true }); launchPractice(h);
+  for (let i = 0; i < 8; i++) {
+    h.advance(1000); closePracticeEyes(h); h.answer();
+    assert.equal(h.all('entry-progress')[0].textContent, `Streak: ${i + 1}`);
+  }
+  h.advance(1000); closePracticeEyes(h); h.answer(false);
+  assert.equal(h.all('entry-progress')[0].textContent, 'Streak: 0');
+  assert.equal(h.closeCalls, 0);
+  for (let i = 0; i < 13; i++) { h.advance(1000); closePracticeEyes(h); }
+  assert.equal(h.all('entry-progress')[0].textContent, 'Streak: 0');
+  assert.equal(h.closeCalls, 0); assert.equal(h.storage.size, 0);
+  h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
+});
+test('practice eyes open one by one, can be closed repeatedly, and catch after four seconds', async () => {
+  const h = harness(), result = h.begin({ practice: true }); launchPractice(h);
+  h.advance(1999); assert.equal(h.all('entry-eye-frame').length, 0);
+  h.advance(1); assert.equal(h.all('entry-eye-frame').length, 4);
+  const open = h.all('entry-hint-eye').find(eye => eye.attrs['aria-pressed'] === 'false');
+  open.click(); assert.equal(h.all('entry-eye-frame').length, 0);
+  h.advance(2000); assert.equal(h.all('entry-eye-frame').length, 4);
+  h.advance(3999); assert.equal(h.closeCalls, 0);
+  h.advance(1);
+  assert.equal(h.all('entry-mouth-frame').length, 24);
+  assert.equal(h.all('entry-caught').length, 1);
+  assert(h.all('entry-card')[0].children.some(node => node.textContent === 'PERCHè è TUTTO BLUE?!?!'));
+  h.advance(329); assert.equal(h.closeCalls, 0);
+  h.advance(1); assert.equal(await result, false); assert.equal(h.closeCalls, 1);
+  assert.equal(h.destination, 'about:blank'); assert.equal(h.timers.size, 0);
+});
+test('practice can be aborted during caught message without closing later', async () => {
+  const h = harness(), controller = new AbortController();
+  const result = h.begin({ practice: true, signal: controller.signal }); launchPractice(h);
+  h.advance(6000); assert.equal(h.all('entry-caught').length, 1);
+  controller.abort(); assert.equal(await result, false);
+  h.advance(1000); assert.equal(h.closeCalls, 0); assert.equal(h.timers.size, 0);
+});

@@ -1214,6 +1214,7 @@ function a1() {
     [Ql, Ct] = ul.useState(!0),
     [Nt, Pl] = ul.useState([0, 0]),
     E = ul.useRef(Date.now()),
+    [reviewActive, setReviewActive] = ul.useState(false),
     [onl, setOnl] = ul.useState(null),
     [onlBusy, setOnlBusy] = ul.useState(!1),
     [onlCode, setOnlCode] = ul.useState(""),
@@ -1234,7 +1235,7 @@ function a1() {
           !!onl &&
           onl.status === "active" &&
           onl.color === R.turn)),
-    d = !V.over && (z === "cvc" || (z === "pvc" && R.turn === -1));
+    d = !reviewActive && !V.over && (z === "cvc" || (z === "pvc" && R.turn === -1));
   (ul.useEffect(() => {
     if (!d) return;
     const B = window.setTimeout(() => {
@@ -1248,7 +1249,7 @@ function a1() {
     ul.useEffect(() => {
       if (
         ((E.current = Date.now()),
-        V.over || (z === "online" && (!onl || onl.status !== "active")))
+        reviewActive || V.over || (z === "online" && (!onl || onl.status !== "active")))
       )
         return;
       const B = R.turn === 1 ? 0 : 1,
@@ -1262,28 +1263,28 @@ function a1() {
             }));
         }, 250);
       return () => window.clearInterval(I);
-    }, [h, V.over, z, onl?.status]),
+    }, [h, V.over, z, onl?.status, reviewActive]),
     ul.useEffect(() => {
-      if (!U || !ml || Q || z === "online") return;
+      if (reviewActive || !U || !ml || Q || z === "online") return;
       const B = window.setTimeout(() => {
         const I = sr(o.pos, Math.min(j, 3), 3e3, o.keys);
         I.move && al({ v: h, from: I.move.from, to: I.move.to });
       }, 250);
       return () => window.clearTimeout(B);
-    }, [h, U, ml, Q, j]),
+    }, [h, U, ml, Q, j, reviewActive]),
     ul.useEffect(() => {
       if (!Gl) return;
       const B = window.setTimeout(() => $l(null), 2200);
       return () => window.clearTimeout(B);
     }, [Gl]));
   ul.useEffect(() => {
-    if (typeof EntryGate === "undefined" || defeatSeen.current) return;
+    if (reviewActive || typeof EntryGate === "undefined" || defeatSeen.current) return;
     if (!EntryGate.isDefeat({ mode: z, kind: V.kind, turn: R.turn, online: onl })) return;
     defeatSeen.current = true;
     const controller = new AbortController();
     EntryGate.punish({ french: FRENCH_MODE, signal: controller.signal }).catch(() => {});
     return () => controller.abort();
-  }, [z, V.kind, R.turn, onl?.id, onl?.status, onl?.winner, onl?.color, onl?.reason]);
+  }, [z, V.kind, R.turn, onl?.id, onl?.status, onl?.winner, onl?.color, onl?.reason, reviewActive]);
   onlRef.current = onl;
   ul.useEffect(() => {
     if (z !== "online" || !onl?.id || onl.status === "over") return;
@@ -1614,6 +1615,17 @@ function a1() {
   return v.jsxs("div", {
     className: "min-h-screen bg-slate-100 pb-72 text-slate-800",
     children: [
+      v.jsx("button", {
+        className: "review-launch",
+        disabled: reviewActive,
+        onClick: async () => {
+          if (reviewActive || typeof EntryGate === "undefined") return;
+          setReviewActive(true);
+          try { await EntryGate.review({ french: FRENCH_MODE }); } catch {}
+          finally { setReviewActive(false); }
+        },
+        children: FRENCH_MODE ? "Réviser" : "Ripassa",
+      }),
       v.jsx("header", {
         className: "bg-[#343a40] px-4 py-4 text-white shadow",
         children: v.jsxs("div", {
