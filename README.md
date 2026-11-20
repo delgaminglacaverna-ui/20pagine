@@ -214,7 +214,7 @@ orologi (default 2), poi domande infinite. Il contatore mostra la streak corrent
 errore o timeout la riportano a zero e parte un'altra domanda, dopo Wrong.
 Le risposte corrette mantengono l'attesa della fine del suono Correct.
 
-Gli otto occhi sono inizialmente chiusi. Ogni 5 secondi si apre un occhio chiuso
+Gli otto occhi sono inizialmente chiusi. Inizialmente ogni 5 secondi si apre un occhio chiuso
 scelto a caso; cliccarlo lo richiude e può riaprirsi successivamente. Se un occhio
 resta aperto per 4 secondi, tutti diventano bocche, lo sfondo diventa blu e appare
 «PERCHè è TUTTO BLUE?!?!» per 500 ms prima di tentare la chiusura (fallback
@@ -228,3 +228,7 @@ continuano sul server e gli eventuali risultati vengono gestiti al ritorno.
 Ripassa è accanto alle modalità di gioco. La scheda, gli occhi decorativi e la
 disposizione dei due orologi usano lo stesso layout del quiz iniziale; con più
 di tre orologi l’equazione va a capo per restare leggibile.
+
+Nel ripasso, ogni 5 punti di streak l’intervallo di apertura scende di 250 ms,
+fino a un minimo di 1,5 secondi (streak 70). Un errore o timeout azzera la streak
+e ripristina il prossimo intervallo a 5 secondi. Il tempo per richiudere resta 4 secondi.

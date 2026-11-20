@@ -52,6 +52,9 @@
     const options = shuffle([answer, ...shuffle(positions).slice(0, 3)]).map(minute => ({ minute, hour: next() }));
     return { clocks, options, correctIndex: options.findIndex(clock => clock.minute === answer) };
   }
+  function practiceSpawnInterval(streak) {
+    return Math.max(1500, 5000 - Math.floor(Math.max(0, streak) / 5) * 250);
+  }
   const SOUND_FILES = {
     Clock: 'chronos_math_sound.mp3.MPEG',
     Correct: 'Chronos_Clock_Question_Correct.mp3.MPEG',
@@ -236,6 +239,7 @@
         if (closed || phase === 'denied' || phase === 'caught') return;
         if (practice) {
           phase = 'checking'; clearRound(); stopSounds(); round = 0;
+          nextEyeAt = Date.now() + practiceSpawnInterval(0);
           const progress = stage.querySelector('.entry-progress');
           if (progress) progress.textContent = t('streak', 0);
           playSound('Wrong', () => { if (!closed && phase === 'checking') showQuestion(); }); return;
@@ -290,6 +294,7 @@
         phase = 'checking'; clearRound();
         if (index !== question.correctIndex) { fail(false, index); return; }
         round++;
+        if (practice && round % 5 === 0) nextEyeAt = Math.min(nextEyeAt, Date.now() + practiceSpawnInterval(round));
         stopSounds();
         playSound('Correct', () => {
           if (closed || phase !== 'checking') return;
@@ -385,7 +390,7 @@
           if (closed || phase !== 'welcome') return;
           const time = Number(seconds.value), count = Number(clocks.value);
           if (!Number.isInteger(time) || time < 1 || time > 120 || !Number.isInteger(count) || count < 1 || count > 15) return;
-          practiceSeconds = time; practiceClocks = count; nextEyeAt = Date.now() + 5000;
+          practiceSeconds = time; practiceClocks = count; nextEyeAt = Date.now() + practiceSpawnInterval(0);
           eyeTimer = root.setInterval(() => {
             if (closed || phase === 'caught') return;
             const now = Date.now();
@@ -396,7 +401,7 @@
                 const index = available[Math.floor(Math.random() * available.length)];
                 openEyes.set(index, now + 4000); paintEye(eyes.children[index], 'open');
               }
-              nextEyeAt = now + 5000;
+              nextEyeAt = now + practiceSpawnInterval(round);
             }
           }, 100);
           showQuestion();
@@ -462,5 +467,5 @@
       previousFocus?.focus?.();
     }
   }
-  root.EntryGate = { start, punish, review: options => punish({ ...options, practice: true }), isDefeat, italyTime, makeQuestion, TEXT };
+  root.EntryGate = { start, punish, practiceSpawnInterval, review: options => punish({ ...options, practice: true }), isDefeat, italyTime, makeQuestion, TEXT };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

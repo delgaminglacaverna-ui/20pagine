@@ -584,3 +584,19 @@ test('practice closed eyes use three distinct phases without double animation de
   assert(css.includes('.entry-closed-frame-3 { animation-name: entry-clock-frame-3; }'));
   h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
 });
+test('review eyes gradually spawn faster every five streak points with a safe floor', () => {
+  const interval = harness().gate.practiceSpawnInterval;
+  for (const [streak, expected] of [[0, 5000], [4, 5000], [5, 4750], [9, 4750], [10, 4500], [65, 1750], [70, 1500], [500, 1500]]) {
+    assert.equal(interval(streak), expected);
+  }
+});
+test('review spawn schedule resets to five seconds after streak loss', async () => {
+  const h = harness(), result = h.begin({ practice: true }); launchPractice(h);
+  for (let i = 0; i < 10; i++) { h.advance(1000); closePracticeEyes(h); h.answer(); }
+  assert.equal(h.all('entry-progress')[0].textContent, 'Streak: 10');
+  h.advance(1000); closePracticeEyes(h); h.answer(false);
+  assert.equal(h.all('entry-progress')[0].textContent, 'Streak: 0');
+  h.advance(4999); assert.equal(h.all('entry-eye-frame').length, 0);
+  h.advance(1); assert.equal(h.all('entry-eye-frame').length, 4);
+  h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
+});
