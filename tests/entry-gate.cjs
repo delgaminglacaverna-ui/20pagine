@@ -531,11 +531,12 @@ test('practice continues past three questions and resets streak on wrong answers
 });
 test('practice eyes open one by one, can be closed repeatedly, and catch after four seconds', async () => {
   const h = harness(), result = h.begin({ practice: true }); launchPractice(h);
-  h.advance(1999); assert.equal(h.all('entry-eye-frame').length, 0);
+  h.advance(4999); assert.equal(h.all('entry-eye-frame').length, 0);
   h.advance(1); assert.equal(h.all('entry-eye-frame').length, 4);
   const open = h.all('entry-hint-eye').find(eye => eye.attrs['aria-pressed'] === 'false');
   open.click(); assert.equal(h.all('entry-eye-frame').length, 0);
-  h.advance(2000); assert.equal(h.all('entry-eye-frame').length, 4);
+  h.advance(4999); assert.equal(h.all('entry-eye-frame').length, 0);
+  h.advance(1); assert.equal(h.all('entry-eye-frame').length, 4);
   h.advance(3999); assert.equal(h.closeCalls, 0);
   h.advance(1);
   assert.equal(h.all('entry-mouth-frame').length, 24);
@@ -548,7 +549,7 @@ test('practice eyes open one by one, can be closed repeatedly, and catch after f
 test('practice can be aborted during caught message without closing later', async () => {
   const h = harness(), controller = new AbortController();
   const result = h.begin({ practice: true, signal: controller.signal }); launchPractice(h);
-  h.advance(6000); assert.equal(h.all('entry-caught').length, 1);
+  h.advance(9000); assert.equal(h.all('entry-caught').length, 1);
   controller.abort(); assert.equal(await result, false);
   h.advance(1000); assert.equal(h.closeCalls, 0); assert.equal(h.timers.size, 0);
 });
@@ -563,5 +564,23 @@ test('default review uses the entrance quiz layout rather than punishment grid',
   const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
   assert(!css.includes('.entry-practice .entry-card'));
   assert(!css.includes('.entry-practice .entry-eye:nth-child'));
+  h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
+});
+
+test('practice closed eyes use three distinct phases without double animation delays', async () => {
+  const h = harness(), result = h.begin({ practice: true });
+  function verifyClosed() {
+    const frames = h.all('entry-closed-frame'); assert.equal(frames.length, 24);
+    for (const frame of frames) assert.equal(frame.style.animationDelay, undefined);
+    for (const eye of h.all('entry-hint-eye')) {
+      assert.equal(eye.children.length, 3);
+      eye.children.forEach((frame, index) => assert.equal(frame.src, `/assets/closed-eyes/frame-${index + 1}.webp`));
+    }
+  }
+  verifyClosed(); launchPractice(h); h.advance(5000);
+  closePracticeEyes(h); verifyClosed();
+  const css = fs.readFileSync('assets/entry-gate.css', 'utf8');
+  assert(css.includes('.entry-closed-frame-2 { animation-name: entry-clock-frame-2; }'));
+  assert(css.includes('.entry-closed-frame-3 { animation-name: entry-clock-frame-3; }'));
   h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
 });
