@@ -2,12 +2,14 @@
 <html lang="it">
   <head>
     <meta charset="UTF-8" />
+    <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="only light" />
     <meta name="darkreader-lock" />
     <link rel="preload" href="assets/fonts/NotoSansSymbols2-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <title>HAI FATTO I COMPITI???</title>
     <link rel="stylesheet" href="/assets/entry-gate.css" />
+    <link rel="stylesheet" href="/assets/risio.css" />
     <script src="/assets/site-text.js"></script>
     <link id="tab-icon" rel="icon" type="image/webp" href="/assets/eyes/frame-1.webp" />
     <script src="/assets/tab-state.js"></script>
@@ -66,7 +68,8 @@ const Qt = (o, h) => o >= 0 && o < 10 && h >= 0 && h < 10,
   nr = (o) => (10 - parseInt(o.slice(1), 10)) * 10 + (o.charCodeAt(0) - 97),
   cr = [oe, _t, Zt, Vt, Lt, Rt, Vt, Zt, _t, oe];
 // French is a separate local ruleset; reload when switching to reset the game safely.
-const FRENCH_MODE = new URLSearchParams(location.search).get("version") === "french";
+const RISIO_MODE = /^\/risio\/?$/.test(location.pathname || "");
+const FRENCH_MODE = !RISIO_MODE && new URLSearchParams(location.search).get("version") === "french";
 const FRENCH_TEXT = {
   "Scacchi Estremi 10×10 · 20 Pagine": "Échecs extrêmes 10×10 · 20 Pagine",
   "Scacchiera 10×10 con il nuovo pezzo ": "Échiquier 10×10 avec la nouvelle pièce ",
@@ -713,6 +716,17 @@ function Ff({ code: o, size: h }) {
   const b = Math.abs(o),
     f = o > 0,
     z = b === 7;
+  if (RISIO_MODE) {
+    const images = { 1: '/assets/enfosi/smiley.png', 2: '/assets/risio/Kruzzit3.webp', 3: '/assets/risio/Yippeeyay3.webp', 4: '/assets/risio/Glogga3.webp', 5: '/assets/risio/Floopfang3.webp', 6: '/assets/risio/Zorker2.webp', 7: '/assets/risio/Blepzo3.webp' };
+    const names = { 1: 'Pedone', 2: 'Kruzzit', 3: 'Yippeeyay', 4: 'Glogga', 5: 'Floopfang', 6: 'Zorker', 7: 'Blepzo' };
+    const size = h ?? 'var(--chess-piece-size, 55px)';
+    return v.jsx('img', {
+      src: images[b], alt: names[b], draggable: false,
+      className: 'risio-piece pointer-events-none select-none',
+      'data-piece-side': f ? 'white' : 'black',
+      style: { width: size, height: size, objectFit: 'contain', transform: f ? 'none' : 'rotate(180deg)', filter: f ? 'none' : 'invert(1)' },
+    });
+  }
   return v.jsx("span", {
     className: "chess-piece pointer-events-none select-none leading-none" + (FRENCH_MODE ? " french-piece" : ""),
     "data-piece-side": f ? "white" : "black",
@@ -1280,7 +1294,7 @@ function a1() {
       return () => window.clearTimeout(B);
     }, [Gl]));
   ul.useEffect(() => {
-    if (reviewActive || typeof EntryGate === "undefined" || defeatSeen.current) return;
+    if (RISIO_MODE || reviewActive || typeof EntryGate === "undefined" || defeatSeen.current) return;
     if (!EntryGate.isDefeat({ mode: z, kind: V.kind, turn: R.turn, online: onl })) return;
     defeatSeen.current = true;
     const controller = new AbortController();
@@ -1305,6 +1319,7 @@ function a1() {
     };
   }, [z, onl?.id, onl?.status, onl?.token]);
   ul.useEffect(() => {
+    if (RISIO_MODE) return;
     const code = new URLSearchParams(location.search).get("partita");
     !FRENCH_MODE && code && onlJoin(code);
   }, []);
@@ -1608,14 +1623,14 @@ function a1() {
     oa.push({ n: B / 2 + 1, w: sa(o.notes[B]), b: sa(o.notes[B + 1]) });
   const en = oa.map((B) => `${B.n}. ${B.w}${B.b ? " " + B.b : ""}`).join(" "),
     Ll = (B, I) =>
-      v.jsx("button", {
+      RISIO_MODE && B === "online" ? null : v.jsx("button", {
         className: z === B ? l1 : Pu,
         onClick: () => (onlLeave(), El(B)),
         children: I,
         disabled: FRENCH_MODE && B === "online",
       });
   return v.jsxs("div", {
-    className: "min-h-screen bg-slate-100 pb-72 text-slate-800",
+    className: "min-h-screen bg-slate-100 pb-72 text-slate-800" + (RISIO_MODE ? " risio-page" : ""),
     children: [
       v.jsx("header", {
         className: "bg-[#343a40] px-4 py-4 text-white shadow",
@@ -1626,7 +1641,7 @@ function a1() {
               className: "text-2xl font-semibold",
               children: "Scacchi Estremi 10×10 · 20 Pagine",
             }),
-            v.jsx("button", {
+            RISIO_MODE ? v.jsx("a", { href: "/", className: "rounded border px-3 py-1 text-sm", children: "Torna alla normalità" }) : v.jsx("button", {
               className: "rounded border px-3 py-1 text-sm",
               onClick: () => {
                 const url = new URL(location.href);
@@ -2191,7 +2206,7 @@ function a1() {
           }),
         ],
       }),
-      v.jsx("footer", {
+      !RISIO_MODE && v.jsx("footer", {
         className: "review-footer",
         children: v.jsx("button", {
           className: "review-launch",
@@ -2331,11 +2346,14 @@ const ENFOSI_MEDIA = [
   { type: 'video', src: '/assets/enfosi/rushing.mp4', alt: 'Rushing muh wave 7 solo' },
 ];
 function i1() {
-  const [enfosi, setEnfosi] = ul.useState(false),
+  const enfosi = RISIO_MODE,
     [mediaIndex, setMediaIndex] = ul.useState(() => Math.floor(Math.random() * ENFOSI_MEDIA.length)),
     [musicOn, setMusicOn] = ul.useState(false),
     music = ul.useRef(null), trigger = ul.useRef(createEnfosiTrigger());
-  ul.useEffect(() => () => { music.current?.pause(); }, []);
+  ul.useEffect(() => {
+    if (RISIO_MODE) toggleMusic();
+    return () => { music.current?.pause(); };
+  }, []);
   function toggleMusic() {
     try {
       if (!music.current) { music.current = new Audio('/assets/enfosi/risio.mp3'); music.current.loop = true; music.current.volume = .5; }
@@ -2345,7 +2363,7 @@ function i1() {
   }
   function clockTap() {
     if (enfosi || !trigger.current(Date.now())) return false;
-    setEnfosi(true); toggleMusic(); return true;
+    location.href = "/risio"; return true;
   }
   const media = ENFOSI_MEDIA[mediaIndex];
   const [o, h] = ul.useState(() => or()),
@@ -2499,7 +2517,7 @@ function kf({ value: o, onChange: h }) {
   });
 }
 function mountSite() {
-  window.TabState?.set(FRENCH_MODE ? "french" : "chess");
+  window.TabState?.set(RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "chess");
   if (typeof SiteText !== "undefined") document.title = SiteText.text(document.title);
   Lh.createRoot(document.getElementById("root")).render(
     v.jsx(ul.StrictMode, { children: v.jsx(a1, {}) }),
@@ -2507,6 +2525,7 @@ function mountSite() {
 }
 async function enterSite() {
   if (typeof SiteText !== "undefined") await SiteText.load();
+  if (RISIO_MODE) { mountSite(); return; }
   if (typeof EntryGate === "undefined") {
     document.getElementById("root").textContent = "Impossibile caricare la prova di ingresso. Ricarica la pagina.";
     return;

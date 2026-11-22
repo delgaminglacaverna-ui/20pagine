@@ -1,5 +1,6 @@
 (function (root) {
   const states = {
+    risio: { title: 'RISIO', icon: '/assets/enfosi/smiley.png', type: 'image/png' },
     compiti: { title: 'HAI FATTO I COMPITI???', icon: '/assets/eyes/frame-1.webp', type: 'image/webp' },
     chess: { title: 'TEMPO ESTREMO COME IL DIH', icon: '/assets/tabs/pawn.svg', type: 'image/svg+xml' },
     french: { title: '(gbfjkdfugyfhdjk)/', icon: '/assets/tabs/cigarette.svg', type: 'image/svg+xml' },
@@ -27,5 +28,5 @@
     icon.type = state.type; icon.href = state.icon;
   }
   root.TabState = { set, get: () => current };
-  set('compiti');
+  set(/^\/risio\/?$/.test(root.location?.pathname || '') ? 'risio' : 'compiti');
 })(typeof globalThis !== 'undefined' ? globalThis : window);
