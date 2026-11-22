@@ -179,6 +179,14 @@ function frenchText(text) {
   if (/^Salta tra \d+s$/.test(text)) return text.replace(/^Salta tra (\d+)s$/, "Passer dans $1 s");
   return text;
 }
+function risioText(text) {
+  if (!RISIO_MODE || typeof text !== 'string') return text;
+  return text.replace(/20 Pagine/g, 'RISIO')
+    .replace(/L'estremo/g, "L'enfoso")
+    .replace(/dell'Estremo/g, "dell'Enfoso")
+    .replace(/Doppio Estremo/g, 'Doppio Enfoso')
+    .replace(/un estremo/g, 'un enfoso');
+}
 // Translate presentation props only, never game identifiers, URLs or notation.
 for (const method of ["jsx", "jsxs"]) {
   const render = v[method];
@@ -187,7 +195,7 @@ for (const method of ["jsx", "jsxs"]) {
       props = { ...props };
       const translate = value => {
         if (Array.isArray(value)) return value.map(translate);
-        const translated = frenchText(value);
+        const translated = risioText(frenchText(value));
         return typeof SiteText !== "undefined" ? SiteText.text(translated) : translated;
       };
       props.children = translate(props.children);
@@ -718,7 +726,7 @@ function Ff({ code: o, size: h }) {
     z = b === 7;
   if (RISIO_MODE) {
     const images = { 1: '/assets/enfosi/smiley.png', 2: '/assets/risio/Kruzzit3.webp', 3: '/assets/risio/Yippeeyay3.webp', 4: '/assets/risio/Glogga3.webp', 5: '/assets/risio/Floopfang3.webp', 6: '/assets/risio/Zorker2.webp', 7: '/assets/risio/Blepzo3.webp' };
-    const names = { 1: 'Pedone', 2: 'Kruzzit', 3: 'Yippeeyay', 4: 'Glogga', 5: 'Floopfang', 6: 'Zorker', 7: 'Blepzo' };
+    const names = { 1: 'Pedone', 2: 'Kruzzit', 3: 'Yippeeyay', 4: 'Glogga', 5: 'Floopfang', 6: 'Zorker', 7: "L'enfoso (Blepzo)" };
     const size = h ?? 'var(--chess-piece-size, 55px)';
     return v.jsx('img', {
       src: images[b], alt: names[b], draggable: false,
@@ -2343,6 +2351,14 @@ const ENFOSI_MEDIA = [
   { type: 'gif', src: 'https://static2.klipy.com/ii/4493325008d34b7bf8cd6813cd5c1619/e0/ea/XuQObLUYftfP.gif', alt: 'Glaggleland Glaggle' },
   { type: 'gif', src: 'https://static2.klipy.com/ii/e7539ef2aad336edaa067c28ee130b3c/20/68/SJuBYjnYdqAb.gif', alt: 'Enfosi blud obby' },
   { type: 'gif', src: 'https://static2.klipy.com/ii/2f34308bfc69e8c858753b83566e3ab4/ca/4a/2n4ZRBCUvXldzDUma6U.gif', alt: 'Cheerer being pet' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/cfb42878805dcb270f51b28683e7455a/b5/99/6j5Bt3dW0OtP456EY.gif', alt: 'Smile more Enfosi' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/4493325008d34b7bf8cd6813cd5c1619/53/f7/UQxptHhtCUTL6JAUd.gif', alt: 'Scratch my belly Gloober' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/a8ada81afc59159ea5c8927feffa2e31/53/2b/76yx5INbmX1nqlrH0iGR.gif', alt: 'Enfosi Tumore' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/806058dc2bb1252215f5013346b7dd2c/8f/55/BuZSTP6egmSv.gif', alt: 'Glaaber absolutely hitting it' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/e7539ef2aad336edaa067c28ee130b3c/32/8d/L1bRJR14fKQLD.gif', alt: 'Grug Enfosi' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/e7539ef2aad336edaa067c28ee130b3c/f2/62/x0LWdWLWmUFiuy.gif', alt: 'Roblox Enfosi' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/a8ada81afc59159ea5c8927feffa2e31/53/41/Yidwxs8hLgjLUQ.gif', alt: 'Enfosi Scribladd' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/a8ada81afc59159ea5c8927feffa2e31/12/31/jeEfHUWsrp0HiPtnL3.gif', alt: 'When the Enfosi glagglleand' },
   { type: 'video', src: '/assets/enfosi/rushing.mp4', alt: 'Rushing muh wave 7 solo' },
 ];
 function i1() {

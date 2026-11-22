@@ -1,12 +1,12 @@
 /* Deliberately restricted to the separate /risio page. */
 .risio-page { background: #fff5a6; }
-.risio-page > * { transform-origin: 50% 20%; animation: risio-dance 3s ease-in-out infinite; }
+.risio-page > * { transform-origin: 50% 20%; animation: risio-dance 2.4s ease-in-out infinite; }
 .risio-page::after { content: ''; position: fixed; inset: 0; z-index: 9999; background: rgba(255, 217, 0, .16); pointer-events: none; }
 .risio-piece { display: inline-block; flex-shrink: 0; }
 @keyframes risio-dance {
-  0%, 100% { transform: rotate(-1deg) scale(1, 1); }
-  25% { transform: rotate(1deg) scale(1.02, .96); }
-  50% { transform: rotate(-1deg) scale(.99, 1.02); }
-  75% { transform: rotate(1deg) scale(1.02, .96); }
+  0%, 100% { transform: rotate(-2deg) scale(1, 1); }
+  25% { transform: rotate(2deg) scale(1.08, .76); }
+  50% { transform: rotate(-2deg) scale(.94, 1.16); }
+  75% { transform: rotate(2deg) scale(1.08, .76); }
 }
 @media (prefers-reduced-motion: reduce) { .risio-page > * { animation: none; } }
