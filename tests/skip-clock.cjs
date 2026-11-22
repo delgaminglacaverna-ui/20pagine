@@ -85,3 +85,18 @@ for (const file of ['smiley.png', 'risio.mp3', 'rushing.mp4']) assert(fs.statSyn
 assert(fs.readFileSync('assets/enfosi/rushing.mp4').subarray(4, 8).toString() === 'ftyp');
 assert(html.indexOf('className: "review-footer"') > html.indexOf('Modalità di gioco estremo'));
 assert.equal((html.match(/className: "review-launch"/g) || []).length, 1);
+
+{
+  let now = 0, tick, remaining;
+  const context = vm.createContext({
+    Date: { now: () => now },
+    window: { setInterval: fn => { tick = fn; return 1; }, clearInterval() {} },
+  });
+  vm.runInContext(html.slice(html.indexOf('const dr = 30'), html.indexOf('function SkipClock(')) + '\nglobalThis.start = startSkipCountdown;', context);
+  context.start(value => { remaining = value; }, 2.5);
+  assert.equal(remaining, 2.5);
+  now = 2499; tick(); assert(remaining > 0);
+  now = 2500; tick(); assert.equal(remaining, 0);
+  context.start(value => { remaining = value; }, 2.5);
+  assert.equal(remaining, 2.5, 'each Enfosi ad restarts the short cooldown');
+}

@@ -42,6 +42,7 @@ test('three clock clicks switch the ad, start local music and replace YouTube me
   await Promise.resolve(); tree = render();
   assert.equal(plays, 1);
   assert(nodes(tree).some(node => node.props?.children === 'ENFOSI AD'));
+  assert.equal(nodes(tree).find(node => node.props?.onClockTap).props.remaining, 2.5);
   const video = nodes(tree).find(node => node.type === 'video');
   assert.equal(video.props.src, '/assets/enfosi/rushing.mp4');
   assert.equal(video.props.muted, true);
