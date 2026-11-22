@@ -108,3 +108,6 @@
 
 
 .entry-equation-many { flex-wrap: wrap; }
+.review-footer { padding: 64px 16px 24px; text-align: center; }
+.review-footer .review-launch { opacity: .25; border: 0; background: transparent; color: #475569; font: inherit; font-size: 12px; cursor: pointer; text-decoration: none; }
+.review-footer .review-launch:hover, .review-footer .review-launch:focus-visible { opacity: 1; text-decoration: underline; }

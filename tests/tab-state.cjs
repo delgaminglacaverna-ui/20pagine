@@ -26,3 +26,19 @@ test('tab title and favicon follow each mode and reuse one icon link', () => {
   }
   api.set('__proto__'); assert.equal(api.get(), 'chess'); assert.equal(added, 1);
 });
+
+test('French version uses exact alternate titles while preserving mode icons and chess title', () => {
+  const icon = {};
+  const document = { title: '', getElementById: () => icon };
+  const context = vm.createContext({ document, URLSearchParams, location: { search: '?version=french' } });
+  vm.runInContext(fs.readFileSync('assets/tab-state.js', 'utf8'), context);
+  assert.equal(document.title, "MIO FIGLIO HA STUDIATO L'INGLESE E LAVORA IN FRANCIA");
+  for (const [mode, title, image] of [
+    ['review', 'perchè è tutto blanc', '/assets/closed-eyes/frame-1.webp'],
+    ['enraged', 'los tempos es bellos hahahas', '/assets/mouths/frame-1.webp'],
+    ['french', '(gbfjkdfugyfhdjk)/', '/assets/tabs/cigarette.svg'],
+    ['compiti', "MIO FIGLIO HA STUDIATO L'INGLESE E LAVORA IN FRANCIA", '/assets/eyes/frame-1.webp'],
+  ]) {
+    context.TabState.set(mode); assert.equal(document.title, title); assert.equal(icon.href, image);
+  }
+});
