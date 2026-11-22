@@ -600,3 +600,18 @@ test('review spawn schedule resets to five seconds after streak loss', async () 
   h.advance(1); assert.equal(h.all('entry-eye-frame').length, 4);
   h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
 });
+test('review upgrades to three clocks at streak ten and resets to configured count on failure', async () => {
+  for (const initial of [1, 2, 3, 5]) {
+    const h = harness(), result = h.begin({ practice: true });
+    h.all('entry-setting-clocks')[0].value = String(initial); launchPractice(h);
+    const clocks = () => h.all('entry-clock', h.all('entry-equation')[0]).length;
+    for (let i = 0; i < 10; i++) {
+      assert.equal(clocks(), initial);
+      h.advance(1000); closePracticeEyes(h); h.answer();
+    }
+    assert.equal(clocks(), Math.max(3, initial));
+    h.advance(1000); closePracticeEyes(h); h.answer(false);
+    assert.equal(clocks(), initial);
+    h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
+  }
+});
