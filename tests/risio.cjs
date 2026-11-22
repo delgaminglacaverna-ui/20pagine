@@ -59,7 +59,26 @@ test('Risio-only labels rename the AI and special piece without changing the oth
     assert.equal(normal.risioText(before), before);
   }
   const css = fs.readFileSync('assets/risio.css', 'utf8');
-  assert(css.includes('scale(1.08, .76)'));
-  assert(css.includes('scale(.94, 1.16)'));
+  assert(css.includes('scale(1.025, .94)'));
+  assert(css.includes('scale(.98, 1.045)'));
   assert(css.includes('prefers-reduced-motion'));
+});
+
+test('all ten opening names are themed in Risio only', () => {
+  const labels = [...html.slice(html.indexOf('const Ih = ['), html.indexOf('function Ph(')).matchAll(/label: "([^"]+)"/g)].map(match => match[1]);
+  assert.equal(labels.length, 10);
+  const risio = renderContext('/risio'), normal = renderContext('/');
+  for (const label of labels) {
+    assert.notEqual(risio.risioText(label), label);
+    assert.equal(normal.risioText(label), label);
+  }
+});
+
+test('Risio openings use the supplied Enfosi names rather than Smiley', () => {
+  const risio = renderContext('/risio');
+  const labels = [...html.slice(html.indexOf('const Ih = ['), html.indexOf('function Ph(')).matchAll(/label: "([^"]+)"/g)].map(match => risio.risioText(match[1]));
+  for (const name of ['Giggler', 'Gazo', 'Gloober', 'Gembo', 'Cheerer', 'Gleeber', 'Glaaber']) {
+    assert(labels.some(label => label.includes(name)), name);
+  }
+  assert(!labels.some(label => /smiley/i.test(label)));
 });

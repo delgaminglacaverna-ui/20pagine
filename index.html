@@ -181,6 +181,24 @@ function frenchText(text) {
 }
 function risioText(text) {
   if (!RISIO_MODE || typeof text !== 'string') return text;
+  const names = {
+    "Apertura del Re (fuori tempo)": "Risveglio di Gazo",
+    "Gambetto del Tempo": "Gambetto di Giggler",
+    "Attacco dell'Estremo": "Attacco dell'Enfoso",
+    "Partita del Centro Estremo": "Festa al centro di Gembo",
+    "Doppio Estremo": "Doppio Enfoso",
+    "Cavalli del Tempo": "Saltelli di Cheerer",
+    "Fianchetto Estremo": "Fianchetto di Gleeber",
+    "Svolta a T": "Svolta di Glaaber",
+    "Arrocco Lampo": "Rifugio di Floopfang",
+    "Difesa del Tempo Fermo": "Difesa del Gloober tranquillo",
+    "Scacchi Estremi 10×10 · 20 Pagine": "Scacchi ENFOSI 10×10 · RISIO",
+    ": sfida il tempo contro 20 Pagine o contro un amico. Estremo nel gioco, estremo nel tempo.": ": sorridi contro RISIO o contro un amico. Enfoso nel gioco, enfoso nello spirito.",
+    "Puoi giocare solo se studi 20 pagine": "Puoi giocare solo se sorridi a RISIO",
+    "Modalità di gioco estremo": "Modalità di gioco enfoso",
+    "x-treme": "extra enfoso",
+  };
+  if (Object.hasOwn(names, text)) return names[text];
   return text.replace(/20 Pagine/g, 'RISIO')
     .replace(/L'estremo/g, "L'enfoso")
     .replace(/dell'Estremo/g, "dell'Enfoso")
@@ -2293,9 +2311,9 @@ function c1() {
 }
 const dr = 30,
   wf = 1.25;
-function startSkipCountdown(setRemaining) {
-  const deadline = Date.now() + dr * 1000;
-  setRemaining(dr);
+function startSkipCountdown(setRemaining, duration = dr) {
+  const deadline = Date.now() + duration * 1000;
+  setRemaining(duration);
   const timer = window.setInterval(() => {
     const remaining = Math.max(0, (deadline - Date.now()) / 1000);
     setRemaining(remaining);
@@ -2383,7 +2401,7 @@ function i1() {
   }
   const media = ENFOSI_MEDIA[mediaIndex];
   const [o, h] = ul.useState(() => or()),
-    [b, f] = ul.useState(dr),
+    [b, f] = ul.useState(enfosi ? 2.5 : dr),
     z = ul.useRef(null),
     x = ul.useRef(null),
     [j, D] = ul.useState(null),
@@ -2465,11 +2483,11 @@ function i1() {
     );
   }, [enfosi]),
     ul.useEffect(() => {
-      return startSkipCountdown(f);
+      return startSkipCountdown(f, enfosi ? 2.5 : dr);
     }, [o, enfosi, mediaIndex]));
   const $ = ul.useRef(o);
   function il() {
-    if (enfosi) { f(dr); setMediaIndex(index => (index + 1 + Math.floor(Math.random() * (ENFOSI_MEDIA.length - 1))) % ENFOSI_MEDIA.length); return; }
+    if (enfosi) { f(2.5); setMediaIndex(index => (index + 1 + Math.floor(Math.random() * (ENFOSI_MEDIA.length - 1))) % ENFOSI_MEDIA.length); return; }
     const Q = or($.current);
     (($.current = Q), f(dr), q.current?.loadVideoById?.(Q), h(Q));
   }

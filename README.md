@@ -303,8 +303,8 @@ con il pass esistente e pubblicità TBB sono ripristinati. Le partite non vengon
 trasferite fra le due pagine. Le rewrite Vercel coprono `/risio` e `/risio/`.
 
 
-Aggiornamento RISIO: l'animazione dura 2,4 secondi e alterna uno schiacciamento
-verticale al 76% e un allungamento al 116%, con oscillazione di ±2°. Il movimento
+Aggiornamento RISIO: l'animazione dura 3,6 secondi e alterna uno schiacciamento
+verticale al 94% e un allungamento al 104,5%, con oscillazione di ±0,7°. Il movimento
 ridotto continua a disabilitarla. Solo in `/risio`, il nome dell'IA è **RISIO**
 e il pezzo speciale è **L'enfoso** (immagine Blepzo), incluse modalità, statistiche,
 descrizioni e aperture che nominano il pezzo. Le regole non cambiano.
@@ -320,3 +320,11 @@ La playlist ENFOSI comprende anche queste otto GIF (11 GIF totali + MP4):
 - https://klipy.com/gifs/when-the-enfosi-glagglleand
 Restano caricamenti esterni da KLIPY con fallback locale e rotazione casuale
 senza ripetizione immediata.
+
+In `/risio` il cooldown per cambiare ENFOSI AD è 2,5 secondi a ogni cambio
+(la versione normale mantiene 30 secondi). Tutte le dieci aperture e i testi
+introduttivi hanno nomi a tema ENFOSI/RISIO, senza modificare mosse o regole.
+
+Le aperture RISIO usano anche i nomi Giggler, Gazo, Gloober, Gembo, Cheerer,
+Gleeber e Glaaber; “Smiley” non è usato come nome di un enfoso nelle aperture.
+Le immagini originali di pedone e timer restano invariate.
