@@ -252,3 +252,32 @@ Titoli esatti della scheda:
 - Francese: `(gbfjkdfugyfhdjk)/`
 - Ripassa: `NON SI FANNO I COMPITI IN CLASSE!!`
 - Chronos: `IO SAREI MORTIFICATO, NON PROVI VERGOGNA`
+
+Solo nella versione francese (`?version=french`), i titoli Compiti/Ripassa/Chronos
+sono rispettivamente `MIO FIGLIO HA STUDIATO L'INGLESE E LAVORA IN FRANCIA`,
+`perchè è tutto blanc` e `los tempos es bellos hahahas`. Icone e titolo degli
+scacchi francesi restano invariati.
+
+### ENFOSI AD (easter egg)
+
+Ripassa è ora un pulsante discreto in fondo alla pagina, visibile anche alla
+navigazione da tastiera (non è rimosso dall'accessibilità).
+Tre clic sul timer della TBB AD entro una finestra mobile di 10 secondi attivano
+ENFOSI AD per la sessione corrente. I clic contano anche durante il countdown,
+ma non permettono di saltare prima dei 30 secondi. Il terzo clic attiva la modalità
+senza saltare il nuovo contenuto e riparte il countdown.
+
+La faccina allegata (`assets/enfosi/smiley.png`) sostituisce il timer visivo e ruota
+una volta ogni 15 secondi, salvo preferenza movimento ridotto. Il player YouTube
+viene distrutto e sostituito da una delle tre GIF o dall'MP4 locale; skip e fine
+video scelgono un contenuto diverso e fanno ripartire il timer. Le GIF dipendono
+da KLIPY e hanno la faccina come fallback se non disponibili:
+- https://klipy.com/gifs/glaggleland-glaggle-1
+- https://klipy.com/gifs/enfosi-blud-obby-disloyalcloth-stream-preview
+- https://klipy.com/gifs/cheerer-being-pet-aww
+
+I file caricati nel repository sono spostati in `assets/enfosi/rushing.mp4` e
+`assets/enfosi/risio.mp3`, senza ricodifica, e inclusi nella build. L'MP3 parte
+al clic di attivazione e va in loop, con controllo audio dedicato; l'MP4 è muto
+per non sovrapporre due tracce. Se l'autoplay audio viene bloccato, usare il
+pulsante audio. Il widget resta trascinabile.

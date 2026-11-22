@@ -1834,17 +1834,7 @@ function a1() {
                       Ll("pvp", "Giocatore vs Giocatore"),
                       Ll("cvc", "20 Pagine vs 20 Pagine"),
                       Ll("online", "Online 1v1"),
-                      v.jsx("button", {
-                        className: Pu + " review-launch",
-                        disabled: reviewActive,
-                        onClick: async () => {
-                          if (reviewActive || typeof EntryGate === "undefined") return;
-                          setReviewActive(true);
-                          try { await EntryGate.review({ french: FRENCH_MODE }); } catch {}
-                          finally { setReviewActive(false); }
-                        },
-                        children: FRENCH_MODE ? "Réviser" : "Ripassa",
-                      }),
+
                     ],
                   }),
                 ],
@@ -2201,6 +2191,20 @@ function a1() {
           }),
         ],
       }),
+      v.jsx("footer", {
+        className: "review-footer",
+        children: v.jsx("button", {
+          className: "review-launch",
+          disabled: reviewActive,
+          onClick: async () => {
+            if (reviewActive || typeof EntryGate === "undefined") return;
+            setReviewActive(true);
+            try { await EntryGate.review({ french: FRENCH_MODE }); } catch {}
+            finally { setReviewActive(false); }
+          },
+          children: FRENCH_MODE ? "Réviser" : "Ripassa",
+        }),
+      }),
       v.jsx(i1, {}),
     ],
   });
@@ -2276,20 +2280,20 @@ function startSkipCountdown(setRemaining) {
   }, 100);
   return () => window.clearInterval(timer);
 }
-function SkipClock({ remaining, onSkip }) {
+function SkipClock({ remaining, onSkip, onClockTap, enfosi = false }) {
   const seconds = Math.ceil(Math.max(0, remaining)), ready = remaining <= 0;
   return v.jsxs("button", {
     type: "button",
-    className: "skip-clock" + (ready ? " skip-clock-ready" : ""),
-    disabled: !ready,
-    onClick: () => { if (ready) onSkip?.(); },
+    className: "skip-clock" + (enfosi ? " enfosi-clock" : "") + (ready ? " skip-clock-ready" : ""),
+    "aria-disabled": !ready,
+    onClick: () => { if (onClockTap?.()) return; if (ready) onSkip?.(); },
     role: ready ? undefined : "timer",
     title: ready ? (FRENCH_MODE ? "Passer la vidéo" : "Salta video") : undefined,
     "aria-label": ready ? (FRENCH_MODE ? "Passer la vidéo" : "Salta video")
       : FRENCH_MODE ? `Passer dans ${seconds} secondes` : `Salta tra ${seconds} secondi`,
     "aria-live": "off",
     children: [
-      ...[1, 2, 3].map((frame) => v.jsx("img", {
+      ...(enfosi ? [v.jsx("img", { src: "/assets/enfosi/smiley.png", className: "enfosi-smiley", alt: "" }, "smiley")] : [1, 2, 3].map((frame) => v.jsx("img", {
         className: `skip-clock-face skip-clock-face-${frame}`,
         src: `assets/clock/face-${frame}.png`,
         alt: "",
@@ -2297,13 +2301,13 @@ function SkipClock({ remaining, onSkip }) {
         draggable: false,
         width: 420,
         height: 420,
-      }, frame)),
+      }, frame))),
       v.jsx("span", {
         className: "skip-clock-hand",
         "aria-hidden": true,
         style: { transform: `rotate(${(dr - Math.max(0, Math.min(dr, remaining))) * 360 / dr}deg)` },
       }),
-      ...(ready ? [1, 2, 3].map(frame => v.jsx("img", {
+      ...(ready && !enfosi ? [1, 2, 3].map(frame => v.jsx("img", {
         className: `skip-clock-cross skip-clock-cross-${frame}`,
         src: `assets/wrong/frame-${frame}.${frame === 3 ? "png" : "webp"}`,
         alt: "", "aria-hidden": true,
@@ -2311,7 +2315,39 @@ function SkipClock({ remaining, onSkip }) {
     ],
   });
 }
+function createEnfosiTrigger() {
+  let taps = [];
+  return now => {
+    taps = taps.filter(time => now - time <= 10000);
+    taps.push(now);
+    if (taps.length < 3) return false;
+    taps = []; return true;
+  };
+}
+const ENFOSI_MEDIA = [
+  { type: 'gif', src: 'https://static2.klipy.com/ii/4493325008d34b7bf8cd6813cd5c1619/e0/ea/XuQObLUYftfP.gif', alt: 'Glaggleland Glaggle' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/e7539ef2aad336edaa067c28ee130b3c/20/68/SJuBYjnYdqAb.gif', alt: 'Enfosi blud obby' },
+  { type: 'gif', src: 'https://static2.klipy.com/ii/2f34308bfc69e8c858753b83566e3ab4/ca/4a/2n4ZRBCUvXldzDUma6U.gif', alt: 'Cheerer being pet' },
+  { type: 'video', src: '/assets/enfosi/rushing.mp4', alt: 'Rushing muh wave 7 solo' },
+];
 function i1() {
+  const [enfosi, setEnfosi] = ul.useState(false),
+    [mediaIndex, setMediaIndex] = ul.useState(() => Math.floor(Math.random() * ENFOSI_MEDIA.length)),
+    [musicOn, setMusicOn] = ul.useState(false),
+    music = ul.useRef(null), trigger = ul.useRef(createEnfosiTrigger());
+  ul.useEffect(() => () => { music.current?.pause(); }, []);
+  function toggleMusic() {
+    try {
+      if (!music.current) { music.current = new Audio('/assets/enfosi/risio.mp3'); music.current.loop = true; music.current.volume = .5; }
+      if (!music.current.paused) { music.current.pause(); setMusicOn(false); }
+      else { music.current.play()?.then(() => setMusicOn(true)).catch(() => setMusicOn(false)); }
+    } catch { setMusicOn(false); }
+  }
+  function clockTap() {
+    if (enfosi || !trigger.current(Date.now())) return false;
+    setEnfosi(true); toggleMusic(); return true;
+  }
+  const media = ENFOSI_MEDIA[mediaIndex];
   const [o, h] = ul.useState(() => or()),
     [b, f] = ul.useState(dr),
     z = ul.useRef(null),
@@ -2352,6 +2388,7 @@ function i1() {
   }, []);
   const q = ul.useRef(null);
   (ul.useEffect(() => {
+    if (enfosi) return;
     let Q = !1;
     return (
       c1().then((K) => {
@@ -2392,12 +2429,13 @@ function i1() {
         ((Q = !0), q.current?.destroy?.(), (q.current = null));
       }
     );
-  }, []),
+  }, [enfosi]),
     ul.useEffect(() => {
       return startSkipCountdown(f);
-    }, [o]));
+    }, [o, enfosi, mediaIndex]));
   const $ = ul.useRef(o);
   function il() {
+    if (enfosi) { f(dr); setMediaIndex(index => (index + 1 + Math.floor(Math.random() * (ENFOSI_MEDIA.length - 1))) % ENFOSI_MEDIA.length); return; }
     const Q = or($.current);
     (($.current = Q), f(dr), q.current?.loadVideoById?.(Q), h(Q));
   }
@@ -2411,7 +2449,7 @@ function i1() {
       children: [
         v.jsxs("div", {
           className: `flex touch-none select-none items-center justify-between gap-2 px-2 py-1.5 text-xs ${M ? "cursor-grabbing" : "cursor-grab"}`,
-          title: "Trascina per spostare la TBB AD",
+          title: enfosi ? "Trascina per spostare la ENFOSI AD" : "Trascina per spostare la TBB AD",
           onPointerDown: C,
           onPointerMove: k,
           onPointerUp: L,
@@ -2427,19 +2465,24 @@ function i1() {
                 v.jsx("span", {
                   className:
                     "mr-1.5 rounded bg-amber-400 px-1.5 py-0.5 font-bold text-amber-950",
-                  children: "TBB AD",
+                  children: enfosi ? "ENFOSI AD" : "TBB AD",
                 }),
               ],
             }),
-            v.jsx(SkipClock, { remaining: b, onSkip: il }),
+            enfosi && v.jsx("button", { type: "button", onClick: toggleMusic, "aria-label": musicOn ? "Disattiva musica" : "Attiva musica", children: musicOn ? "🔊" : "🔇" }),
+            v.jsx(SkipClock, { remaining: b, onSkip: il, onClockTap: clockTap, enfosi }),
           ],
         }),
         v.jsx("div", {
           className: "relative aspect-video w-full bg-black",
-          children: v.jsx("div", {
-            className: "pointer-events-none absolute inset-0",
-            children: v.jsx("div", { ref: z, className: "h-full w-full" }),
-          }),
+          children: enfosi
+            ? media.type === 'video'
+              ? v.jsx("video", { key: media.src, src: media.src, autoPlay: true, muted: true, playsInline: true, controls: true, onEnded: il, onError: il, className: "enfosi-media" })
+              : v.jsx("img", { key: media.src, src: media.src, alt: media.alt, className: "enfosi-media", onError: event => { event.currentTarget.onerror = null; event.currentTarget.src = '/assets/enfosi/smiley.png'; } })
+            : v.jsx("div", {
+              className: "pointer-events-none absolute inset-0",
+              children: v.jsx("div", { ref: z, className: "h-full w-full" }),
+            }),
         }),
       ],
     }),
@@ -2493,7 +2536,13 @@ enterSite();
       .skip-clock { position: relative; display: inline-block; flex-shrink: 0;
         width: 54px; height: 54px; border-radius: 50%; background: #000;
         overflow: hidden; border: 0; padding: 0; appearance: none; }
-      .skip-clock:disabled { opacity: 1; cursor: default; }
+      .skip-clock[aria-disabled="true"] { opacity: 1; cursor: default; }
+      .enfosi-clock { overflow: visible; }
+      .enfosi-clock .skip-clock-hand { display: none; }
+      .enfosi-smiley { width: 100%; height: 100%; object-fit: contain; animation: enfosi-spin 15s linear infinite; }
+      @keyframes enfosi-spin { to { transform: rotate(360deg); } }
+      .enfosi-media { width: 100%; height: 100%; position: absolute; inset: 0; object-fit: contain; }
+      @media (prefers-reduced-motion: reduce) { .enfosi-smiley { animation: none; } }
       .skip-clock-ready { background: #000; cursor: pointer; }
       .skip-clock-ready:hover { border-color: #fff; }
       .skip-clock-cross { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; animation: skip-cross .6s step-end infinite; z-index: 2; }
