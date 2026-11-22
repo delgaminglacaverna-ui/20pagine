@@ -77,8 +77,9 @@ readyTrigger.props.onClick(); assert.equal(skips, 0, 'activation click must not 
 const smiley = SkipClock({ remaining: 20, enfosi: true });
 assert.equal(smiley.props.children[0].props.src, '/assets/enfosi/smiley.png');
 assert(smiley.props.className.includes('enfosi-clock'));
-assert.equal(ENFOSI_MEDIA.filter(media => media.type === 'gif').length, 3);
+assert.equal(ENFOSI_MEDIA.filter(media => media.type === 'gif').length, 11);
 assert.equal(ENFOSI_MEDIA.filter(media => media.type === 'video').length, 1);
+assert.equal(new Set(ENFOSI_MEDIA.map(media => media.src)).size, 12);
 assert(html.includes('enfosi-spin 15s linear infinite'));
 for (const file of ['smiley.png', 'risio.mp3', 'rushing.mp4']) assert(fs.statSync(`assets/enfosi/${file}`).size > 1000);
 assert(fs.readFileSync('assets/enfosi/rushing.mp4').subarray(4, 8).toString() === 'ftyp');

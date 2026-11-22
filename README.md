@@ -269,7 +269,7 @@ senza saltare il nuovo contenuto e riparte il countdown.
 
 La faccina allegata (`assets/enfosi/smiley.png`) sostituisce il timer visivo e ruota
 una volta ogni 15 secondi, salvo preferenza movimento ridotto. Il player YouTube
-viene distrutto e sostituito da una delle tre GIF o dall'MP4 locale; skip e fine
+viene distrutto e sostituito da una delle undici GIF o dall'MP4 locale; skip e fine
 video scelgono un contenuto diverso e fanno ripartire il timer. Le GIF dipendono
 da KLIPY e hanno la faccina come fallback se non disponibili:
 - https://klipy.com/gifs/glaggleland-glaggle-1
@@ -301,3 +301,22 @@ movimento ridotto disabilita il ballo. L'icona della scheda è la faccina.
 **Torna alla normalità** apre `/`: pezzi testuali, modalità normali, quiz d'ingresso
 con il pass esistente e pubblicità TBB sono ripristinati. Le partite non vengono
 trasferite fra le due pagine. Le rewrite Vercel coprono `/risio` e `/risio/`.
+
+
+Aggiornamento RISIO: l'animazione dura 2,4 secondi e alterna uno schiacciamento
+verticale al 76% e un allungamento al 116%, con oscillazione di ±2°. Il movimento
+ridotto continua a disabilitarla. Solo in `/risio`, il nome dell'IA è **RISIO**
+e il pezzo speciale è **L'enfoso** (immagine Blepzo), incluse modalità, statistiche,
+descrizioni e aperture che nominano il pezzo. Le regole non cambiano.
+
+La playlist ENFOSI comprende anche queste otto GIF (11 GIF totali + MP4):
+- https://klipy.com/gifs/smile-more-enfosi
+- https://klipy.com/gifs/scratch-my-belly-gloober
+- https://klipy.com/gifs/enfosi-tumore-2
+- https://klipy.com/gifs/glaaber-from-enfosi-absolutely-hitting-it
+- https://klipy.com/gifs/grug-enfosi
+- https://klipy.com/gifs/roblox-enfosi
+- https://klipy.com/gifs/enfosi-scribladd
+- https://klipy.com/gifs/when-the-enfosi-glagglleand
+Restano caricamenti esterni da KLIPY con fallback locale e rotazione casuale
+senza ripetizione immediata.

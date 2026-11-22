@@ -8,7 +8,7 @@ function renderContext(pathname, search = '') {
     URLSearchParams, location: { pathname, search }, document: { documentElement: {} },
     v: { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) },
   });
-  vm.runInContext(html.slice(html.indexOf('const Ht ='), html.indexOf('function wh(')) + '\nglobalThis.api = { Ff, RISIO_MODE, FRENCH_MODE };', context);
+  vm.runInContext(html.slice(html.indexOf('const Ht ='), html.indexOf('function wh(')) + '\nglobalThis.api = { Ff, RISIO_MODE, FRENCH_MODE, risioText };', context);
   return context.api;
 }
 test('Risio uses the supplied images for every piece and inverts/rotates only black', () => {
@@ -44,4 +44,22 @@ test('normal routes retain text pieces and French behavior without Risio styling
   assert(css.includes('prefers-reduced-motion'));
   const routes = JSON.parse(fs.readFileSync('vercel.json', 'utf8')).rewrites;
   for (const path of ['/risio', '/risio/']) assert(routes.some(route => route.source === path && route.destination === '/index.html'));
+});
+
+test('Risio-only labels rename the AI and special piece without changing the other variants', () => {
+  const risio = renderContext('/risio'), normal = renderContext('/');
+  for (const [before, after] of [
+    ['Giocatore vs 20 Pagine', 'Giocatore vs RISIO'],
+    ['20 Pagine vs 20 Pagine', 'RISIO vs RISIO'],
+    ['Statistiche di 20 Pagine', 'Statistiche di RISIO'],
+    ["Il nuovo pezzo: L'estremo (X)", "Il nuovo pezzo: L'enfoso (X)"],
+    ["Attacco dell'Estremo", "Attacco dell'Enfoso"],
+  ]) {
+    assert.equal(risio.risioText(before), after);
+    assert.equal(normal.risioText(before), before);
+  }
+  const css = fs.readFileSync('assets/risio.css', 'utf8');
+  assert(css.includes('scale(1.08, .76)'));
+  assert(css.includes('scale(.94, 1.16)'));
+  assert(css.includes('prefers-reduced-motion'));
 });
