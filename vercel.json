@@ -9,6 +9,14 @@
   },
   "rewrites": [
     {
+      "source": "/risio",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/risio/",
+      "destination": "/index.html"
+    },
+    {
       "source": "/panel",
       "destination": "/panel.html"
     },

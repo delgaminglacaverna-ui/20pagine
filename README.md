@@ -263,7 +263,7 @@ scacchi francesi restano invariati.
 Ripassa è ora un pulsante discreto in fondo alla pagina, visibile anche alla
 navigazione da tastiera (non è rimosso dall'accessibilità).
 Tre clic sul timer della TBB AD entro una finestra mobile di 10 secondi attivano
-ENFOSI AD per la sessione corrente. I clic contano anche durante il countdown,
+la variante `/risio` con ENFOSI AD. La navigazione ricomincia la partita. I clic contano anche durante il countdown,
 ma non permettono di saltare prima dei 30 secondi. Il terzo clic attiva la modalità
 senza saltare il nuovo contenuto e riparte il countdown.
 
@@ -277,7 +277,27 @@ da KLIPY e hanno la faccina come fallback se non disponibili:
 - https://klipy.com/gifs/cheerer-being-pet-aww
 
 I file caricati nel repository sono spostati in `assets/enfosi/rushing.mp4` e
-`assets/enfosi/risio.mp3`, senza ricodifica, e inclusi nella build. L'MP3 parte
-al clic di attivazione e va in loop, con controllo audio dedicato; l'MP4 è muto
+`assets/enfosi/risio.mp3`, senza ricodifica, e inclusi nella build. L'MP3 tenta l'avvio
+all'apertura della variante e va in loop, con controllo audio dedicato; l'MP4 è muto
 per non sovrapporre due tracce. Se l'autoplay audio viene bloccato, usare il
 pulsante audio. Il widget resta trascinabile.
+
+
+### Variante /risio
+
+Il triplo clic sull'orologio apre `/risio` (accessibile anche direttamente).
+Qui l'ingresso non richiede il quiz e non modifica il pass di 24 ore. Il widget
+parte come ENFOSI AD. I pezzi usano le immagini caricate, solo in questa variante:
+- Pedone: faccina gialla originale (`assets/enfosi/smiley.png`).
+- Cavallo: Kruzzit; alfiere: Yippeeyay; torre: Glogga.
+- Regina: Floopfang; re: Zorker; estremo: Blepzo.
+I neri sono ruotati di 180° con colori invertiti. Le promozioni e le anteprime
+usano la stessa mappatura. Le immagini degli altri pezzi sono in `assets/risio/`.
+
+Online 1v1, Ripassa e selettore francese non sono disponibili; anche parametri
+`?version=french` e `?partita=...` vengono ignorati. Nessuna sconfitta evoca Chronos.
+La pagina oscilla e si comprime, con tinta gialla non interattiva. La preferenza
+movimento ridotto disabilita il ballo. L'icona della scheda è la faccina.
+**Torna alla normalità** apre `/`: pezzi testuali, modalità normali, quiz d'ingresso
+con il pass esistente e pubblicità TBB sono ripristinati. Le partite non vengono
+trasferite fra le due pagine. Le rewrite Vercel coprono `/risio` e `/risio/`.

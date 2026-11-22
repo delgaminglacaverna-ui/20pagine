@@ -1,0 +1,47 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const { test } = require('node:test');
+const html = fs.readFileSync('index.html', 'utf8');
+function renderContext(pathname, search = '') {
+  const context = vm.createContext({
+    URLSearchParams, location: { pathname, search }, document: { documentElement: {} },
+    v: { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) },
+  });
+  vm.runInContext(html.slice(html.indexOf('const Ht ='), html.indexOf('function wh(')) + '\nglobalThis.api = { Ff, RISIO_MODE, FRENCH_MODE };', context);
+  return context.api;
+}
+test('Risio uses the supplied images for every piece and inverts/rotates only black', () => {
+  const expected = ['smiley.png', 'Kruzzit3.webp', 'Yippeeyay3.webp', 'Glogga3.webp', 'Floopfang3.webp', 'Zorker2.webp', 'Blepzo3.webp'];
+  const api = renderContext('/risio', '?version=french&partita=12345678');
+  assert.equal(api.RISIO_MODE, true); assert.equal(api.FRENCH_MODE, false);
+  for (let i = 1; i <= 7; i++) for (const side of [1, -1]) {
+    const piece = api.Ff({ code: i * side });
+    assert.equal(piece.type, 'img'); assert(piece.props.src.endsWith(expected[i - 1]));
+    assert(fs.existsSync(piece.props.src.slice(1)));
+    assert.equal(piece.props.style.transform, side === 1 ? 'none' : 'rotate(180deg)');
+    assert.equal(piece.props.style.filter, side === 1 ? 'none' : 'invert(1)');
+    assert.equal(piece.props.draggable, false);
+    assert(piece.props.alt);
+  }
+  assert.equal(api.Ff({ code: 1, size: '2rem' }).props.style.width, '2rem');
+});
+test('normal routes retain text pieces and French behavior without Risio styling', () => {
+  for (const path of ['/', '/other', '/risio-other']) {
+    const api = renderContext(path);
+    assert.equal(api.RISIO_MODE, false); assert.equal(api.Ff({ code: 1 }).type, 'span');
+  }
+  assert.equal(renderContext('/risio/').RISIO_MODE, true);
+  assert.equal(renderContext('/', '?version=french').FRENCH_MODE, true);
+  assert(html.includes('if (RISIO_MODE) { mountSite(); return; }'));
+  assert(html.includes('if (RISIO_MODE || reviewActive || typeof EntryGate'));
+  assert(html.includes('RISIO_MODE && B === "online" ? null'));
+  assert(html.includes('!RISIO_MODE && v.jsx("footer"'));
+  assert(html.includes('href: "/", className: "rounded border px-3 py-1 text-sm", children: "Torna alla normalità"'));
+  assert(html.includes('if (RISIO_MODE) return;\n    const code ='));
+  const css = fs.readFileSync('assets/risio.css', 'utf8');
+  assert(css.includes('.risio-page > *'));
+  assert(css.includes('prefers-reduced-motion'));
+  const routes = JSON.parse(fs.readFileSync('vercel.json', 'utf8')).rewrites;
+  for (const path of ['/risio', '/risio/']) assert(routes.some(route => route.source === path && route.destination === '/index.html'));
+});

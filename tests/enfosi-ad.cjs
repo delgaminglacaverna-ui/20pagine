@@ -7,7 +7,7 @@ test('three clock clicks switch the ad, start local music and replace YouTube me
   let cursor = 0, now = 0, plays = 0, pauses = 0;
   const hooks = [];
   const context = vm.createContext({
-    FRENCH_MODE: false, Date: { now: () => now }, Math: Object.assign(Object.create(Math), { random: () => .99 }),
+    FRENCH_MODE: false, RISIO_MODE: false, location: { href: "/" }, Date: { now: () => now }, Math: Object.assign(Object.create(Math), { random: () => .99 }),
     or: () => 'youtube-id',
     Audio: class {
       constructor(src) { assert.equal(src, '/assets/enfosi/risio.mp3'); this.paused = true; }
@@ -33,7 +33,13 @@ test('three clock clicks switch the ad, start local music and replace YouTube me
   const clock = nodes(tree).find(node => typeof node.type === 'function' && node.props?.onClockTap);
   for (let i = 0; i < 3; i++) { now = i * 1000; clock.props.onClockTap(); }
   await Promise.resolve();
+  assert.equal(context.location.href, "/risio");
+  assert.equal(plays, 0);
+  assert(nodes(render()).some(node => node.props?.children === 'TBB AD'), 'normal page stays normal when restored from history');
+  context.RISIO_MODE = true; hooks.length = 0;
   tree = render();
+  nodes(tree).find(node => node.props?.['aria-label'] === 'Attiva musica').props.onClick();
+  await Promise.resolve(); tree = render();
   assert.equal(plays, 1);
   assert(nodes(tree).some(node => node.props?.children === 'ENFOSI AD'));
   const video = nodes(tree).find(node => node.type === 'video');

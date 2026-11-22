@@ -42,3 +42,11 @@ test('French version uses exact alternate titles while preserving mode icons and
     context.TabState.set(mode); assert.equal(document.title, title); assert.equal(icon.href, image);
   }
 });
+
+test('Risio has its own tab immediately, independently of the French query flag', () => {
+  const icon = {}, document = { title: '', getElementById: () => icon };
+  const context = vm.createContext({ document, URLSearchParams, location: { pathname: '/risio', search: '?version=french' } });
+  vm.runInContext(fs.readFileSync('assets/tab-state.js', 'utf8'), context);
+  assert.equal(context.TabState.get(), 'risio'); assert.equal(document.title, 'RISIO');
+  assert.equal(icon.href, '/assets/enfosi/smiley.png');
+});
