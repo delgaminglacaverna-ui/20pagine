@@ -38,9 +38,9 @@ test('three clock clicks switch the ad, start local music and replace YouTube me
   assert(nodes(render()).some(node => node.props?.children === 'TBB AD'), 'normal page stays normal when restored from history');
   context.RISIO_MODE = true; hooks.length = 0;
   tree = render();
-  nodes(tree).find(node => node.props?.['aria-label'] === 'Attiva musica').props.onClick();
+  assert(!nodes(tree).some(node => /musica/.test(node.props?.['aria-label'] || '')));
   await Promise.resolve(); tree = render();
-  assert.equal(plays, 1);
+  assert.equal(plays, 0); // effects are tested separately; no manual audio control
   assert(nodes(tree).some(node => node.props?.children === 'ENFOSI AD'));
   assert.equal(nodes(tree).find(node => node.props?.onClockTap).props.remaining, 2.5);
   const video = nodes(tree).find(node => node.type === 'video');
@@ -48,6 +48,5 @@ test('three clock clicks switch the ad, start local music and replace YouTube me
   assert.equal(video.props.muted, true);
   video.props.onEnded(); tree = render();
   assert(nodes(tree).some(node => node.type === 'img' && node.props.src.startsWith('https://static2.klipy.com/')));
-  nodes(tree).find(node => node.props?.['aria-label'] === 'Disattiva musica').props.onClick();
-  assert.equal(pauses, 1);
+  assert.equal(pauses, 0);
 });
