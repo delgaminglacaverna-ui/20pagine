@@ -303,11 +303,12 @@
       }
       function showQuestion() {
         playSound('Clock');
-        clearRound(); phase = 'preview'; question = makeQuestion(Math.random, practice ? practiceClocks : punishment ? 15 : 2);
+        const clockCount = practice ? Math.max(practiceClocks, round >= 10 ? 3 : 1) : punishment ? 15 : 2;
+        clearRound(); phase = 'preview'; question = makeQuestion(Math.random, clockCount);
         heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment ? ' entry-punishment' : '') + (practice ? ' entry-practice' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
         const progress = el('h2', 'entry-progress', practice ? t('streak', round) : `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
         progress.setAttribute('aria-label', practice ? t('streak', round) : t(punishment ? 'punishRound' : 'round', round + 1));
-        const equation = el('div', 'entry-equation' + (practice && practiceClocks > 3 ? ' entry-equation-many' : ''));
+        const equation = el('div', 'entry-equation' + (practice && clockCount > 3 ? ' entry-equation-many' : ''));
         question.clocks.forEach((clock, index) => {
           if (punishment) {
             const term = el('span', 'entry-term'); term.append(face('', clock.minute, clock.hour).clock);

@@ -232,3 +232,7 @@ di tre orologi l’equazione va a capo per restare leggibile.
 Nel ripasso, ogni 5 punti di streak l’intervallo di apertura scende di 250 ms,
 fino a un minimo di 1,5 secondi (streak 70). Un errore o timeout azzera la streak
 e ripristina il prossimo intervallo a 5 secondi. Il tempo per richiudere resta 4 secondi.
+
+A streak 10 nel ripasso, dalla domanda successiva vengono mostrati almeno 3 orologi.
+Errore/timeout ripristinano il numero scelto all’inizio; se erano già più di 3,
+la quantità configurata non viene ridotta.
