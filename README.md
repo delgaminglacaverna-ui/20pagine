@@ -236,3 +236,19 @@ e ripristina il prossimo intervallo a 5 secondi. Il tempo per richiudere resta 4
 A streak 10 nel ripasso, dalla domanda successiva vengono mostrati almeno 3 orologi.
 Errore/timeout ripristinano il numero scelto all’inizio; se erano già più di 3,
 la quantità configurata non viene ridotta.
+
+### Titolo e icona della scheda
+
+`assets/tab-state.js` aggiorna il titolo e un singolo favicon secondo la modalità:
+Compiti → occhio aperto; scacchi → pedone; versione francese → sigaretta;
+Ripassa → occhio chiuso; Chronos infuriato (sconfitta, errore d'ingresso o scoperta
+nel ripasso) → bocca. Uscire dal ripasso ripristina il titolo/icona precedenti.
+Le immagini degli occhi e della bocca usano i fotogrammi esistenti; pedone e
+sigaretta hanno icone SVG locali. Le icone della scheda sono statiche.
+
+Titoli esatti della scheda:
+- Compiti: `HAI FATTO I COMPITI???`
+- Scacchi: `TEMPO ESTREMO COME IL DIH`
+- Francese: `(gbfjkdfugyfhdjk)/`
+- Ripassa: `NON SI FANNO I COMPITI IN CLASSE!!`
+- Chronos: `IO SAREI MORTIFICATO, NON PROVI VERGOGNA`

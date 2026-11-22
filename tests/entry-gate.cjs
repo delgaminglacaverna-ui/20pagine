@@ -5,7 +5,8 @@ const vm = require('node:vm');
 const source = fs.readFileSync('assets/entry-gate.js', 'utf8');
 function harness(french = false, { storage = new Map(), at = Date.parse('2026-07-01T12:00:00Z'), storageBlocked = false, audioMode } = {}) {
   let time = at, nextTimer = 0, closeCalls = 0, destination;
-  const timers = new Map(), played = [], audioClips = [];
+  const timers = new Map(), played = [], audioClips = [], tabUpdates = [];
+  let tabMode = 'chess';
   class AudioMock {
     constructor(src) { this.src = src; this.events = {}; audioClips.push(this); }
     addEventListener(name, fn) { this.events[name] = fn; }
@@ -37,6 +38,7 @@ function harness(french = false, { storage = new Map(), at = Date.parse('2026-07
   class ClockDate extends Date { constructor(...args) { super(...(args.length ? args : [time])); } static now() { return time; } }
   const addTimer = (fn, delay, repeat) => { const id = ++nextTimer; timers.set(id, { fn, at: time + delay, delay, repeat }); return id; };
   const context = vm.createContext({
+    TabState: { set: mode => { tabMode = mode; tabUpdates.push(mode); }, get: () => tabMode },
     Date: ClockDate, Intl, document: doc, Audio: audioMode ? AudioMock : undefined,
     localStorage: {
       getItem: key => { if (storageBlocked) throw Error('Storage blocked'); return storage.get(key); },
@@ -69,7 +71,7 @@ function harness(french = false, { storage = new Map(), at = Date.parse('2026-07
     const choice = all('entry-choice').find(node => (minute(node) === target) === correct);
     assert(choice); choice.click();
   }
-  return { gate: context.EntryGate, root, body, doc, storage, timers, played, audioClips, advance, all, answer,
+  return { gate: context.EntryGate, root, body, doc, storage, timers, played, audioClips, tabUpdates, advance, all, answer,
     get now() { return time; },
     begin: (options = {}) => context.EntryGate.start({ container: root, french, ...options }),
     get closeCalls() { return closeCalls; }, get destination() { return destination; } };
@@ -283,6 +285,7 @@ test('loss overlay has no exit button or Escape shortcut and restores interactio
   assert.equal(await result, false);
   assert.equal(h.root.inert, false); assert.equal(h.body.style.overflow, 'auto');
   assert(!h.body.children.includes(overlay)); assert.equal(h.timers.size, 0);
+  assert.equal(h.tabUpdates.at(-1), 'chess');
 });
 test('jumpscare dialogue plays in order then starts automatically in both languages', async () => {
   for (const french of [false, true]) {
@@ -614,4 +617,19 @@ test('review upgrades to three clocks at streak ten and resets to configured cou
     assert.equal(clocks(), initial);
     h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
   }
+});
+
+test('quiz, review and Chronos events update browser tab state', async () => {
+  const h = harness(), result = h.begin();
+  assert.equal(h.tabUpdates.at(-1), 'compiti');
+  h.all('entry-yes')[0].click(); h.advance(1000); h.answer(false);
+  assert.equal(await result, false); assert.equal(h.tabUpdates.at(-1), 'enraged');
+  const review = harness(), controller = new AbortController();
+  const pending = review.begin({ practice: true, signal: controller.signal });
+  assert.equal(review.tabUpdates.at(-1), 'review'); launchPractice(review);
+  review.advance(9000); assert.equal(review.tabUpdates.at(-1), 'enraged');
+  controller.abort(); assert.equal(await pending, false);
+  const loss = harness(), stop = new AbortController();
+  const punishment = loss.begin({ punishment: true, signal: stop.signal });
+  assert.equal(loss.tabUpdates.at(-1), 'enraged'); stop.abort(); await punishment;
 });

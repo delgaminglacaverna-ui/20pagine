@@ -78,6 +78,7 @@
     if (signal?.aborted) return Promise.resolve(false);
     const totalRounds = punishment ? 300 : 3;
     if (!practice && !punishment && hasPass()) return Promise.resolve(true);
+    root.TabState?.set(punishment ? 'enraged' : practice ? 'review' : 'compiti');
     const words = TEXT[french ? 'fr' : 'it'];
     const t = (key, ...values) => {
       const original = words[key];
@@ -249,6 +250,7 @@
         root.addEventListener('pagehide', cleanup);
         try { root.localStorage.removeItem(PASS_KEY); } catch {}
         if (punishment) { leave(); return; }
+        root.TabState?.set('enraged');
         heading.textContent = '';
         clockBox.hidden = true;
         // Both chess defeat and homework failure use mouths.
@@ -363,6 +365,7 @@
       function caught() {
         if (closed || phase === 'caught') return;
         cleanup(); phase = 'caught';
+        root.TabState?.set('enraged');
         signal?.addEventListener('abort', dismiss, { once: true });
         root.addEventListener('pagehide', cleanup);
         screen.className = 'entry-gate entry-practice entry-caught';
@@ -442,6 +445,7 @@
   }
   async function punish({ french = false, signal, practice = false } = {}) {
     if (signal?.aborted) return false;
+    const previousTab = root.TabState?.get();
     const overlay = document.createElement('div'); overlay.className = 'entry-defeat-overlay';
     overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('aria-label', practice ? (french ? TEXT.fr.review : TEXT.it.review) : french ? TEXT.fr.taunt : TEXT.it.taunt);
@@ -466,6 +470,7 @@
       overlay.removeEventListener('keydown', escape); overlay.remove(); document.body.style.overflow = overflow;
       if (background) background.inert = wasInert;
       previousFocus?.focus?.();
+      if (previousTab) root.TabState?.set(previousTab);
     }
   }
   root.EntryGate = { start, punish, practiceSpawnInterval, review: options => punish({ ...options, practice: true }), isDefeat, italyTime, makeQuestion, TEXT };
