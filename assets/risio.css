@@ -17,3 +17,11 @@
 @media (max-width: 767px), (pointer: coarse), (prefers-reduced-motion: reduce) {
   .risio-jumpscare img { animation: none; }
 }
+
+.risio-comment { position: fixed; bottom: 16px; left: 16px; max-width: calc(100vw - 32px); z-index: 10001; padding: 10px 16px; border: 2px solid #a17d00; border-radius: 16px; background: #fff5a6; color: #352600; font-weight: bold; pointer-events: none; }
+.risio-castle-party { position: fixed; inset: 0; z-index: 10000; pointer-events: none; overflow: hidden; }
+.risio-castle-party img { position: absolute; top: -60px; width: 44px; height: 44px; object-fit: contain; animation: risio-confetti .95s ease-in both; }
+@keyframes risio-confetti { from { transform: translateY(0) rotate(-25deg); } to { transform: translateY(calc(100dvh + 80px)) rotate(160deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .risio-castle-party img { animation: none; top: 16px; }
+}
