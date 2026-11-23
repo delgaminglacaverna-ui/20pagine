@@ -1608,12 +1608,12 @@ function a1() {
       $l("Niente da ripetere: sei all'estremo della partita.");
       return;
     }
-    setHistoryPaused(true);
     for (let I = 0; I < B; I++) {
       const _l = o.redo.pop();
       Iu(o, _l, !1);
     }
-    (q(null), f());
+    setHistoryPaused(o.redo.length > 0);
+    (q(null), K(null), f());
   }
   let Bt;
   switch (V.kind) {
