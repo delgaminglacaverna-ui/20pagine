@@ -23,3 +23,21 @@ test('personal match URLs preserve variant before the match parameter', () => {
   assert(!html.includes('disabled: FRENCH_MODE && B === "online"'));
   assert(!html.includes('RISIO_MODE && B === "online" ? null'));
 });
+test('online retrospective reviews run only for the local color with mixed rules, never call API', () => {
+  const html = fs.readFileSync('index.html', 'utf8');
+  const source = html.slice(html.indexOf('  function reviewPlayedNote('), html.indexOf('  function re(B, I)'));
+  for (const color of [1, -1]) {
+    const own = { piece: color, from: 1, to: 2 }, enemy = { piece: -color, from: 3, to: 4 };
+    const notes = [{}, {}], calls = [];
+    const ctx = vm.createContext({ RISIO_MODE: false, FRENCH_MODE: false, z: 'online', onlRef: { current: { color } },
+      R: { hist: [{ move: own }, { move: enemy }], frenchSides: [-1] }, o: { notes }, f() {},
+      window: { MoveCoach: { analyze(moves, french, cb, depth, sides) { calls.push({ moves, depth, sides }); cb({ symbol: 'V', comment: 'test' }); }, explain() { throw Error('online must not call explanatory API'); } } } });
+    vm.runInContext(source, ctx);
+    ctx.reviewPlayedNote(notes[1], enemy, 2, true);
+    assert.equal(notes[1].review, undefined);
+    ctx.reviewPlayedNote(notes[0], own, 1, true);
+    assert.equal(notes[0].review.symbol, 'V');
+    assert.equal(calls.length, 1); assert.equal(calls[0].moves.length, 1);
+    assert.equal(calls[0].depth, 3); assert.deepEqual(calls[0].sides, [-1]);
+  }
+});

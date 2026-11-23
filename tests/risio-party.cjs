@@ -26,5 +26,5 @@ test('Risio has no comment popup but both castling flags still celebrate', () =>
   assert(html.includes('liveRisioMove(_l.move)'));
   assert(html.includes('liveRisioMove(_l[0])'));
   assert(html.includes('window.RisioEffects?.move(move)'));
-  assert(html.includes('window.MoveCoach.risio(z === "online" ? "pvp" : z, move.piece)'));
+  assert(html.includes('window.MoveCoach.risio(online ? "pvp" : z, move.piece)'));
 });
