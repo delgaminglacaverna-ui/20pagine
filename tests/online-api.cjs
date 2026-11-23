@@ -121,3 +121,28 @@ test('Vercel routes target the same Node handler and static output includes asse
   assert(config.rewrites.some(route => route.source === '/api/matches/:id' && route.destination === '/api/matches?id=:id'));
   assert(fs.existsSync('api/matches.js'));
 });
+test('online variants are personal, French restrictions are server-enforced and reconnect cannot change them', async () => {
+  const service = createService(memoryStore());
+  const white = await request(service, 'POST', undefined, undefined, undefined, { variant: 'french' });
+  const black = await request(service, 'POST', white.id, 'join', undefined, { variant: 'risio' });
+  assert.deepEqual(black.frenchSides, [1]);
+  await rejects(request(service, 'POST', white.id, 'move', white.token, { ply: 0, move: '92,71,0', variant: 'normal' }), 400);
+  await request(service, 'POST', white.id, 'move', white.token, { ply: 0, move: '85,65,0' });
+  const state = await request(service, 'POST', white.id, 'move', black.token, { ply: 1, move: '2,21,0' });
+  assert.equal(state.moves.length, 2, 'normal-rules opponent can move left');
+  const reconnect = await request(service, 'POST', white.id, 'join', white.token, { variant: 'normal' });
+  assert.equal(reconnect.variants.white, 'french');
+  assert.deepEqual(reconnect.frenchSides, [1]);
+  const { pos } = replay(state.moves, state.variants);
+  assert(pos.legalMoves().every(m => m.to % 10 >= m.from % 10));
+  const white2 = await request(service, 'POST', undefined, undefined, undefined, { variant: 'normal' });
+  const black2 = await request(service, 'POST', white2.id, 'join', undefined, { variant: 'french' });
+  await request(service, 'POST', white2.id, 'move', white2.token, { ply: 0, move: '92,71,0' });
+  await rejects(request(service, 'POST', white2.id, 'move', black2.token, { ply: 1, move: '2,21,0' }), 400);
+});
+test('invalid online variants are rejected without changing an existing seat', async () => {
+  const service = createService(memoryStore());
+  await rejects(request(service, 'POST', undefined, undefined, undefined, { variant: 'arbitrary' }), 400);
+  const white = await request(service, 'POST');
+  await rejects(request(service, 'POST', white.id, 'join', undefined, { variant: 'arbitrary' }), 400);
+});

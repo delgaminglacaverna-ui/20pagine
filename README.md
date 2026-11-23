@@ -514,3 +514,21 @@ les explications API (ainsi que la consigne du fournisseur IA optionnel), les
 Les anciennes explications API italiennes sauvegardées affichent une description
 française du vote ; les nouvelles explications sont générées directement en français.
 Les valeurs numériques, les symboles et les règles du jeu ne sont pas modifiés.
+
+
+### Online con versioni personali
+Online 1v1 è disponibile in tutte le interfacce. URL personali canonici:
+`/?partita=CODICE`, `/?version=french&partita=CODICE`, `/risio?partita=CODICE`.
+Il link di invito copiato è neutro (`/?partita=CODICE`): l'avversario può aprirlo
+normalmente o scegliere la propria versione prima di creare/entrare nella lobby.
+L'aspetto non cambia quello dell'altro giocatore.
+
+Il server salva la variante di ciascun posto alla creazione/ingresso. Solo i colori
+iscritti come francesi non possono muovere verso colonne più a sinistra né arroccare;
+le regole valgono anche per attacchi/scacco/matto e non cambiano ruotando la tavola.
+RISIO ha regole normali con la propria UI. Riconnettersi o cambiare URL non cambia
+le restrizioni del posto: per cambiarle serve una nuova partita. La lobby mostra
+i colori sottoposti ai limiti. Il server è autoritativo su legalità e risultato;
+non accetta dal browser un elenco arbitrario di colori francesi. Le vecchie lobby
+senza metadati restano normali. Replay e analisi archivio conservano i limiti per
+colore, anche se la versione visiva del browser è diversa.

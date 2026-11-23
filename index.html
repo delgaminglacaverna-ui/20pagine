@@ -276,8 +276,10 @@ class rr {
       this.b.join(",") + "|" + this.turn + "|" + this.castling + "|" + this.ep
     );
   }
+  frenchSides = null;
+  isFrench(color) { return this.frenchSides ? this.frenchSides.includes(color) : FRENCH_MODE; }
   attacked(h, b) {
-    if (FRENCH_MODE) {
+    if (this.isFrench(b)) {
       const turn = this.turn;
       try {
         this.turn = b;
@@ -369,7 +371,7 @@ class rr {
       z = this.turn,
       x = (j, D, M, y, U = 0, H = 0) => {
         // Castling also moves a rook left, so neither castle is allowed.
-        if (FRENCH_MODE && (ia(D) < ia(j) || H === 3 || H === 4)) return;
+        if (this.isFrench(z) && (ia(D) < ia(j) || H === 3 || H === 4)) return;
         b.push({ from: j, to: D, piece: M, captured: y, promo: U, flag: H });
       };
     for (let j = 0; j < 100; j++) {
@@ -1113,6 +1115,13 @@ function onlFind(pos, code) {
     .legalMoves()
     .find((m) => m.from === a && m.to === b && (m.promo || 0) === (c || 0));
 }
+function onlVariant() { return RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "normal"; }
+function onlPageUrl(id) {
+  const params = new URLSearchParams();
+  if (FRENCH_MODE) params.set("version", "french");
+  if (id) params.set("partita", id);
+  return (RISIO_MODE ? "/risio" : "/") + (params.size ? "?" + params.toString() : "");
+}
 const ONL_KEY = "scacchiEstremi.partite";
 function onlTokens() {
   try {
@@ -1216,6 +1225,7 @@ function OnlinePanel(o) {
     className: box,
     children: [
       h2,
+      v.jsx("p", { className: "mb-2 text-slate-600", children: `Limiti francesi (sinistra e arrocco vietati): ${n.frenchSides?.length ? n.frenchSides.map(side => side === 1 ? "Bianco" : "Nero").join(", ") : "nessuno"}. Regole fissate all’ingresso, aspetto personale.` }),
       v.jsxs("div", {
         className: "flex flex-wrap items-center gap-x-4 gap-y-2",
         children: [
@@ -1379,7 +1389,7 @@ function a1() {
     window.GameArchive?.save({
       id: archiveId.current, variant: RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "normal", mode: z,
       result: onl?.status === "over" ? (onl.reason === "resign" ? "resign" : "onlineOver") : V.kind,
-      turn: R.turn, moves: R.hist.map(entry => entry.move), notes: o.notes,
+      turn: R.turn, frenchSides: R.frenchSides, moves: R.hist.map(entry => entry.move), notes: o.notes,
     });
   }, [h, z, historyPaused, onl?.status, V.kind]);
   onlRef.current = onl;
@@ -1400,14 +1410,14 @@ function a1() {
     };
   }, [z, onl?.id, onl?.status, onl?.token]);
   ul.useEffect(() => {
-    if (RISIO_MODE) return;
     const code = new URLSearchParams(location.search).get("partita");
-    !FRENCH_MODE && code && onlJoin(code);
+    code && onlJoin(code);
   }, []);
   function onlSync(st) {
     if (!st || typeof st.version != "number" || st.version <= onlVer.current)
       return;
     onlVer.current = st.version;
+    R.frenchSides = Array.isArray(st.frenchSides) ? st.frenchSides : [];
     const codes = st.moves || [],
       local = R.hist.map((x) => onlEnc(x.move));
     if (
@@ -1419,6 +1429,7 @@ function a1() {
       const m = onlFind(R, codes[i]);
       if (!m) break;
       Iu(o, m, !0);
+      if (RISIO_MODE) o.notes[o.notes.length - 1].review = window.MoveCoach.risio("pvp", m.piece);
     }
     ((o.redo = []),
       q(null),
@@ -1435,13 +1446,13 @@ function a1() {
       (onlVer.current = -1),
       setOnl({ ...data }),
       k(data.color === -1),
-      history.replaceState(null, "", `${location.pathname}?partita=${data.id}`),
+      history.replaceState(null, "", onlPageUrl(data.id)),
       onlSync(data));
   }
   async function onlCreate() {
     setOnlBusy(!0);
     try {
-      const r = await onlApi("/api/matches", {}, null);
+      const r = await onlApi("/api/matches", { variant: onlVariant() }, null);
       r.ok ? onlEnter(r.data) : $l(r.data.error || "Impossibile creare la partita.");
     } catch {
       $l("Server non raggiungibile.");
@@ -1456,7 +1467,7 @@ function a1() {
     }
     setOnlBusy(!0);
     try {
-      const r = await onlApi(`/api/matches/${code}/join`, {}, onlTokens()[code]);
+      const r = await onlApi(`/api/matches/${code}/join`, { variant: onlVariant() }, onlTokens()[code]);
       r.ok ? onlEnter(r.data) : $l(r.data.error || "Partita non trovata.");
     } catch {
       $l("Server non raggiungibile.");
@@ -1506,9 +1517,9 @@ function a1() {
   function onlLeave() {
     (setOnl(null),
       (onlVer.current = -1),
-      history.replaceState(null, "", location.pathname));
+      history.replaceState(null, "", onlPageUrl()));
   }
-  const onlLink = onl ? `${location.origin}${location.pathname}?partita=${onl.id}` : "";
+  const onlLink = onl ? `${location.origin}/?partita=${onl.id}` : "";
   const O = U && ml && z !== "online" && Ul && Ul.v === h ? Ul : null,
     Y = (B) => {
       if (!ml || Q) return !1;
@@ -1531,6 +1542,7 @@ function a1() {
   function El(B, I) {
     archiveId.current = window.GameArchive?.newId();
     setHistoryPaused(false);
+    R.frenchSides = null;
     defeatSeen.current = false;
     if (
       (R.setup(),
@@ -1562,7 +1574,7 @@ function a1() {
     Iu(o, move, !0);
     const note = o.notes[o.notes.length - 1];
     if (RISIO_MODE) {
-      note.review = window.MoveCoach.risio(z, move.piece);
+      note.review = window.MoveCoach.risio(z === "online" ? "pvp" : z, move.piece);
       window.RisioEffects?.move(move);
     } else if (z !== "online" && window.MoveCoach) {
       const moves = R.hist.map(entry => ({ from: entry.move.from, to: entry.move.to, promo: entry.move.promo }));
@@ -1738,11 +1750,11 @@ function a1() {
   const positionScore = Number.isFinite(positionReview?.whiteScore) ? positionReview.whiteScore : hr(R);
   const en = oa.map((B) => `${B.n}. ${B.w}${B.b ? " " + B.b : ""}`).join(" "),
     Ll = (B, I) =>
-      RISIO_MODE && B === "online" ? null : v.jsx("button", {
+      v.jsx("button", {
         className: z === B ? l1 : Pu,
         onClick: () => (onlLeave(), El(B)),
         children: I,
-        disabled: FRENCH_MODE && B === "online",
+
       });
   return v.jsxs("div", {
     className: "min-h-screen bg-slate-100 pb-72 text-slate-800" + (RISIO_MODE ? " risio-page" : ""),
@@ -1769,7 +1781,7 @@ function a1() {
             }),
             FRENCH_MODE && v.jsx("p", {
               className: "text-sm",
-              children: "Version française : aucun déplacement vers la colonne a, même après rotation. Roque interdit. Jeu local uniquement. Changer de version recommence la partie.",
+              children: "Version française : aucun déplacement vers la colonne a, même après rotation. Roque interdit. En ligne, ces restrictions ne concernent que les joueurs ayant choisi la version française en rejoignant la partie.",
             }),
             v.jsxs("p", {
               className: "text-sm text-slate-300",
@@ -2676,6 +2688,7 @@ function kf({ value: o, onChange: h }) {
 function ArchiveReplay({ game, ply, flipped, go, flip }) {
   const { rr: ReplayPosition } = window.ArchiveRules(game.variant === "french");
   const position = new ReplayPosition();
+  if (Array.isArray(game.frenchSides)) position.frenchSides = game.frenchSides;
   let last = null, valid = true;
   for (const code of game.moves.slice(0, ply)) {
     const move = position.legalMoves().find(m => m.from === code.from && m.to === code.to && (m.promo || 0) === (code.promo || 0));
