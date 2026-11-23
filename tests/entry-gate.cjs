@@ -587,9 +587,9 @@ test('practice closed eyes use three distinct phases without double animation de
   assert(css.includes('.entry-closed-frame-3 { animation-name: entry-clock-frame-3; }'));
   h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
 });
-test('review eyes gradually spawn faster every five streak points with a safe floor', () => {
+test('review eyes alternate single and double speed upgrades with a safe floor', () => {
   const interval = harness().gate.practiceSpawnInterval;
-  for (const [streak, expected] of [[0, 5000], [4, 5000], [5, 4750], [9, 4750], [10, 4500], [65, 1750], [70, 1500], [500, 1500]]) {
+  for (const [streak, expected] of [[0, 5000], [4, 5000], [5, 4750], [9, 4750], [10, 4250], [14, 4250], [15, 4000], [20, 3500], [25, 3250], [30, 2750], [35, 2500], [40, 2000], [45, 1750], [49, 1750], [50, 1500], [500, 1500]]) {
     assert.equal(interval(streak), expected);
   }
 });
@@ -603,7 +603,7 @@ test('review spawn schedule resets to five seconds after streak loss', async () 
   h.advance(1); assert.equal(h.all('entry-eye-frame').length, 4);
   h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);
 });
-test('review upgrades to three clocks at streak ten and resets to configured count on failure', async () => {
+test('review preserves configured clock count past streak ten and after failure', async () => {
   for (const initial of [1, 2, 3, 5]) {
     const h = harness(), result = h.begin({ practice: true });
     h.all('entry-setting-clocks')[0].value = String(initial); launchPractice(h);
@@ -612,7 +612,7 @@ test('review upgrades to three clocks at streak ten and resets to configured cou
       assert.equal(clocks(), initial);
       h.advance(1000); closePracticeEyes(h); h.answer();
     }
-    assert.equal(clocks(), Math.max(3, initial));
+    assert.equal(clocks(), initial);
     h.advance(1000); closePracticeEyes(h); h.answer(false);
     assert.equal(clocks(), initial);
     h.all('entry-practice-exit')[0].click(); assert.equal(await result, false);

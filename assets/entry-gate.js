@@ -53,7 +53,8 @@
     return { clocks, options, correctIndex: options.findIndex(clock => clock.minute === answer) };
   }
   function practiceSpawnInterval(streak) {
-    return Math.max(1500, 5000 - Math.floor(Math.max(0, streak) / 5) * 250);
+    const upgrades = Math.floor(Math.max(0, streak) / 5);
+    return Math.max(1500, 5000 - (upgrades + Math.floor(upgrades / 2)) * 250);
   }
   const SOUND_FILES = {
     Clock: 'chronos_math_sound.mp3.MPEG',
@@ -305,7 +306,7 @@
       }
       function showQuestion() {
         playSound('Clock');
-        const clockCount = practice ? Math.max(practiceClocks, round >= 10 ? 3 : 1) : punishment ? 15 : 2;
+        const clockCount = practice ? practiceClocks : punishment ? 15 : 2;
         clearRound(); phase = 'preview'; question = makeQuestion(Math.random, clockCount);
         heading.textContent = t('challenge'); heading.setAttribute('aria-live', 'off'); screen.className = 'entry-gate' + (punishment ? ' entry-punishment' : '') + (practice ? ' entry-practice' : ''); clockBox.hidden = true; bigEye.hidden = true; stage.replaceChildren();
         const progress = el('h2', 'entry-progress', practice ? t('streak', round) : `${roman(round + 1)} / ${roman(totalRounds)}`); progress.tabIndex = -1;
