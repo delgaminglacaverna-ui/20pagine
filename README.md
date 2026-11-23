@@ -389,7 +389,7 @@ La ricerca breve può sbagliare: non è un verdetto definitivo né un rilevatore
 perfetto di pezzi persi o mosse mancate. La classificazione usa il punteggio,
 non il solo fatto di aver mosso o catturato un pezzo.
 Online il commentatore è disabilitato per non offrire assistenza durante la partita.
-Aperture caricate non sono analizzate; annulla ripristina il commento precedente,
+Aperture caricate sono marcate Theory senza ricerca; annulla ripristina il commento precedente,
 ripeti conserva la valutazione già ricevuta. I simboli non entrano nella notazione copiata.
 In RISIO le valutazioni sono volutamente parodistiche: umano vs IA ??/!!,
 IA vs IA 67, umano vs umano ??; il commento resta sempre “bip bup”.
@@ -409,3 +409,33 @@ le valutazioni parodistiche con un'analisi reale.
 Il simbolo dell'ultima mossa appare nell'angolo in alto a destra della casa
 di arrivo, anche a scacchiera ruotata, oltre che nel registro. Si aggiorna con
 annulla/ripeti e scompare al reset, in assenza di analisi e durante l'analisi online disabilitata.
+
+
+### Theory e API di boi battler
+Le sequenze che corrispondono a un prefisso esatto di una delle dieci aperture
+del sito sono **📖 Theory**, sia giocate sia caricate. Non è un database di teoria
+8×8: la prima deviazione smette di essere Theory. I voti scherzosi RISIO hanno
+precedenza e non chiamano API; online il commentatore resta disabilitato.
+
+Dopo l'analisi di una mossa locale fuori repertorio, il client chiama `POST /api/coach`
+con la cronologia, l'alternativa trovata, perdita stimata e profondità. Il server
+ricostruisce la partita e verifica la legalità di entrambe le mosse usando le
+stesse regole 10×10 (anche francesi). Fornisce una spiegazione concreta con case,
+catture, scacco/matto e alternativa; non afferma che una cattura legale sia forzata.
+I punteggi rimangono stime della ricerca client, non una seconda analisi server.
+
+Facoltativamente configura **OPENAI_API_KEY** solo sul server Vercel e ridistribuisci;
+`COACH_MODEL` sceglie il modello (default `gpt-4.1-mini`). La chiave non va in chat,
+HTML o frontend. Il modello riceve soltanto fatti scacchistici verificati e stime
+del motore, non IP, credenziali o altri dati del giocatore; la richiesta arriva dal
+server a OpenAI e può avere costi. La fonte “AI” è indicata nell'interfaccia.
+Servono anche le variabili Upstash esistenti per limitare le chiamate a pagamento
+(8/minuto per IP, 100/minuto globali). Se mancano chiave/limitatore, si raggiunge
+il limite o il provider fallisce, l'API restituisce la spiegazione deterministica
+senza chiamate a pagamento. Questi limiti non sostituiscono un tetto di spesa
+nell'account del provider. Gli errori di rete client lasciano il commento locale.
+
+Il collegamento al provider è testato con risposte simulate, non con una chiave
+reale in questo ambiente. Le spiegazioni generate possono comunque sbagliare e
+non modificano simboli o punteggi. Il browser invia solo richieste same-origin;
+l'endpoint accetta POST JSON, limita il corpo e rifiuta origini diverse.
