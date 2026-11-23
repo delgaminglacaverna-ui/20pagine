@@ -35,7 +35,9 @@ function coachSearch(pos, depth, alpha, beta, ply, state) {
 self.onmessage = ({ data }) => {
   try {
     FRENCH_MODE = !!data.french;
-    const pos = new rr(), history = [pos.key()];
+    const pos = new rr();
+    if (Array.isArray(data.frenchSides)) pos.frenchSides = data.frenchSides.filter(side => side === 1 || side === -1);
+    const history = [pos.key()];
     const find = code => pos.legalMoves().find(m => m.from === code.from && m.to === code.to && (m.promo || 0) === (code.promo || 0));
     for (const code of data.moves.slice(0, -1)) {
       const move = find(code); if (!move) throw Error('Invalid history');

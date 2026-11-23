@@ -77,8 +77,10 @@ class rr {
       this.b.join(",") + "|" + this.turn + "|" + this.castling + "|" + this.ep
     );
   }
+  frenchSides = null;
+  isFrench(color) { return this.frenchSides ? this.frenchSides.includes(color) : FRENCH_MODE; }
   attacked(h, b) {
-    if (FRENCH_MODE) {
+    if (this.isFrench(b)) {
       const turn = this.turn;
       try {
         this.turn = b;
@@ -170,7 +172,7 @@ class rr {
       z = this.turn,
       x = (j, D, M, y, U = 0, H = 0) => {
         // Castling also moves a rook left, so neither castle is allowed.
-        if (FRENCH_MODE && (ia(D) < ia(j) || H === 3 || H === 4)) return;
+        if (this.isFrench(z) && (ia(D) < ia(j) || H === 3 || H === 4)) return;
         b.push({ from: j, to: D, piece: M, captured: y, promo: U, flag: H });
       };
     for (let j = 0; j < 100; j++) {

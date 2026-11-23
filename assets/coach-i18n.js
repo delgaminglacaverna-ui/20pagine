@@ -55,7 +55,8 @@
   function text(value, french = true) {
     if (!french || typeof value !== 'string') return value;
     if (Object.hasOwn(strings, value)) return strings[value];
-    return value.replace(/^Analisi (\d+\/\d+)…$/, 'Analyse $1…')
+    return value.replace(/^Limiti francesi \(sinistra e arrocco vietati\): (.*)\. Regole fissate all’ingresso, aspetto personale\.$/, (_, sides) => `Restrictions françaises (gauche et roque interdits) : ${sides.replace(/Bianco/g, 'Blancs').replace(/Nero/g, 'Noirs').replace(/nessuno/g, 'aucune')}. Règles fixées à l’entrée, apparence personnelle.`)
+      .replace(/^Analisi (\d+\/\d+)…$/, 'Analyse $1…')
       .replace(/^Posizione /, 'Position ').replace(/Inizio partita/g, 'Début de partie').replace(/\bMossa (\d+)/g, 'Coup $1')
       .replace(/ · profondità /g, ' · profondeur ').replace(/^Evaluation: /, 'Évaluation : ').replace(/^Variante prevista: /, 'Variante prévue : ')
       .replace(/Matto per il Bianco/g, 'Mat en faveur des Blancs').replace(/Matto per il Nero/g, 'Mat en faveur des Noirs')

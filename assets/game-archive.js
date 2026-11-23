@@ -21,6 +21,7 @@
     const games = read(), old = games.find(g => g.id === snapshot.id);
     // Whitelist fields: never persist online tokens, passwords or user IPs.
     const game = { id: snapshot.id, createdAt: old?.createdAt || Date.now(), updatedAt: Date.now(), variant: snapshot.variant, mode: snapshot.mode,
+      frenchSides: Array.isArray(snapshot.frenchSides) ? snapshot.frenchSides.filter(side => side === 1 || side === -1) : null,
       result: String(snapshot.result || 'none').slice(0, 30), turn: snapshot.turn,
       moves: snapshot.moves.map(m => ({ from: m.from, to: m.to, promo: m.promo, piece: m.piece })),
       notes: (snapshot.notes || []).map((n, i) => {
@@ -103,7 +104,7 @@
           status.textContent = t(`Analisi ${i + 1}/${game.moves.length}…`);
           replay?.go(i + 1);
           const result = game.variant === 'risio' ? root.MoveCoach.risio(game.mode, game.moves[i].piece) : await new Promise(resolve => {
-            const stop = root.MoveCoach.analyze(game.moves.slice(0, i + 1), game.variant === 'french', resolve, 4);
+            const stop = root.MoveCoach.analyze(game.moves.slice(0, i + 1), game.variant === 'french', resolve, 4, game.frenchSides);
             cancelWorker = () => { stop(); resolve(null); };
           });
           if (!running || !result) break;
