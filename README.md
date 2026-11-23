@@ -341,7 +341,7 @@ Il ballo della pagina RISIO include anche piccoli saltelli (6 px verso l’alto)
 e un’oscillazione laterale di 4 px, mantenendo il ciclo morbido da 3,6 s.
 Il movimento ridotto disabilita il ballo; il jumpscare resta indipendente.
 
-Solo RISIO: ogni mossa giocata dal vivo mostra per 2,2 s il fumetto “RISIO: bip bup”.
+Solo RISIO: il riquadro commentatore dice “bip bup”, senza pop-up separati.
 Ogni arrocco (corto o lungo, di entrambi i colori) aggiunge una pioggia decorativa
 di enfosi per circa un secondo, senza bloccare i clic. Con movimento ridotto
 le immagini restano ferme. Caricamento aperture, annulla e ripeti non generano effetti.
@@ -460,8 +460,13 @@ cita la risposta di quella linea, non la cattura legale di valore più alto.
 Una variante prevista non è un piano garantito: l'IA di gioco può cercare a una
 profondità diversa. In assenza di continuazione, il commento dichiara il limite.
 
-In giocatore vs IA (normale e francese), solo le mosse umane avviano ricerca
-e richieste a `/api/coach`. Dopo la risposta dell’IA commento, evaluation e badge
-restano riferiti all’ultima mossa umana; non valutano la posizione dopo l’IA.
-Le mosse IA non ricevono voti o Theory, anche con aperture caricate e ripeti.
-PvP, IA vs IA e la parodia RISIO mantengono il comportamento precedente.
+In giocatore vs IA (normale e francese), tutte le mosse avviano la ricerca dei
+voti, incluse quelle dell'IA. Solo le mosse umane fuori repertorio richiedono
+spiegazioni a `/api/coach`: boi battler continua a commentare l'ultima mossa umana.
+Evaluation numerica e badge seguono invece l'ultima mossa di qualunque colore.
+Durante l'analisi o se questa fallisce, l'evaluation mostra una stima statica
+esplicitamente indicata, non una finta profondità di ricerca. Le mosse Theory
+mantengono libro e nome dell'apertura, ma ricevono anche la ricerca numerica.
+PvP e IA vs IA mantengono i commenti per entrambe le parti.
+In RISIO il riquadro si chiama **RISIO dice:** e continua a dire “bip bup”; il
+pop-up separato è rimosso. Festa dell'arrocco e jumpscare restano invariati.

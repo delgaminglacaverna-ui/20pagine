@@ -120,7 +120,7 @@ test('good-move checks stack vertically and commentator uses requested name', ()
   assert.equal(mark.props.children.length, 2);
   assert(mark.props.children.every(child => child.props.children === '✓'));
   assert(fs.readFileSync('assets/move-coach.css', 'utf8').includes('flex-direction: column'));
-  assert(html.includes('children: "boi battler dice:"'));
+  assert(html.includes('children: RISIO_MODE ? "RISIO dice:" : "boi battler dice:"'));
 });
 test('four-ply coach continuation selects the bishop capture and retains a legal PV', () => {
   const c = vm.createContext({ self: {}, Date, Math });
