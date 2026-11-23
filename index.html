@@ -1287,6 +1287,7 @@ function a1() {
     [Nt, Pl] = ul.useState([0, 0]),
     E = ul.useRef(Date.now()),
     [reviewActive, setReviewActive] = ul.useState(false),
+    [historyPaused, setHistoryPaused] = ul.useState(false),
     [onl, setOnl] = ul.useState(null),
     [onlBusy, setOnlBusy] = ul.useState(!1),
     [onlCode, setOnlCode] = ul.useState(""),
@@ -1299,7 +1300,7 @@ function a1() {
     rl = ul.useMemo(() => hr(R), [h]),
     onlOver = z === "online" && !!onl && onl.status === "over",
     ml =
-      !V.over &&
+      !historyPaused && !V.over &&
       !onlOver &&
       (z === "pvp" ||
         (z === "pvc" && R.turn === 1) ||
@@ -1307,7 +1308,7 @@ function a1() {
           !!onl &&
           onl.status === "active" &&
           onl.color === R.turn)),
-    d = !reviewActive && !V.over && (z === "cvc" || (z === "pvc" && R.turn === -1));
+    d = !historyPaused && !reviewActive && !V.over && (z === "cvc" || (z === "pvc" && R.turn === -1));
   (ul.useEffect(() => {
     if (!d) return;
     const B = window.setTimeout(() => {
@@ -1321,7 +1322,7 @@ function a1() {
     ul.useEffect(() => {
       if (
         ((E.current = Date.now()),
-        reviewActive || V.over || (z === "online" && (!onl || onl.status !== "active")))
+        reviewActive || historyPaused || V.over || (z === "online" && (!onl || onl.status !== "active")))
       )
         return;
       const B = R.turn === 1 ? 0 : 1,
@@ -1335,32 +1336,32 @@ function a1() {
             }));
         }, 250);
       return () => window.clearInterval(I);
-    }, [h, V.over, z, onl?.status, reviewActive]),
+    }, [h, V.over, z, onl?.status, reviewActive, historyPaused]),
     ul.useEffect(() => {
-      if (reviewActive || !U || !ml || Q || z === "online") return;
+      if (historyPaused || reviewActive || !U || !ml || Q || z === "online") return;
       const B = window.setTimeout(() => {
         const I = sr(o.pos, Math.min(j, 3), 3e3, o.keys);
         I.move && al({ v: h, from: I.move.from, to: I.move.to });
       }, 250);
       return () => window.clearTimeout(B);
-    }, [h, U, ml, Q, j, reviewActive]),
+    }, [h, U, ml, Q, j, reviewActive, historyPaused]),
     ul.useEffect(() => {
       if (!Gl) return;
       const B = window.setTimeout(() => $l(null), 2200);
       return () => window.clearTimeout(B);
     }, [Gl]));
   ul.useEffect(() => {
-    if (!RISIO_MODE || reviewActive || z !== "pvc" || V.kind !== "mate" || R.turn !== 1) return;
+    if (!RISIO_MODE || reviewActive || historyPaused || z !== "pvc" || V.kind !== "mate" || R.turn !== 1) return;
     return window.RisioEffects?.scare();
-  }, [z, V.kind, R.turn, reviewActive]);
+  }, [z, V.kind, R.turn, reviewActive, historyPaused]);
   ul.useEffect(() => {
-    if (RISIO_MODE || reviewActive || typeof EntryGate === "undefined" || defeatSeen.current) return;
+    if (RISIO_MODE || reviewActive || historyPaused || typeof EntryGate === "undefined" || defeatSeen.current) return;
     if (!EntryGate.isDefeat({ mode: z, kind: V.kind, turn: R.turn, online: onl })) return;
     defeatSeen.current = true;
     const controller = new AbortController();
     EntryGate.punish({ french: FRENCH_MODE, signal: controller.signal }).catch(() => {});
     return () => controller.abort();
-  }, [z, V.kind, R.turn, onl?.id, onl?.status, onl?.winner, onl?.color, onl?.reason, reviewActive]);
+  }, [z, V.kind, R.turn, onl?.id, onl?.status, onl?.winner, onl?.color, onl?.reason, reviewActive, historyPaused]);
   onlRef.current = onl;
   ul.useEffect(() => {
     if (z !== "online" || !onl?.id || onl.status === "over") return;
@@ -1508,6 +1509,7 @@ function a1() {
     (I.piece > 0 && !ol && (ol = I), I.piece < 0 && !Hl && (Hl = I));
   }
   function El(B, I) {
+    setHistoryPaused(false);
     defeatSeen.current = false;
     if (
       (R.setup(),
@@ -1590,21 +1592,23 @@ function a1() {
   }
   function Pa() {
     if (d) return;
-    const B = Math.min(z === "pvc" && R.turn === 1 ? 2 : 1, R.hist.length);
+    const B = Math.min(1, R.hist.length);
     if (B === 0) {
       $l("Niente da annullare: il tempo è già all'inizio.");
       return;
     }
+    setHistoryPaused(true);
     for (let I = 0; I < B; I++) $h(o);
     (q(null), K(null), f());
   }
   function lu() {
     if (d) return;
-    const B = Math.min(z === "pvc" ? 2 : 1, o.redo.length);
+    const B = Math.min(1, o.redo.length);
     if (B === 0) {
       $l("Niente da ripetere: sei all'estremo della partita.");
       return;
     }
+    setHistoryPaused(true);
     for (let I = 0; I < B; I++) {
       const _l = o.redo.pop();
       Iu(o, _l, !1);
@@ -2074,6 +2078,11 @@ function a1() {
                     onClick: lu,
                     disabled: d || z === "cvc" || z === "online",
                     children: "Avanti nel tempo ⟳",
+                  }),
+                  historyPaused && v.jsx("button", {
+                    className: Pu,
+                    onClick: () => { o.redo = []; setHistoryPaused(false); f(); },
+                    children: "▶ Riprendi da qui",
                   }),
                   v.jsx("button", {
                     className: Pu,

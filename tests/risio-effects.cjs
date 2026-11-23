@@ -27,6 +27,6 @@ test('Risio jumpscare is route-isolated, clean up and redirect after 900ms', () 
   assert(!css.includes('risio-roam'));
   assert(css.includes('.risio-jumpscare'));
   const html = fs.readFileSync('index.html', 'utf8');
-  assert(html.includes('!RISIO_MODE || reviewActive || z !== "pvc" || V.kind !== "mate" || R.turn !== 1'));
+  assert(html.includes('!RISIO_MODE || reviewActive || historyPaused || z !== "pvc" || V.kind !== "mate" || R.turn !== 1'));
   assert(!html.includes('toggleMusic')); assert(html.includes("window.removeEventListener('pointerdown', startMusic)"));
 });
