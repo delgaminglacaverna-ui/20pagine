@@ -589,7 +589,7 @@ test('practice closed eyes use three distinct phases without double animation de
 });
 test('review eyes alternate single and double speed upgrades with a safe floor', () => {
   const interval = harness().gate.practiceSpawnInterval;
-  for (const [streak, expected] of [[0, 5000], [4, 5000], [5, 4750], [9, 4750], [10, 4250], [14, 4250], [15, 4000], [20, 3500], [25, 3250], [30, 2750], [35, 2500], [40, 2000], [45, 1750], [49, 1750], [50, 1500], [500, 1500]]) {
+  for (const [streak, expected] of [[0, 5000], [4, 5000], [5, 4750], [9, 4750], [10, 4250], [14, 4250], [15, 3875], [20, 3125], [25, 2562.5], [30, 1500], [35, 1500], [40, 1500], [45, 1500], [49, 1500], [50, 1500], [500, 1500]]) {
     assert.equal(interval(streak), expected);
   }
 });

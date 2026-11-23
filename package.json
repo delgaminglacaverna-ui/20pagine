@@ -7,7 +7,7 @@
   },
   "scripts": {
     "build": "node scripts/build.cjs",
-    "test": "node scripts/sync-engine.cjs --check && node --test tests/*.cjs"
+    "test": "node scripts/sync-engine.cjs --check && node scripts/sync-coach.cjs --check && node --test tests/*.cjs"
   },
   "devDependencies": {
     "acorn": "^8.19.0"

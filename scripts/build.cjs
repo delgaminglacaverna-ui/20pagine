@@ -1,4 +1,5 @@
 require('./sync-engine.cjs');
+require('./sync-coach.cjs');
 const fs = require('node:fs');
 fs.writeFileSync('assets/legacy-layout.css', require('./legacy-css.cjs')(fs.readFileSync('index.html', 'utf8')));
 fs.mkdirSync('public', { recursive: true });
