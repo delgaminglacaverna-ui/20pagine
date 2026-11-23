@@ -229,13 +229,12 @@ Ripassa è accanto alle modalità di gioco. La scheda, gli occhi decorativi e la
 disposizione dei due orologi usano lo stesso layout del quiz iniziale; con più
 di tre orologi l’equazione va a capo per restare leggibile.
 
-Nel ripasso, ogni 5 punti di streak l’intervallo di apertura scende di 250 ms,
-fino a un minimo di 1,5 secondi (streak 70). Un errore o timeout azzera la streak
-e ripristina il prossimo intervallo a 5 secondi. Il tempo per richiudere resta 4 secondi.
+Nel ripasso, ogni 5 punti di streak l’occhio diventa più veloce, alternando
+riduzioni di 250 ms e 500 ms: a 5 l’intervallo è 4,75 s, a 10 è 4,25 s,
+a 15 è 4 s e a 20 è 3,5 s. Il minimo è 1,5 s (raggiunto a streak 50).
+Un errore o timeout azzera la streak e ripristina l’intervallo di 5 s.
+Il numero di orologi resta sempre quello configurato, anche oltre streak 10.
 
-A streak 10 nel ripasso, dalla domanda successiva vengono mostrati almeno 3 orologi.
-Errore/timeout ripristinano il numero scelto all’inizio; se erano già più di 3,
-la quantità configurata non viene ridotta.
 
 ### Titolo e icona della scheda
 
