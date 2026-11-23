@@ -341,3 +341,8 @@ locali fra umani o fra IA non attivano il jumpscare. Nessun lampeggio o audio ex
 Il ballo della pagina RISIO include anche piccoli saltelli (6 px verso l’alto)
 e un’oscillazione laterale di 4 px, mantenendo il ciclo morbido da 3,6 s.
 Il movimento ridotto disabilita il ballo; il jumpscare resta indipendente.
+
+Solo RISIO: ogni mossa giocata dal vivo mostra per 2,2 s il fumetto “RISIO: bip bup”.
+Ogni arrocco (corto o lungo, di entrambi i colori) aggiunge una pioggia decorativa
+di enfosi per circa un secondo, senza bloccare i clic. Con movimento ridotto
+le immagini restano ferme. Caricamento aperture, annulla e ripeti non generano effetti.

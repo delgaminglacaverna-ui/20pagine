@@ -12,5 +12,33 @@
     const timer = root.setTimeout(() => root.location.assign(destination), 900);
     return () => { root.clearTimeout(timer); overlay.remove(); };
   }
-  root.RisioEffects = { scare };
+  let commentTimer, partyTimer;
+  function move(move) {
+    if (!/^\/risio\/?$/.test(root.location.pathname)) return;
+    // Only live moves call this: loading openings, undo and redo stay silent.
+    let comment = document.querySelector('.risio-comment');
+    if (!comment) {
+      comment = document.createElement('div'); comment.className = 'risio-comment';
+      comment.setAttribute('role', 'status'); document.body.appendChild(comment);
+    }
+    comment.textContent = 'RISIO: bip bup';
+    root.clearTimeout(commentTimer);
+    commentTimer = root.setTimeout(() => comment.remove(), 2200);
+    if (move.flag !== 3 && move.flag !== 4) return;
+    document.querySelector('.risio-castle-party')?.remove();
+    root.clearTimeout(partyTimer);
+    const party = document.createElement('div'); party.className = 'risio-castle-party';
+    party.setAttribute('aria-hidden', 'true');
+    const faces = ['Kruzzit3.webp', 'Yippeeyay3.webp', 'Glogga3.webp', 'Floopfang3.webp', 'Zorker2.webp', 'Blepzo3.webp'];
+    for (let i = 0; i < 18; i++) {
+      const face = document.createElement('img');
+      face.src = '/assets/risio/' + faces[i % faces.length]; face.alt = '';
+      face.style.left = (3 + i * 5.2) + '%';
+      face.style.animationDelay = (i % 4 * 35) + 'ms';
+      party.appendChild(face);
+    }
+    document.body.appendChild(party);
+    partyTimer = root.setTimeout(() => party.remove(), 1100);
+  }
+  root.RisioEffects = { scare, move };
 })(window);

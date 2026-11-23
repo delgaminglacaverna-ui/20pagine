@@ -1284,7 +1284,7 @@ function a1() {
     const B = window.setTimeout(() => {
       const I = o.pos.turn === 1 ? M : j,
         _l = sr(o.pos, I, 7e3, o.keys);
-      (_l.move && (Iu(o, _l.move, !0), ql({ nodes: _l.nodes, ms: _l.ms })),
+      (_l.move && (liveRisioMove(_l.move), ql({ nodes: _l.nodes, ms: _l.ms })),
         f());
     }, 250);
     return () => window.clearTimeout(B);
@@ -1506,13 +1506,17 @@ function a1() {
       }
     (x(B), f());
   }
+  function liveRisioMove(move) {
+    Iu(o, move, !0);
+    if (RISIO_MODE) window.RisioEffects?.move(move);
+  }
   function re(B, I) {
     const _l = V.legal.filter((Ot) => Ot.from === B && Ot.to === I);
     return _l.length === 0
       ? !1
       : _l[0].promo
         ? (K({ from: B, to: I }), q(null), !0)
-        : (Iu(o, _l[0], !0),
+        : (liveRisioMove(_l[0]),
           q(null),
           z === "online" && onlSend(_l[0]),
           f(),
@@ -1523,7 +1527,7 @@ function a1() {
     const I = V.legal.find(
       (_l) => _l.from === Q.from && _l.to === Q.to && _l.promo === B,
     );
-    (K(null), I && (Iu(o, I, !0), z === "online" && onlSend(I), f()));
+    (K(null), I && (liveRisioMove(I), z === "online" && onlSend(I), f()));
   }
   function Ia(B) {
     !ml ||
