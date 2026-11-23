@@ -54,7 +54,11 @@
   }
   function practiceSpawnInterval(streak) {
     const upgrades = Math.floor(Math.max(0, streak) / 5);
-    return Math.max(1500, 5000 - (upgrades + Math.floor(upgrades / 2)) * 250);
+    let reduction = 0;
+    for (let step = 1; step <= Math.min(upgrades, 20); step++) {
+      reduction += 250 * Math.pow(1.5, Math.floor((step - 1) / 2)) * (step % 2 === 0 ? 2 : 1);
+    }
+    return Math.max(1500, 5000 - reduction);
   }
   const SOUND_FILES = {
     Clock: 'chronos_math_sound.mp3.MPEG',

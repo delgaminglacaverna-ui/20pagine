@@ -26,5 +26,6 @@ test('live Risio moves comment bip bup and both castling flags celebrate', () =>
   const html = fs.readFileSync('index.html', 'utf8');
   assert(html.includes('liveRisioMove(_l.move)'));
   assert(html.includes('liveRisioMove(_l[0])'));
-  assert(html.includes('RISIO_MODE) window.RisioEffects?.move(move)'));
+  assert(html.includes('window.RisioEffects?.move(move)'));
+  assert(html.includes('window.MoveCoach.risio(z, move.piece)'));
 });

@@ -230,8 +230,8 @@ disposizione dei due orologi usano lo stesso layout del quiz iniziale; con più
 di tre orologi l’equazione va a capo per restare leggibile.
 
 Nel ripasso, ogni 5 punti di streak l’occhio diventa più veloce, alternando
-riduzioni di 250 ms e 500 ms: a 5 l’intervallo è 4,75 s, a 10 è 4,25 s,
-a 15 è 4 s e a 20 è 3,5 s. Il minimo è 1,5 s (raggiunto a streak 50).
+riduzioni iniziali di 250 ms e 500 ms (poi ×1,5 per coppia): a 5 l’intervallo è 4,75 s, a 10 è 4,25 s,
+a 15 è 3,875 s e a 20 è 3,125 s. Il minimo è 1,5 s (raggiunto a streak 30).
 Un errore o timeout azzera la streak e ripristina l’intervallo di 5 s.
 Il numero di orologi resta sempre quello configurato, anche oltre streak 10.
 
@@ -364,3 +364,25 @@ Chronos browser-tab icons (open eye, closed eye and mouth) use separate
 light-blue-tinted PNGs in `assets/tabs/chronos-*.png` for visibility on light
 browser chrome. Original in-page animation frames, titles and other mode icons
 are unchanged. The initial HTML favicon uses the same tinted eye.
+
+
+### Commentatore mosse
+Le mosse locali dal vivo ricevono un simbolo nel registro e un commento sotto
+la scacchiera. La ricerca gira in un Web Worker sul motore 10×10 del sito
+(profondità massima 2, budget ~1 s; indisponibile se non completa nemmeno un livello).
+Non usa Stockfish e non riproduce l'algoritmo proprietario di chess.com.
+La perdita rispetto alla migliore mossa trovata determina Buona (=), Ottima (!),
+Imprecisione (?!, >=50 centesimi), Errore (?, >=120), Grave errore (??, >=250).
+Brillante (!!) è una prudente euristica: migliore mossa, sacrificio di un pezzo
+catturabile da uno meno prezioso, vantaggio >=80 sulle alternative e valutazione
+non inferiore a -50. La ricerca breve può sbagliare: non è un verdetto definitivo.
+Online il commentatore è disabilitato per non offrire assistenza durante la partita.
+Aperture caricate non sono analizzate; annulla ripristina il commento precedente,
+ripeti conserva la valutazione già ricevuta. I simboli non entrano nella notazione copiata.
+In RISIO le valutazioni sono volutamente parodistiche: umano vs IA ??/!!,
+IA vs IA 67, umano vs umano ??; il commento resta sempre “bip bup”.
+
+Aggiornamento occhio ripasso: gli upgrade a 5/10/15/20 sono rispettivamente
+-0,25/-0,50/-0,375/-0,75 s. Ogni coppia successiva moltiplica le riduzioni
+per 1,5; intervalli 4,75/4,25/3,875/3,125 s, minimo 1,5 s dalla streak 30.
+Il numero configurato di orologi non cambia e l'errore ripristina 5 s.
