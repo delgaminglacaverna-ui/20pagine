@@ -1429,7 +1429,16 @@ function a1() {
       const m = onlFind(R, codes[i]);
       if (!m) break;
       Iu(o, m, !0);
-      if (RISIO_MODE) o.notes[o.notes.length - 1].review = window.MoveCoach.risio("pvp", m.piece);
+      delete o.notes[o.notes.length - 1].review;
+    }
+    // Reviews stay in this browser and belong only to the authenticated player's color.
+    for (let i = o.notes.length - 1; i >= 0; i--) {
+      if (Math.sign(R.hist[i].move.piece) !== st.color) {
+        delete o.notes[i].review;
+        continue;
+      }
+      if (!o.notes[i].review) reviewPlayedNote(o.notes[i], R.hist[i].move, i + 1, true);
+      break;
     }
     ((o.redo = []),
       q(null),
@@ -1444,6 +1453,7 @@ function a1() {
     (data.token && onlSaveToken(data.id, data.token),
       El("online"),
       (onlVer.current = -1),
+      (onlRef.current = data),
       setOnl({ ...data }),
       k(data.color === -1),
       history.replaceState(null, "", onlPageUrl(data.id)),
@@ -1573,25 +1583,30 @@ function a1() {
   function liveRisioMove(move) {
     Iu(o, move, !0);
     const note = o.notes[o.notes.length - 1];
+    reviewPlayedNote(note, move, R.hist.length, z === "online");
+    if (RISIO_MODE) window.RisioEffects?.move(move);
+  }
+  function reviewPlayedNote(note, move, ply, online) {
+    if (online && Math.sign(move.piece) !== onlRef.current?.color) return;
     if (RISIO_MODE) {
-      note.review = window.MoveCoach.risio(z === "online" ? "pvp" : z, move.piece);
-      window.RisioEffects?.move(move);
-    } else if (z !== "online" && window.MoveCoach) {
-      const moves = R.hist.map(entry => ({ from: entry.move.from, to: entry.move.to, promo: entry.move.promo }));
+      note.review = window.MoveCoach.risio(online ? "pvp" : z, move.piece);
+    } else if (window.MoveCoach) {
+      const moves = R.hist.slice(0, ply).map(entry => ({ from: entry.move.from, to: entry.move.to, promo: entry.move.promo }));
       const theoryReview = note.review?.theory ? { ...note.review } : null;
       note.review = { pending: true, ...theoryReview };
       window.MoveCoach.analyze(moves, FRENCH_MODE, result => {
-        // Preserve the shared review object through undo/redo, including pending analysis.
         delete note.review.pending;
         Object.assign(note.review, result, theoryReview || {});
         if (o.notes.some(entry => entry.review === note.review)) f();
-        if (!theoryReview && (z !== "pvc" || move.piece > 0) && !result.unavailable && o.notes.some(entry => entry.review === note.review)) window.MoveCoach.explain(moves, FRENCH_MODE, result, explanation => {
+        // Online uses local, retrospective commentary only: no PV/API advice is shared.
+        if (!online && !theoryReview && (z !== "pvc" || move.piece > 0) && !result.unavailable && o.notes.some(entry => entry.review === note.review)) window.MoveCoach.explain(moves, FRENCH_MODE, result, explanation => {
           if (explanation) Object.assign(note.review, explanation);
           if (o.notes.some(entry => entry.review === note.review)) f();
         });
-      });
+      }, 3, online ? R.frenchSides : null);
     }
   }
+
   function re(B, I) {
     const _l = V.legal.filter((Ot) => Ot.from === B && Ot.to === I);
     return _l.length === 0
@@ -1741,7 +1756,9 @@ function a1() {
   for (let B = 0; B < o.notes.length; B += 2)
     oa.push({ n: B / 2 + 1, w: sa(o.notes[B]), b: sa(o.notes[B + 1]), wr: o.notes[B]?.review, br: o.notes[B + 1]?.review });
   let coachIndex = o.notes.length - 1;
-  if (!RISIO_MODE && z === "pvc") {
+  if (z === "online") {
+    while (coachIndex >= 0 && Math.sign(R.hist[coachIndex]?.move.piece) !== onl?.color) coachIndex--;
+  } else if (!RISIO_MODE && z === "pvc") {
     while (coachIndex >= 0 && !(R.hist[coachIndex]?.move.piece > 0)) coachIndex--;
   }
   const lastCoachNote = o.notes[coachIndex];
@@ -2034,7 +2051,7 @@ function a1() {
                 "aria-label": "Commento della mossa",
                 children: [
                   v.jsx("h2", { className: "font-bold", children: RISIO_MODE ? "RISIO dice:" : "boi battler dice:" }),
-                  v.jsxs("p", { role: "status", children: z === "online" ? "Commenti disabilitati durante le partite online." : !lastCoachReview ? "Gioca una mossa per ricevere un commento." : lastCoachReview.pending ? "Analisi della mossa…" : lastCoachReview.unavailable ? "Analisi non disponibile per questa mossa." : [qualityMark(lastCoachReview.symbol), " ", lastCoachReview.parody ? "bip bup" : lastCoachReview.label + ": " + lastCoachReview.comment] }),
+                  v.jsxs("p", { role: "status", children: !lastCoachReview ? "Gioca una mossa per ricevere un commento." : lastCoachReview.pending ? "Analisi della mossa…" : lastCoachReview.unavailable ? "Analisi non disponibile per questa mossa." : [qualityMark(lastCoachReview.symbol), " ", lastCoachReview.parody ? "bip bup" : lastCoachReview.label + ": " + lastCoachReview.comment] }),
                   lastCoachReview?.explanationSource && v.jsx("p", { className: "text-xs text-slate-500", children: lastCoachReview.explanationSource === "ai" ? "Spiegazione AI basata sui dati del motore; può contenere errori." : "Spiegazione API basata su mosse legali e dati del motore." }),
                   !RISIO_MODE && z !== "online" && v.jsxs("p", {
                     className: "font-mono",

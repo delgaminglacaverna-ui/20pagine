@@ -388,7 +388,7 @@ conto del materiale già catturato. Non prova la correttezza a lungo termine.
 La ricerca breve può sbagliare: non è un verdetto definitivo né un rilevatore
 perfetto di pezzi persi o mosse mancate. La classificazione usa il punteggio,
 non il solo fatto di aver mosso o catturato un pezzo.
-Online il commentatore è disabilitato per non offrire assistenza durante la partita.
+Online il commentatore valuta solo le mosse già compiute dal giocatore locale, bianco o nero: voti e commenti restano nel suo browser e non vengono inviati al rivale. Suggerimenti prima della mossa e spiegazioni API restano disabilitati.
 Aperture caricate sono marcate Theory senza ricerca; annulla ripristina il commento precedente,
 ripeti conserva la valutazione già ricevuta. I simboli non entrano nella notazione copiata.
 In RISIO le valutazioni sono volutamente parodistiche: umano vs IA ??/!!,
@@ -415,7 +415,7 @@ annulla/ripeti e scompare al reset, in assenza di analisi e durante l'analisi on
 Le sequenze che corrispondono a un prefisso esatto di una delle dieci aperture
 del sito sono **📖 Theory**, sia giocate sia caricate. Non è un database di teoria
 8×8: la prima deviazione smette di essere Theory. I voti scherzosi RISIO hanno
-precedenza e non chiamano API; online il commentatore resta disabilitato.
+precedenza e non chiamano API; online il commentatore mostra soltanto le proprie mosse, con analisi locale a profondità 3 e regole personali miste. Alla riconnessione recupera il commento della propria ultima mossa.
 
 Dopo l'analisi di una mossa locale fuori repertorio, il client chiama `POST /api/coach`
 con la cronologia, l'alternativa trovata, perdita stimata e profondità. Il server
