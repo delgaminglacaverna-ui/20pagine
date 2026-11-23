@@ -7,3 +7,5 @@
 .game-archive-panel button:disabled { opacity: .5; cursor: default; }
 .game-archive-panel article, .game-archive-panel li { border-top: 1px solid #cbd5e1; padding: 12px 0; }
 .game-archive-panel li { font-size: .9rem; }
+
+.archive-replay { max-width: 540px; margin: 12px auto; }

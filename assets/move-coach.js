@@ -24,7 +24,8 @@
     const symbol = mode === 'cvc' ? '67' : mode === 'pvp' ? '??' : piece > 0 ? '??' : '!!';
     return { symbol, label: symbol, comment: 'bip bup', parody: true };
   }
-  function analyze(moves, french, callback) {
+  function analyze(moves, french, callback, targetDepth = 3) {
+    targetDepth = targetDepth === 4 ? 4 : 3;
     if (typeof root.Worker !== 'function') { callback({ unavailable: true }); return () => {}; }
     let worker, timer, done = false;
     const finish = result => {
@@ -33,10 +34,10 @@
     };
     try {
       worker = new root.Worker('/assets/coach-worker.js');
-      worker.onmessage = event => finish(event.data.error ? { unavailable: true } : { ...classify(event.data), depth: event.data.depth, whiteScore: event.data.whiteScore, alternative: event.data.alternative, playedLine: event.data.playedLine, alternativeLine: event.data.alternativeLine });
+      worker.onmessage = event => finish(event.data.error ? { unavailable: true } : { ...classify(event.data), depth: event.data.depth, whiteScore: event.data.whiteScore, alternative: event.data.alternative, playedLine: event.data.playedLine, alternativeLine: event.data.alternativeLine, targetDepth });
       worker.onerror = () => finish({ unavailable: true });
       timer = root.setTimeout(() => finish({ unavailable: true }), 6500);
-      worker.postMessage({ moves, french });
+      worker.postMessage({ moves, french, targetDepth: targetDepth === 4 ? 4 : 3 });
     } catch { finish({ unavailable: true }); }
     return () => { done = true; root.clearTimeout(timer); worker?.terminate(); };
   }

@@ -143,3 +143,29 @@ test('four-ply coach continuation selects the bishop capture and retains a legal
   })()`, c);
   assert.equal(result[0], 'd5d2'); assert.equal(result.length, 4);
 });
+test('live analysis defaults to depth three while full review explicitly requests four', () => {
+  const messages = [];
+  class Worker { postMessage(data) { messages.push(data); } terminate() {} }
+  const api = coach({ Worker, setTimeout: () => 1, clearTimeout() {} });
+  api.analyze([], false, () => {});
+  api.analyze([], false, () => {}, 4);
+  assert.equal(messages[0].targetDepth, 3);
+  assert.equal(messages[1].targetDepth, 4);
+});
+test('archive replay reconstructs both sides on the shared read-only board', () => {
+  const html = fs.readFileSync('index.html', 'utf8'), rules = require('../lib/coach-rules.cjs');
+  const { rr } = rules(), pos = new rr(), moves = [];
+  for (let i = 0; i < 2; i++) { const m = pos.legalMoves()[0]; moves.push(m); pos.make(m); }
+  const wh = () => {};
+  const c = vm.createContext({ window: { ArchiveRules: rules, MoveCoach: { evaluation: () => '+0.00' } }, wh,
+    v: { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) } });
+  vm.runInContext(html.slice(html.indexOf('function ArchiveReplay('), html.indexOf('window.GameReplay =')), c);
+  for (const ply of [0, 1, 2]) {
+    const tree = c.ArchiveReplay({ game: { moves, notes: [], variant: 'normal' }, ply, flipped: false });
+    const board = tree.props.children.find(n => n && n.type === wh);
+    assert.equal(board.props.variant, 'normal');
+    assert.equal(board.props.movable(), false);
+    const expected = new rr(); for (let i = 0; i < ply; i++) expected.make(moves[i]);
+    assert.equal(board.props.cells.join(','), expected.b.join(','));
+  }
+});
