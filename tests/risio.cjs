@@ -92,3 +92,17 @@ test('Risio page dance adds a gentle sideways hop without restoring a roaming he
   assert(css.includes('@media (prefers-reduced-motion: reduce) { .risio-page > * { animation: none; } }'));
   assert(!css.includes('risio-roaming-head'));
 });
+
+test('Risio side names are Bianco Glaggles and Nero Enfosi only in the variant', () => {
+  const risio = renderContext('/risio'), normal = renderContext('/');
+  for (const [before, after] of [
+    ['Bianco', 'Bianco Glaggles'], ['Nero', 'Nero Enfosi'],
+    ['Profondità Bianco', 'Profondità Bianco Glaggles'],
+    ['Il Nero sta prendendo il suo tempo', 'Il Nero Enfosi sta prendendo il suo tempo'],
+    ['Vince il Bianco', 'Vince il Bianco Glaggles'],
+    ['nero e bianco', 'nero enfosi e bianco glaggles'],
+  ]) {
+    assert.equal(risio.risioText(before), after);
+    assert.equal(normal.risioText(before), before);
+  }
+});
