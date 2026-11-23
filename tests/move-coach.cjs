@@ -59,3 +59,50 @@ test('notation export remains separate from grades and undo/redo retain review',
   assert(html.includes('if (h.coachReview) z.review = h.coachReview;'));
   assert(html.includes('const en = oa.map((B) => `${B.n}. ${B.w}${B.b ? " " + B.b : ""}`)'));
 });
+
+test('evaluation formats signed pawn units and handles missing and mating scores', () => {
+  const api = coach();
+  assert.equal(api.evaluation(125), '+1.25');
+  assert.equal(api.evaluation(-250), '-2.50');
+  assert.equal(api.evaluation(0), '0.00');
+  assert.equal(api.evaluation(undefined), '—');
+  assert.equal(api.evaluation(999999), 'Matto per il Bianco');
+  assert.equal(api.evaluation(-999999), 'Matto per il Nero');
+});
+test('worker evaluations keep white perspective for either moving side', () => {
+  let result;
+  const context = vm.createContext({ self: { postMessage: value => { result = value; } }, Date, Math });
+  vm.runInContext(fs.readFileSync('assets/coach-worker.js', 'utf8'), context);
+  const moves = vm.runInContext(`(() => {
+    const pos = new rr(), moves = [];
+    for (let i = 0; i < 2; i++) {
+      const m = pos.legalMoves()[0]; moves.push({from: m.from, to: m.to, promo: m.promo}); pos.make(m);
+    }
+    return moves;
+  })()`, context);
+  context.self.onmessage({ data: { moves: moves.slice(0, 1), french: false } });
+  assert(!result.error); assert.equal(result.whiteScore, result.played);
+  context.self.onmessage({ data: { moves, french: false } });
+  assert(!result.error); assert.equal(result.whiteScore, -result.played);
+});
+test('move badge appears only in destination square, including rotated board and parody symbols', () => {
+  const html = fs.readFileSync('index.html', 'utf8');
+  const context = vm.createContext({
+    FRENCH_MODE: false, ca: x => Math.floor(x / 10), ia: x => x % 10,
+    watchBoardSize() {}, Ff() {},
+    ul: { useRef: () => ({ current: null }), useEffect() {} },
+    v: { jsx: (type, props, key) => ({ type, props, key }), jsxs: (type, props, key) => ({ type, props, key }) },
+  });
+  vm.runInContext(html.slice(html.indexOf('function wh('), html.indexOf('const Kf =')), context);
+  for (const flipped of [false, true]) for (const symbol of ['??', '!!', '67']) {
+    const props = { cells: Array(100).fill(0), flipped, source: null, targets: new Set(), moveReview: { to: 37, review: { symbol, parody: true } } };
+    const squares = context.wh(props).props.children.props.children;
+    const marked = squares.filter(square => square.props.children.some(child => child?.props?.className === 'move-quality-badge'));
+    assert.equal(marked.length, 1); assert.equal(marked[0].key, 37);
+    assert.equal(marked[0].props.children.at(-1).props.children, symbol);
+    props.moveReview = null;
+    assert(!context.wh(props).props.children.props.children.some(square => square.props.children.some(child => child?.props?.className === 'move-quality-badge')));
+  }
+  const css = fs.readFileSync('assets/move-coach.css', 'utf8');
+  assert(css.includes('pointer-events: none')); assert(css.includes('right: 2%'));
+});

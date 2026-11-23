@@ -1,0 +1,13 @@
+/* Kept inside the destination square: no interference with drag/drop or coordinates. */
+.move-quality-badge {
+  position: absolute; top: 2%; right: 2%; z-index: 5;
+  min-width: 1.35em; padding: .08em .16em; box-sizing: border-box;
+  border: 1px solid #fff; border-radius: 35%; background: #386b32; color: #fff;
+  font: bold var(--chess-coordinate-size, 11px)/1.2 Arial, sans-serif;
+  text-align: center; pointer-events: none; text-shadow: none;
+}
+.move-quality-badge[data-quality="!!"] { background: #087e8b; }
+.move-quality-badge[data-quality="?!"] { background: #865c00; }
+.move-quality-badge[data-quality="?"] { background: #b55000; }
+.move-quality-badge[data-quality="??"] { background: #be3030; }
+.move-quality-badge[data-quality="67"] { background: #7835a3; }
