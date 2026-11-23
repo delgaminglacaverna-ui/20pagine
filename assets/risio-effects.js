@@ -12,18 +12,10 @@
     const timer = root.setTimeout(() => root.location.assign(destination), 900);
     return () => { root.clearTimeout(timer); overlay.remove(); };
   }
-  let commentTimer, partyTimer;
+  let partyTimer;
   function move(move) {
     if (!/^\/risio\/?$/.test(root.location.pathname)) return;
     // Only live moves call this: loading openings, undo and redo stay silent.
-    let comment = document.querySelector('.risio-comment');
-    if (!comment) {
-      comment = document.createElement('div'); comment.className = 'risio-comment';
-      comment.setAttribute('role', 'status'); document.body.appendChild(comment);
-    }
-    comment.textContent = 'RISIO: bip bup';
-    root.clearTimeout(commentTimer);
-    commentTimer = root.setTimeout(() => comment.remove(), 2200);
     if (move.flag !== 3 && move.flag !== 4) return;
     document.querySelector('.risio-castle-party')?.remove();
     root.clearTimeout(partyTimer);
