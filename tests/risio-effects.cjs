@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
-test('Risio head and jumpscare are route-isolated, clean up and redirect after 900ms', () => {
+test('Risio jumpscare is route-isolated, clean up and redirect after 900ms', () => {
   const children = []; let callback, delay, destination, cleared;
   const document = {
     querySelector: selector => children.find(node => '.' + node.className === selector),
@@ -15,15 +15,17 @@ test('Risio head and jumpscare are route-isolated, clean up and redirect after 9
     clearTimeout: id => { cleared = id; },
   };
   vm.runInNewContext(fs.readFileSync('assets/risio-effects.js', 'utf8'), { window, document });
-  window.RisioEffects.start(); window.RisioEffects.scare(); assert.equal(children.length, 0);
+  assert.equal(window.RisioEffects.start, undefined);
+  assert.equal(children.length, 0);
+  window.RisioEffects.scare(); assert.equal(children.length, 0);
   window.location.pathname = '/risio';
-  window.RisioEffects.start(); window.RisioEffects.start(); assert.equal(children.length, 1);
-  const cleanup = window.RisioEffects.scare(); assert.equal(children.length, 2);
+  const cleanup = window.RisioEffects.scare(); assert.equal(children.length, 1);
   assert.equal(delay, 900); assert.equal(destination, undefined);
   callback(); assert.equal(destination, 'https://sites.google.com/view/enphosoweb?pli=1&authuser=0');
-  cleanup(); assert.equal(cleared, 42); assert.equal(children.length, 1);
+  cleanup(); assert.equal(cleared, 42); assert.equal(children.length, 0);
   const css = fs.readFileSync('assets/risio.css', 'utf8');
-  assert(css.includes('(pointer: coarse)')); assert(css.includes('pointer-events: none'));
+  assert(!css.includes('risio-roam'));
+  assert(css.includes('.risio-jumpscare'));
   const html = fs.readFileSync('index.html', 'utf8');
   assert(html.includes('!RISIO_MODE || reviewActive || z !== "pvc" || V.kind !== "mate" || R.turn !== 1'));
   assert(!html.includes('toggleMusic')); assert(html.includes("window.removeEventListener('pointerdown', startMusic)"));
