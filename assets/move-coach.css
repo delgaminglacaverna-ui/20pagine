@@ -16,3 +16,5 @@
 .move-quality-badge[data-quality="👑"] { background: #796000; }
 .move-quality-badge[data-quality="!"] { background: #2864a0; }
 .move-quality-badge[data-quality="V"] { background: #52624a; }
+
+.move-quality-badge[data-quality="📖"] { background: #775437; }

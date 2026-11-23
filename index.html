@@ -975,6 +975,10 @@ function Iu(o, h, b) {
   }
   if (h.coachReview) z.review = h.coachReview;
   (o.notes.push(z), o.keys.push(f.key()), b && (o.redo = []));
+  if (!RISIO_MODE) {
+    const opening = openingTheory(o.pos.hist.map(entry => entry.move));
+    if (opening) z.review = { symbol: "📖", label: "Theory", comment: `Apertura: ${opening}. Questa sequenza è nel repertorio del sito.`, theory: true };
+  }
 }
 function $h(o) {
   const h = o.pos.hist[o.pos.hist.length - 1];
@@ -1035,6 +1039,11 @@ const Ih = [
     },
   ],
   zc = (o) => (o === 1 ? "Bianco" : "Nero");
+function openingTheory(moves) {
+  if (!moves.length) return null;
+  const codes = moves.map(move => Ge(move.from) + Ge(move.to) + (move.promo ? "=" + move.promo : ""));
+  return Ih.find(opening => codes.length <= opening.moves.length && codes.every((code, index) => code === opening.moves[index]))?.label || null;
+}
 function Ph() {
   const o = ul.useMemo(() => {
       const b = new rr();
@@ -1532,13 +1541,18 @@ function a1() {
     if (RISIO_MODE) {
       note.review = window.MoveCoach.risio(z, move.piece);
       window.RisioEffects?.move(move);
-    } else if (z !== "online" && window.MoveCoach) {
+    } else if (z !== "online" && window.MoveCoach && !note.review?.theory) {
+      const moves = R.hist.map(entry => ({ from: entry.move.from, to: entry.move.to, promo: entry.move.promo }));
       note.review = { pending: true };
-      window.MoveCoach.analyze(R.hist.map(entry => ({ from: entry.move.from, to: entry.move.to, promo: entry.move.promo })), FRENCH_MODE, result => {
+      window.MoveCoach.analyze(moves, FRENCH_MODE, result => {
         // Preserve the shared review object through undo/redo, including pending analysis.
         delete note.review.pending;
         Object.assign(note.review, result);
         if (o.notes.some(entry => entry.review === note.review)) f();
+        if (!result.unavailable && o.notes.some(entry => entry.review === note.review)) window.MoveCoach.explain(moves, FRENCH_MODE, result, explanation => {
+          if (explanation) Object.assign(note.review, explanation);
+          if (o.notes.some(entry => entry.review === note.review)) f();
+        });
       });
     }
   }
@@ -1977,6 +1991,7 @@ function a1() {
                 children: [
                   v.jsx("h2", { className: "font-bold", children: "boi battler dice:" }),
                   v.jsxs("p", { role: "status", children: z === "online" ? "Commenti disabilitati durante le partite online." : !lastCoachReview ? "Gioca una mossa per ricevere un commento." : lastCoachReview.pending ? "Analisi della mossa…" : lastCoachReview.unavailable ? "Analisi non disponibile per questa mossa." : [qualityMark(lastCoachReview.symbol), " ", lastCoachReview.parody ? "bip bup" : lastCoachReview.label + ": " + lastCoachReview.comment] }),
+                  lastCoachReview?.explanationSource && v.jsx("p", { className: "text-xs text-slate-500", children: lastCoachReview.explanationSource === "ai" ? "Spiegazione AI basata sui dati del motore; può contenere errori." : "Spiegazione API basata su mosse legali e dati del motore." }),
                   !RISIO_MODE && z !== "online" && v.jsxs("p", {
                     className: "font-mono",
                     children: ["Valutazione: ", v.jsx("b", { children: window.MoveCoach?.evaluation(lastCoachReview?.whiteScore) ?? "—" }), Number.isFinite(lastCoachReview?.whiteScore) ? ` · profondità ${lastCoachReview.depth}` : "", " (+ Bianco / − Nero)"],
