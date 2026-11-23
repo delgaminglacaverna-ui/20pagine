@@ -1,11 +1,11 @@
 (function (root) {
   const states = {
     risio: { title: 'RISIO', icon: '/assets/enfosi/smiley.png', type: 'image/png' },
-    compiti: { title: 'HAI FATTO I COMPITI???', icon: '/assets/eyes/frame-1.webp', type: 'image/webp' },
+    compiti: { title: 'HAI FATTO I COMPITI???', icon: '/assets/tabs/chronos-eye.png', type: 'image/png' },
     chess: { title: 'TEMPO ESTREMO COME IL DIH', icon: '/assets/tabs/pawn.svg', type: 'image/svg+xml' },
     french: { title: '(gbfjkdfugyfhdjk)/', icon: '/assets/tabs/cigarette.svg', type: 'image/svg+xml' },
-    review: { title: 'NON SI FANNO I COMPITI IN CLASSE!!', icon: '/assets/closed-eyes/frame-1.webp', type: 'image/webp' },
-    enraged: { title: 'IO SAREI MORTIFICATO, NON PROVI VERGOGNA', icon: '/assets/mouths/frame-1.webp', type: 'image/webp' },
+    review: { title: 'NON SI FANNO I COMPITI IN CLASSE!!', icon: '/assets/tabs/chronos-closed-eye.png', type: 'image/png' },
+    enraged: { title: 'IO SAREI MORTIFICATO, NON PROVI VERGOGNA', icon: '/assets/tabs/chronos-mouth.png', type: 'image/png' },
   };
   const frenchTitles = {
     compiti: "MIO FIGLIO HA STUDIATO L'INGLESE E LAVORA IN FRANCIA",
