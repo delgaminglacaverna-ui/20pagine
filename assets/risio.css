@@ -11,18 +11,9 @@
 }
 @media (prefers-reduced-motion: reduce) { .risio-page > * { animation: none; } }
 
-.risio-roaming-head { position: fixed; top: 0; left: 0; width: 76px; height: 76px; object-fit: contain; z-index: 10000; pointer-events: none; animation: risio-roam 18s linear infinite; }
-@keyframes risio-roam {
-  0%, 100% { transform: translate(0, 0) rotate(-10deg); }
-  22% { transform: translate(calc(100vw - 76px), calc(65vh - 76px)) rotate(12deg); }
-  45% { transform: translate(30vw, calc(100dvh - 76px)) rotate(-10deg); }
-  68% { transform: translate(calc(100vw - 76px), 0) rotate(12deg); }
-  85% { transform: translate(0, 60vh) rotate(-10deg); }
-}
 .risio-jumpscare { position: fixed; inset: 0; z-index: 2147483647; display: grid; place-items: center; background: #171000; }
 .risio-jumpscare img { width: min(90vw, 90dvh); height: min(90vw, 90dvh); object-fit: contain; animation: risio-scare .25s ease-out both; }
 @keyframes risio-scare { from { transform: scale(.12); } to { transform: scale(1); } }
 @media (max-width: 767px), (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .risio-roaming-head { animation: none; top: 80px; left: auto; right: 10px; width: 56px; height: 56px; }
   .risio-jumpscare img { animation: none; }
 }

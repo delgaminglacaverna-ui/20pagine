@@ -332,8 +332,8 @@ Le immagini originali di pedone e timer restano invariate.
 
 RISIO: nessun pulsante mute nella pagina. La musica prova l'autoplay e riprova
 alle interazioni (i controlli audio del browser/dispositivo restano disponibili).
-La testa decorativa rimbalza nel viewport desktop, resta ferma su mobile e con
-movimento ridotto; non intercetta clic. Una sconfitta umana contro l'IA RISIO
+Non è presente una testa decorativa durante il gioco, né su desktop né su mobile.
+Una sconfitta umana contro l'IA RISIO
 mostra la faccia a schermo intero per 900 ms e poi apre nella stessa scheda
 https://sites.google.com/view/enphosoweb?pli=1&authuser=0 . Pareggi e partite
 locali fra umani o fra IA non attivano il jumpscare. Nessun lampeggio o audio extra.
