@@ -122,3 +122,24 @@ test('good-move checks stack vertically and commentator uses requested name', ()
   assert(fs.readFileSync('assets/move-coach.css', 'utf8').includes('flex-direction: column'));
   assert(html.includes('children: "boi battler dice:"'));
 });
+test('four-ply coach continuation selects the bishop capture and retains a legal PV', () => {
+  const c = vm.createContext({ self: {}, Date, Math });
+  vm.runInContext(fs.readFileSync('assets/coach-worker.js', 'utf8'), c);
+  const result = vm.runInContext(`(() => {
+    const p = new rr(); p.b.fill(0);
+    p.b[nr('a1')] = Rt; p.b[nr('j10')] = -Rt;
+    p.kings = [nr('a1'), nr('j10')]; p.castling = 0; p.ep = -1;
+    p.b[nr('d5')] = -_t; p.b[nr('d2')] = Vt; p.b[nr('g5')] = Ht;
+    p.turn = -1;
+    const initialKey = p.key();
+    const result = coachSearch(p, 4, -1e9, 1e9, 0, { deadline: Date.now() + 4000, repetitions: new Map() });
+    if (p.key() !== initialKey) throw Error('Search mutated position');
+    const notation = result.pv.map(move => Ge(move.from) + Ge(move.to));
+    for (const code of result.pv) {
+      const move = p.legalMoves().find(m => m.from === code.from && m.to === code.to && (m.promo || 0) === (code.promo || 0));
+      if (!move) throw Error('Illegal PV'); p.make(move);
+    }
+    return notation;
+  })()`, c);
+  assert.equal(result[0], 'd5d2'); assert.equal(result.length, 4);
+});

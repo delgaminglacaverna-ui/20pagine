@@ -33,9 +33,9 @@
     };
     try {
       worker = new root.Worker('/assets/coach-worker.js');
-      worker.onmessage = event => finish(event.data.error ? { unavailable: true } : { ...classify(event.data), depth: event.data.depth, whiteScore: event.data.whiteScore, alternative: event.data.alternative });
+      worker.onmessage = event => finish(event.data.error ? { unavailable: true } : { ...classify(event.data), depth: event.data.depth, whiteScore: event.data.whiteScore, alternative: event.data.alternative, playedLine: event.data.playedLine, alternativeLine: event.data.alternativeLine });
       worker.onerror = () => finish({ unavailable: true });
-      timer = root.setTimeout(() => finish({ unavailable: true }), 2500);
+      timer = root.setTimeout(() => finish({ unavailable: true }), 6500);
       worker.postMessage({ moves, french });
     } catch { finish({ unavailable: true }); }
     return () => { done = true; root.clearTimeout(timer); worker?.terminate(); };
@@ -46,7 +46,7 @@
     const timer = root.setTimeout(() => controller.abort(), 9000);
     root.fetch('/api/coach', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
-      body: JSON.stringify({ moves, french, alternative: review.alternative, loss: review.loss, depth: review.depth }),
+      body: JSON.stringify({ moves, french, alternative: review.alternative, loss: review.loss, depth: review.depth, playedLine: review.playedLine, alternativeLine: review.alternativeLine }),
     }).then(response => response.ok ? response.json() : null).then(data => {
       callback(data && typeof data.comment === 'string' && data.comment.length <= 1600 ? { comment: data.comment, explanationSource: data.source === 'ai' ? 'ai' : 'engine' } : null);
     }).catch(() => callback(null)).finally(() => root.clearTimeout(timer));

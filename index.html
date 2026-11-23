@@ -1998,7 +1998,7 @@ function a1() {
                   lastCoachReview?.explanationSource && v.jsx("p", { className: "text-xs text-slate-500", children: lastCoachReview.explanationSource === "ai" ? "Spiegazione AI basata sui dati del motore; può contenere errori." : "Spiegazione API basata su mosse legali e dati del motore." }),
                   !RISIO_MODE && z !== "online" && v.jsxs("p", {
                     className: "font-mono",
-                    children: ["Valutazione: ", v.jsx("b", { children: window.MoveCoach?.evaluation(lastCoachReview?.whiteScore) ?? "—" }), Number.isFinite(lastCoachReview?.whiteScore) ? ` · profondità ${lastCoachReview.depth}` : "", " (+ Bianco / − Nero)"],
+                    children: ["Valutazione: ", v.jsx("b", { children: window.MoveCoach?.evaluation(lastCoachReview?.whiteScore) ?? "—" }), Number.isFinite(lastCoachReview?.whiteScore) ? ` · profondità ${lastCoachReview.depth}/4` : "", " (+ Bianco / − Nero)"],
                   }),
                   !RISIO_MODE && v.jsx("p", { className: "text-xs text-slate-500", children: "Stima del motore 10×10 del sito, non Stockfish né analisi chess.com. Ricerca breve: anche Brillante è una valutazione euristica." }),
                 ],
