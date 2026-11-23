@@ -7,13 +7,17 @@ function coach(extra = {}) {
   vm.runInContext(fs.readFileSync('assets/move-coach.js', 'utf8'), context);
   return context.MoveCoach;
 }
-test('move quality thresholds and conservative brilliant classification', () => {
+test('quality scale separates decent, good and best from rare exceptional moves', () => {
   const api = coach();
-  for (const [loss, symbol] of [[0, '!'], [15, '!'], [16, '='], [49, '='], [50, '?!'], [120, '?'], [250, '??']]) {
-    assert.equal(api.classify({ best: 300, played: 300 - loss, second: 300 }).symbol, symbol);
+  for (const [loss, symbol] of [[0, '✓✓'], [25, '✓✓'], [26, 'V'], [79, 'V'], [80, '?!'], [149, '?!'], [150, 'X'], [299, 'X'], [300, '??']]) {
+    assert.equal(api.classify({ best: 400, played: 400 - loss, second: 400 }).symbol, symbol);
   }
-  assert.equal(api.classify({ best: 100, played: 100, second: 0, bestMove: true, sacrifice: true }).symbol, '!!');
-  assert.notEqual(api.classify({ best: -100, played: -100, second: -200, bestMove: true, sacrifice: true }).symbol, '!!');
+  assert.equal(api.classify({ best: 100, played: 100, second: 100, bestMove: true, depth: 2 }).symbol, '👑');
+  assert.equal(api.classify({ best: 100, played: 100, second: -100, bestMove: true, depth: 1 }).symbol, '👑');
+  assert.equal(api.classify({ best: 100, played: 100, second: -100, bestMove: true, depth: 2 }).symbol, '!');
+  assert.equal(api.classify({ best: 100, played: 100, second: 0, bestMove: true, sacrifice: true, depth: 2 }).symbol, '!!');
+  assert.notEqual(api.classify({ best: -100, played: -100, second: -200, bestMove: true, sacrifice: true, depth: 2 }).symbol, '!!');
+  assert.notEqual(api.classify({ best: 100, played: 100, second: 0, bestMove: true, sacrifice: true, depth: 1 }).symbol, '!!');
 });
 test('Risio grades are parody rules, independent of actual move quality', () => {
   const api = coach();
@@ -89,12 +93,12 @@ test('move badge appears only in destination square, including rotated board and
   const html = fs.readFileSync('index.html', 'utf8');
   const context = vm.createContext({
     FRENCH_MODE: false, ca: x => Math.floor(x / 10), ia: x => x % 10,
-    watchBoardSize() {}, Ff() {},
+    watchBoardSize() {}, Ff() {}, qualityMark: symbol => symbol,
     ul: { useRef: () => ({ current: null }), useEffect() {} },
     v: { jsx: (type, props, key) => ({ type, props, key }), jsxs: (type, props, key) => ({ type, props, key }) },
   });
   vm.runInContext(html.slice(html.indexOf('function wh('), html.indexOf('const Kf =')), context);
-  for (const flipped of [false, true]) for (const symbol of ['??', '!!', '67']) {
+  for (const flipped of [false, true]) for (const symbol of ['??', '!!', '67', '👑', 'X', 'V']) {
     const props = { cells: Array(100).fill(0), flipped, source: null, targets: new Set(), moveReview: { to: 37, review: { symbol, parody: true } } };
     const squares = context.wh(props).props.children.props.children;
     const marked = squares.filter(square => square.props.children.some(child => child?.props?.className === 'move-quality-badge'));
@@ -105,4 +109,16 @@ test('move badge appears only in destination square, including rotated board and
   }
   const css = fs.readFileSync('assets/move-coach.css', 'utf8');
   assert(css.includes('pointer-events: none')); assert(css.includes('right: 2%'));
+});
+
+test('good-move checks stack vertically and commentator uses requested name', () => {
+  const html = fs.readFileSync('index.html', 'utf8');
+  const context = vm.createContext({ v: { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) } });
+  vm.runInContext(html.slice(html.indexOf('function qualityMark('), html.indexOf('function wh(')), context);
+  const mark = context.qualityMark('✓✓');
+  assert.equal(mark.props.className, 'move-quality-double-check');
+  assert.equal(mark.props.children.length, 2);
+  assert(mark.props.children.every(child => child.props.children === '✓'));
+  assert(fs.readFileSync('assets/move-coach.css', 'utf8').includes('flex-direction: column'));
+  assert(html.includes('children: "boi battler dice:"'));
 });
