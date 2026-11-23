@@ -809,6 +809,12 @@ function watchBoardSize(element) {
     window.removeEventListener("resize", update);
   };
 }
+function qualityMark(symbol) {
+  return symbol === "✓✓" ? v.jsxs("span", {
+    className: "move-quality-double-check", "aria-label": "Buona",
+    children: [v.jsx("span", { children: "✓" }), v.jsx("span", { children: "✓" })],
+  }) : symbol;
+}
 function wh(o) {
   const boardRef = ul.useRef(null);
   ul.useEffect(() => watchBoardSize(boardRef.current), []);
@@ -904,7 +910,7 @@ function wh(o) {
                 "data-quality": o.moveReview.review.symbol,
                 title: o.moveReview.review.parody ? "bip bup" : o.moveReview.review.label,
                 "aria-label": `${o.moveReview.review.symbol}: ${o.moveReview.review.parody ? "bip bup" : o.moveReview.review.label}`,
-                children: o.moveReview.review.symbol,
+                children: qualityMark(o.moveReview.review.symbol),
               }),
             ],
           },
@@ -1969,8 +1975,8 @@ function a1() {
                 className: "rounded border border-slate-300 bg-white p-4 text-sm shadow-sm",
                 "aria-label": "Commento della mossa",
                 children: [
-                  v.jsx("h2", { className: "font-bold", children: RISIO_MODE ? "RISIO commenta" : "Il commentatore · 20 Pagine" }),
-                  v.jsx("p", { role: "status", children: z === "online" ? "Commenti disabilitati durante le partite online." : !lastCoachReview ? "Gioca una mossa per ricevere un commento." : lastCoachReview.pending ? "Analisi della mossa…" : lastCoachReview.unavailable ? "Analisi non disponibile per questa mossa." : `${lastCoachReview.symbol} ${lastCoachReview.parody ? "bip bup" : lastCoachReview.label + ": " + lastCoachReview.comment}` }),
+                  v.jsx("h2", { className: "font-bold", children: "boi battler dice:" }),
+                  v.jsxs("p", { role: "status", children: z === "online" ? "Commenti disabilitati durante le partite online." : !lastCoachReview ? "Gioca una mossa per ricevere un commento." : lastCoachReview.pending ? "Analisi della mossa…" : lastCoachReview.unavailable ? "Analisi non disponibile per questa mossa." : [qualityMark(lastCoachReview.symbol), " ", lastCoachReview.parody ? "bip bup" : lastCoachReview.label + ": " + lastCoachReview.comment] }),
                   !RISIO_MODE && z !== "online" && v.jsxs("p", {
                     className: "font-mono",
                     children: ["Valutazione: ", v.jsx("b", { children: window.MoveCoach?.evaluation(lastCoachReview?.whiteScore) ?? "—" }), Number.isFinite(lastCoachReview?.whiteScore) ? ` · profondità ${lastCoachReview.depth}` : "", " (+ Bianco / − Nero)"],
@@ -2159,11 +2165,11 @@ function a1() {
                                   }),
                                   v.jsx("span", {
                                     className: "w-20",
-                                    children: [B.w, B.wr?.symbol ? ` ${B.wr.symbol}` : ""],
+                                    children: [B.w, B.wr?.symbol ? [" ", qualityMark(B.wr.symbol)] : ""],
                                   }),
                                   v.jsx("span", {
                                     className: "w-20",
-                                    children: [B.b, B.br?.symbol ? ` ${B.br.symbol}` : ""],
+                                    children: [B.b, B.br?.symbol ? [" ", qualityMark(B.br.symbol)] : ""],
                                   }),
                                 ],
                               },

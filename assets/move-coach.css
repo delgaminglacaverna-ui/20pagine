@@ -8,6 +8,11 @@
 }
 .move-quality-badge[data-quality="!!"] { background: #087e8b; }
 .move-quality-badge[data-quality="?!"] { background: #865c00; }
-.move-quality-badge[data-quality="?"] { background: #b55000; }
+.move-quality-badge[data-quality="X"] { background: #b55000; }
 .move-quality-badge[data-quality="??"] { background: #be3030; }
 .move-quality-badge[data-quality="67"] { background: #7835a3; }
+
+.move-quality-double-check { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; line-height: .7; font-weight: bold; }
+.move-quality-badge[data-quality="👑"] { background: #796000; }
+.move-quality-badge[data-quality="!"] { background: #2864a0; }
+.move-quality-badge[data-quality="V"] { background: #52624a; }

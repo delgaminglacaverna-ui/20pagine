@@ -371,11 +371,23 @@ Le mosse locali dal vivo ricevono un simbolo nel registro e un commento sotto
 la scacchiera. La ricerca gira in un Web Worker sul motore 10×10 del sito
 (profondità massima 2, budget ~1 s; indisponibile se non completa nemmeno un livello).
 Non usa Stockfish e non riproduce l'algoritmo proprietario di chess.com.
-La perdita rispetto alla migliore mossa trovata determina Buona (=), Ottima (!),
-Imprecisione (?!, >=50 centesimi), Errore (?, >=120), Grave errore (??, >=250).
-Brillante (!!) è una prudente euristica: migliore mossa, sacrificio di un pezzo
-catturabile da uno meno prezioso, vantaggio >=80 sulle alternative e valutazione
-non inferiore a -50. La ricerca breve può sbagliare: non è un verdetto definitivo.
+Il commentatore si chiama **boi battler dice:**. Scala dei simboli:
+- `??` Grave errore: perdita >=300 centesimi rispetto alla migliore trovata.
+- `X` Errore / occasione mancata: perdita >=150 e <300.
+- `?!` Imprecisione: perdita >=80 e <150.
+- `V` Decente: perdita >25 e <80.
+- Due ✓ sovrapposti: Buona, perdita <=25 ma non la migliore a pari merito.
+- 👑 Migliore: punteggio massimo trovato, inclusi eventuali ex aequo.
+- `!` Eccezionale: migliore unica con margine >=150 sulle alternative.
+- `!!` Brillante: migliore unica con sacrificio, margine >=80 sulle alternative.
+Gli ultimi due richiedono almeno profondità 2 completata e valutazione >=-50;
+non vengono regalati a ogni mossa corretta. “Eccezionale” e “Brillante” sono
+riconoscimenti aggiuntivi alla migliore mossa, non punteggi superiori al massimo.
+Il sacrificio è un'euristica: pezzo attaccabile da uno meno prezioso, tenendo
+conto del materiale già catturato. Non prova la correttezza a lungo termine.
+La ricerca breve può sbagliare: non è un verdetto definitivo né un rilevatore
+perfetto di pezzi persi o mosse mancate. La classificazione usa il punteggio,
+non il solo fatto di aver mosso o catturato un pezzo.
 Online il commentatore è disabilitato per non offrire assistenza durante la partita.
 Aperture caricate non sono analizzate; annulla ripristina il commento precedente,
 ripeti conserva la valutazione già ricevuta. I simboli non entrano nella notazione copiata.
