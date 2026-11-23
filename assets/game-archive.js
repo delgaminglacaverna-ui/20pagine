@@ -1,5 +1,7 @@
 (function (root) {
   'use strict';
+  const french = typeof root.URLSearchParams === 'function' && new root.URLSearchParams(root.location?.search || '').get('version') === 'french' && !/^\/risio\/?$/.test(root.location?.pathname || '');
+  const t = value => root.CoachI18n?.text(value, french) ?? value;
   const KEY = '20pagine.games.v1', MAX = 50;
   let storageError = false, stopAnalysis = null, replay = null;
   const newId = () => root.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2);
@@ -38,9 +40,9 @@
     const previousFocus = document.activeElement;
     const overlay = document.createElement('div'); overlay.className = 'game-archive';
     const panel = document.createElement('section'); panel.className = 'game-archive-panel';
-    panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-label', 'Le tue partite'); panel.tabIndex = -1;
+    panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); panel.setAttribute('aria-label', t('Le tue partite')); panel.tabIndex = -1;
     overlay.appendChild(panel); document.body.appendChild(overlay);
-    function el(tag, text, parent = panel) { const node = document.createElement(tag); if (text != null) node.textContent = text; parent.appendChild(node); return node; }
+    function el(tag, text, parent = panel) { const node = document.createElement(tag); if (text != null) node.textContent = t(text); parent.appendChild(node); return node; }
     function button(text, action, parent = panel) { const b = el('button', text, parent); b.type = 'button'; b.onclick = action; return b; }
     function cancel() { stopAnalysis?.(); stopAnalysis = null; }
     function close() { cancel(); replay?.unmount(); replay = null; document.removeEventListener('keydown', keys); overlay.remove(); previousFocus?.focus?.(); }
@@ -65,8 +67,8 @@
         const row = el('article');
         const modes = { pvc: 'Giocatore vs IA', pvp: 'Giocatore vs giocatore', cvc: 'IA vs IA', online: 'Online' };
         const results = { none: 'In corso / interrotta', check: 'In corso · scacco', mate: game.turn === 1 ? 'Vince il Nero' : 'Vince il Bianco', stalemate: 'Patta · stallo', repetition: 'Patta · ripetizione', insufficient: 'Patta · materiale', fifty: 'Patta · 50 mosse', resign: 'Terminata per abbandono', onlineOver: 'Terminata online' };
-        el('h3', new Date(game.createdAt).toLocaleString() + ' · ' + game.variant, row);
-        el('p', `${modes[game.mode]} · ${results[game.result] || 'Terminata'} · ${game.moves.length} semimosse`, row);
+        el('h3', new Date(game.createdAt).toLocaleString(french ? 'fr-FR' : undefined) + ' · ' + t(game.variant), row);
+        el('p', `${t(modes[game.mode])} · ${t(results[game.result] || 'Terminata')} · ${game.moves.length} semimosse`, row);
         button('Apri e analizza', () => detail(game.id), row);
         button('Elimina', () => { remove(game.id); list(); }, row);
       }
@@ -82,12 +84,12 @@
       function renderRows(g) {
         rows.replaceChildren();
         g.moves.forEach((move, index) => {
-          const note = g.notes?.[index], review = note?.review;
+          const note = g.notes?.[index], review = root.CoachI18n?.review(note?.review, french) || note?.review;
           const row = el('li', null, rows);
           button(`${index + 1}. ${note?.san || notation(move)} ${review?.symbol || ''}`, () => replay?.go(index + 1), row);
           if (review?.unavailable) el('p', 'Analisi non disponibile: puoi ritentare.', row);
           if (review?.comment) el('p', review.comment, row);
-          if (Number.isFinite(review?.whiteScore)) el('p', `Evaluation: ${root.MoveCoach.evaluation(review.whiteScore)} · profondità ${review.depth}/${review.targetDepth || 4}`, row);
+          if (Number.isFinite(review?.whiteScore)) el('p', `Evaluation: ${root.MoveCoach.evaluation(review.whiteScore, french)} · profondità ${review.depth}/${review.targetDepth || 4}`, row);
           if (review?.playedLine?.length) el('p', 'Variante prevista: ' + review.playedLine.map(notation).join(' → '), row);
         });
       }
@@ -95,10 +97,10 @@
       let running = false, cancelWorker;
       const start = button('Analizza / riprendi', async () => {
         if (running) return; running = true; start.disabled = true;
-        stopAnalysis = () => { running = false; cancelWorker?.(); start.disabled = false; status.textContent = 'Analisi interrotta. I risultati completati sono salvati.'; };
+        stopAnalysis = () => { running = false; cancelWorker?.(); start.disabled = false; status.textContent = t('Analisi interrotta. I risultati completati sono salvati.'); };
         for (let i = 0; i < game.moves.length && running; i++) {
           if (game.notes?.[i]?.review && !game.notes[i].review.unavailable && (game.notes[i].review.parody || game.notes[i].review.targetDepth === 4)) continue;
-          status.textContent = `Analisi ${i + 1}/${game.moves.length}…`;
+          status.textContent = t(`Analisi ${i + 1}/${game.moves.length}…`);
           replay?.go(i + 1);
           const result = game.variant === 'risio' ? root.MoveCoach.risio(game.mode, game.moves[i].piece) : await new Promise(resolve => {
             const stop = root.MoveCoach.analyze(game.moves.slice(0, i + 1), game.variant === 'french', resolve, 4);
@@ -114,7 +116,7 @@
           game.notes = current.notes;
           write(games); replay?.update(current); renderRows(current);
         }
-        if (running) { status.textContent = 'Analisi completata. Le mosse non analizzabili sono indicate come tali e possono essere ritentate.'; start.disabled = false; running = false; stopAnalysis = null; }
+        if (running) { status.textContent = t('Analisi completata. Le mosse non analizzabili sono indicate come tali e possono essere ritentate.'); start.disabled = false; running = false; stopAnalysis = null; }
       });
       button('Interrompi analisi', cancel);
     }

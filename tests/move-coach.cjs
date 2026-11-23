@@ -157,7 +157,7 @@ test('archive replay reconstructs both sides on the shared read-only board', () 
   const { rr } = rules(), pos = new rr(), moves = [];
   for (let i = 0; i < 2; i++) { const m = pos.legalMoves()[0]; moves.push(m); pos.make(m); }
   const wh = () => {};
-  const c = vm.createContext({ window: { ArchiveRules: rules, MoveCoach: { evaluation: () => '+0.00' } }, wh,
+  const c = vm.createContext({ FRENCH_MODE: false, window: { ArchiveRules: rules, MoveCoach: { evaluation: () => '+0.00' } }, wh,
     v: { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) } });
   vm.runInContext(html.slice(html.indexOf('function ArchiveReplay('), html.indexOf('window.GameReplay =')), c);
   for (const ply of [0, 1, 2]) {

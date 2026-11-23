@@ -29,6 +29,7 @@
     if (typeof root.Worker !== 'function') { callback({ unavailable: true }); return () => {}; }
     let worker, timer, done = false;
     const finish = result => {
+      result = root.CoachI18n?.review(result, french) || result;
       if (done) return; done = true;
       root.clearTimeout(timer); worker?.terminate(); callback(result);
     };
@@ -49,12 +50,12 @@
       method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: controller.signal,
       body: JSON.stringify({ moves, french, alternative: review.alternative, loss: review.loss, depth: review.depth, playedLine: review.playedLine, alternativeLine: review.alternativeLine }),
     }).then(response => response.ok ? response.json() : null).then(data => {
-      callback(data && typeof data.comment === 'string' && data.comment.length <= 1600 ? { comment: data.comment, explanationSource: data.source === 'ai' ? 'ai' : 'engine' } : null);
+      callback(data && typeof data.comment === 'string' && data.comment.length <= 1600 ? { comment: data.comment, language: french ? 'fr' : 'it', explanationSource: data.source === 'ai' ? 'ai' : 'engine' } : null);
     }).catch(() => callback(null)).finally(() => root.clearTimeout(timer));
   }
-  function evaluation(score) {
+  function evaluation(score, french = false) {
     if (!Number.isFinite(score)) return '—';
-    if (Math.abs(score) > 999000) return score > 0 ? 'Matto per il Bianco' : 'Matto per il Nero';
+    if (Math.abs(score) > 999000) return french ? (score > 0 ? 'Mat en faveur des Blancs' : 'Mat en faveur des Noirs') : (score > 0 ? 'Matto per il Bianco' : 'Matto per il Nero');
     const value = score / 100;
     return (value > 0 ? '+' : '') + value.toFixed(2);
   }

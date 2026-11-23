@@ -506,3 +506,11 @@ mossa dal registro. Durante l'analisi passa alla mossa esaminata e mostra il vot
 appena disponibile. Replay e regole rispettano la variante salvata (normale,
 francese o RISIO), anche aprendola da un'altra versione del sito. Non avvia IA,
 Chronos, pubblicità, effetti RISIO né modifica la partita live.
+
+
+Localisation française : le commentateur, les libellés/commentaires des notes,
+les explications API (ainsi que la consigne du fournisseur IA optionnel), les
+états de recherche, l'archive et la navigation du replay sont traduits.
+Les anciennes explications API italiennes sauvegardées affichent une description
+française du vote ; les nouvelles explications sont générées directement en français.
+Les valeurs numériques, les symboles et les règles du jeu ne sont pas modifiés.

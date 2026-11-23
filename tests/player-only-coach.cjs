@@ -23,7 +23,7 @@ test('AI vs player rates both sides but requests explanations only for human mov
   c.z = 'cvc'; c.liveRisioMove({ piece: -1 }); assert.equal(analyses, 4);
 });
 test('after the AI reply commentary stays on the player while score and badge use the latest move', () => {
-  const c = vm.createContext({ o: { notes: [{ review: { symbol: 'V' } }, { review: { symbol: 'X', whiteScore: -150 } }] }, R: { hist: [{ move: { piece: 1, to: 42 } }, { move: { piece: -1, to: 71 } }] }, RISIO_MODE: false, z: 'pvc', hr: () => 0 });
+  const c = vm.createContext({ o: { notes: [{ review: { symbol: 'V' } }, { review: { symbol: 'X', whiteScore: -150 } }] }, R: { hist: [{ move: { piece: 1, to: 42 } }, { move: { piece: -1, to: 71 } }] }, RISIO_MODE: false, FRENCH_MODE: false, window: {}, z: 'pvc', hr: () => 0 });
   vm.runInContext(html.slice(html.indexOf('  let coachIndex ='), html.indexOf('  const en =')), c);
   assert.equal(vm.runInContext('coachIndex', c), 0);
   assert.equal(vm.runInContext('lastCoachReview.symbol', c), 'V');
@@ -33,7 +33,7 @@ test('after the AI reply commentary stays on the player while score and badge us
 });
 
 test('position evaluation has a labeled static fallback while search is pending', () => {
-  const c = vm.createContext({ o: { notes: [{ review: { pending: true } }] }, R: { hist: [{ move: { piece: 1 } }] }, RISIO_MODE: false, z: 'pvc', hr: () => 225 });
+  const c = vm.createContext({ o: { notes: [{ review: { pending: true } }] }, R: { hist: [{ move: { piece: 1 } }] }, RISIO_MODE: false, FRENCH_MODE: false, window: {}, z: 'pvc', hr: () => 225 });
   vm.runInContext(html.slice(html.indexOf('  let coachIndex ='), html.indexOf('  const en =')), c);
   assert.equal(vm.runInContext('positionScore', c), 225);
   assert(html.includes('stima statica (analisi non ancora disponibile)'));

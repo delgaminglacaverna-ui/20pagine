@@ -15,6 +15,7 @@
     <link id="tab-icon" rel="icon" type="image/png" href="/assets/tabs/chronos-eye.png" />
     <script src="/assets/tab-state.js"></script>
     <script src="/assets/risio-effects.js"></script>
+    <script src="/assets/coach-i18n.js"></script>
     <script src="/assets/move-coach.js"></script>
     <script src="/assets/game-archive.js"></script>
     <script src="/assets/archive-rules.js"></script>
@@ -182,6 +183,10 @@ const FRENCH_TEXT = {
 function frenchText(text) {
   if (!FRENCH_MODE || typeof text !== "string") return text;
   if (Object.hasOwn(FRENCH_TEXT, text)) return FRENCH_TEXT[text];
+  if (typeof window !== "undefined" && window.CoachI18n) {
+    const localized = window.CoachI18n.text(text);
+    if (localized !== text) return localized;
+  }
   if (/^Salta tra \d+s$/.test(text)) return text.replace(/^Salta tra (\d+)s$/, "Passer dans $1 s");
   return text;
 }
@@ -1728,7 +1733,7 @@ function a1() {
     while (coachIndex >= 0 && !(R.hist[coachIndex]?.move.piece > 0)) coachIndex--;
   }
   const lastCoachNote = o.notes[coachIndex];
-  const lastCoachReview = lastCoachNote?.review;
+  const lastCoachReview = window.CoachI18n?.review(lastCoachNote?.review, FRENCH_MODE) || lastCoachNote?.review;
   const positionReview = o.notes[o.notes.length - 1]?.review;
   const positionScore = Number.isFinite(positionReview?.whiteScore) ? positionReview.whiteScore : hr(R);
   const en = oa.map((B) => `${B.n}. ${B.w}${B.b ? " " + B.b : ""}`).join(" "),
@@ -2677,7 +2682,7 @@ function ArchiveReplay({ game, ply, flipped, go, flip }) {
     if (!move) { valid = false; break; }
     position.make(move); last = move;
   }
-  const review = game.notes?.[ply - 1]?.review;
+  const review = window.CoachI18n?.review(game.notes?.[ply - 1]?.review, FRENCH_MODE) || game.notes?.[ply - 1]?.review;
   const noop = () => {};
   return v.jsxs("div", { className: "archive-replay", children: [
     v.jsx("p", { role: "status", children: valid ? `Posizione ${ply}/${game.moves.length} · ${ply ? game.notes?.[ply - 1]?.san || "Mossa " + ply : "Inizio partita"}` : "Impossibile ricostruire questa posizione salvata." }),
