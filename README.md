@@ -470,3 +470,23 @@ mantengono libro e nome dell'apertura, ma ricevono anche la ricerca numerica.
 PvP e IA vs IA mantengono i commenti per entrambe le parti.
 In RISIO il riquadro si chiama **RISIO dice:** e continua a dire “bip bup”; il
 pop-up separato è rimosso. Festa dell'arrocco e jumpscare restano invariati.
+
+
+### Le tue partite · Analisi
+Le partite vengono salvate automaticamente in localStorage (`20pagine.games.v1`),
+senza IP, account, cookie identificativi o sincronizzazione server. Sono riconosciute
+per browser/profilo/origine: cancellare i dati del sito le elimina; la navigazione
+privata può non conservarle. Non si recuperano partite precedenti a questa funzione.
+Sono conservate le ultime 50 partite (massimo 600 semimosse ciascuna), incluse
+interrotte, con variante, modalità, data, stato, mosse e valutazioni. Non si salvano
+token online o credenziali. Se lo storage è bloccato/pieno, l'archivio segnala il limite.
+Reset/modalità iniziano una nuova voce; riprendere da un punto passato crea una
+nuova partita senza sovrascrivere il ramo originale. Sfogliare la cronologia non
+riscrive il salvataggio. Un ritorno al presente prosegue la stessa voce.
+
+Il pulsante “Le tue partite · Analisi” apre l'elenco, dettaglio mosse ed eliminazione.
+“Analizza / riprendi” esamina in sequenza le mosse senza valutazione, salvando ogni
+risultato e mostrando evaluation/variante; si può interrompere o chiudere. Non fa
+chiamate linguistiche a pagamento in blocco. La profondità resta fino a 4 semimosse
+con budget e indicazione del livello effettivo. RISIO conserva i voti parodistici.
+Il dettaglio non riprende la partita sulla scacchiera: è un archivio e analisi.
