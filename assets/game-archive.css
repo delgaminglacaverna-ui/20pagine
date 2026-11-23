@@ -1,0 +1,9 @@
+.game-archive { position: fixed; inset: 0; z-index: 20000; background: #0009; display: flex; justify-content: center; padding: 16px; overflow-y: auto; }
+.game-archive-panel { background: #fff; color: #172033; border-radius: 12px; padding: 20px; max-width: 760px; width: 100%; height: max-content; max-height: calc(100dvh - 32px); overflow-y: auto; }
+.game-archive-panel h2 { font-size: 1.4rem; font-weight: bold; }
+.game-archive-panel h3 { font-weight: bold; }
+.game-archive-panel p { margin: 8px 0; }
+.game-archive-panel button { border: 1px solid #64748b; border-radius: 5px; padding: 6px 10px; margin: 5px 8px 5px 0; cursor: pointer; }
+.game-archive-panel button:disabled { opacity: .5; cursor: default; }
+.game-archive-panel article, .game-archive-panel li { border-top: 1px solid #cbd5e1; padding: 12px 0; }
+.game-archive-panel li { font-size: .9rem; }
