@@ -47,6 +47,9 @@ test('three clock clicks switch the ad, start local music and replace YouTube me
   assert.equal(video.props.src, '/assets/enfosi/rushing.mp4');
   assert.equal(video.props.muted, true);
   video.props.onEnded(); tree = render();
+  const uploaded = nodes(tree).find(node => node.type === 'video');
+  assert.equal(uploaded.props.src, '/assets/enfosi/enfosi-upload.mp4');
+  uploaded.props.onEnded(); tree = render();
   assert(nodes(tree).some(node => node.type === 'img' && node.props.src.startsWith('https://static2.klipy.com/')));
   assert.equal(pauses, 0);
 });

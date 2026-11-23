@@ -77,9 +77,9 @@ readyTrigger.props.onClick(); assert.equal(skips, 0, 'activation click must not 
 const smiley = SkipClock({ remaining: 20, enfosi: true });
 assert.equal(smiley.props.children[0].props.src, '/assets/enfosi/smiley.png');
 assert(smiley.props.className.includes('enfosi-clock'));
-assert.equal(ENFOSI_MEDIA.filter(media => media.type === 'gif').length, 11);
-assert.equal(ENFOSI_MEDIA.filter(media => media.type === 'video').length, 1);
-assert.equal(new Set(ENFOSI_MEDIA.map(media => media.src)).size, 12);
+assert.equal(ENFOSI_MEDIA.filter(media => media.type === 'gif').length, 14);
+assert.equal(ENFOSI_MEDIA.filter(media => media.type === 'video').length, 2);
+assert.equal(new Set(ENFOSI_MEDIA.map(media => media.src)).size, 16);
 assert(html.includes('enfosi-spin 15s linear infinite'));
 for (const file of ['smiley.png', 'risio.mp3', 'rushing.mp4']) assert(fs.statSync(`assets/enfosi/${file}`).size > 1000);
 assert(fs.readFileSync('assets/enfosi/rushing.mp4').subarray(4, 8).toString() === 'ftyp');
@@ -99,4 +99,12 @@ assert.equal((html.match(/className: "review-launch"/g) || []).length, 1);
   now = 2500; tick(); assert.equal(remaining, 0);
   context.start(value => { remaining = value; }, 2.5);
   assert.equal(remaining, 2.5, 'each Enfosi ad restarts the short cooldown');
+}
+
+for (const media of ENFOSI_MEDIA.filter(media => media.type === 'video')) {
+  const bytes = fs.readFileSync(media.src.slice(1));
+  assert.equal(bytes.subarray(4, 8).toString(), 'ftyp');
+}
+for (const name of ['Enfosi Risio', 'Enphosian Glaggleland Enphosian Bean', 'Enfosi Gloober']) {
+  assert(ENFOSI_MEDIA.some(media => media.alt === name));
 }

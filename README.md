@@ -350,3 +350,13 @@ le immagini restano ferme. Caricamento aperture, annulla e ripeti non generano e
 Solo in `/risio`, i nomi visibili dei colori sono **Bianco Glaggles** e
 **Nero Enfosi**, anche nei turni, timer, profondità e risultati. I colori
 interni del motore e le altre versioni restano invariati.
+
+
+Playlist ENFOSI aggiornata: **14 GIF + 2 video**, con le aggiunte:
+- https://klipy.com/gifs/enfosi-risio
+- https://klipy.com/gifs/enphosian-glaggleland-enphosian-bean
+- https://klipy.com/gifs/enfosi-gloober
+- `assets/enfosi/enfosi-upload.mp4`, conversione H.264/AAC con faststart del
+  file originale `v12044gd0000dbijqp7og65ogbohiss0.mov`, conservato nella root.
+Il video usa lo stesso autoplay muto, skip dopo 2,5 s e avanzamento a fine video
+previsti per gli altri contenuti RISIO. Le ad del sito normale non cambiano.
