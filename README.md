@@ -369,7 +369,7 @@ are unchanged. The initial HTML favicon uses the same tinted eye.
 ### Commentatore mosse
 Le mosse locali dal vivo ricevono un simbolo nel registro e un commento sotto
 la scacchiera. La ricerca gira in un Web Worker sul motore 10×10 del sito
-(profondità massima 2, budget ~1 s; indisponibile se non completa nemmeno un livello).
+(profondità obiettivo 4 semimosse, budget ~4 s; indisponibile se non completa nemmeno un livello).
 Non usa Stockfish e non riproduce l'algoritmo proprietario di chess.com.
 Il commentatore si chiama **boi battler dice:**. Scala dei simboli:
 - `??` Grave errore: perdita >=300 centesimi rispetto alla migliore trovata.
@@ -447,3 +447,15 @@ all’ultima mossa con Avanti, la pausa termina automaticamente e puoi giocare
 (o riparte l’IA se tocca a lei). “Riprendi
 da qui” scarta le mosse future e riparte dalla posizione visualizzata; se
 tocca al Nero contro IA, il motore riprende a giocare. Reset esce dalla pausa.
+
+
+Il motore dei voti ora cerca fino a **4 semimosse** (non quattro turni completi),
+con approfondimento iterativo e budget di 4 s. Mostra sempre il livello davvero
+completato, che può essere inferiore su posizioni costose; non promette profondità
+4 se il tempo scade. Il nuovo ricercatore conserva la variante principale di ogni
+candidato, con controlli di legalità, matto, patta e ripetizione. I punteggi di tutti
+i candidati usati per un voto provengono dallo stesso livello completato.
+L'API riceve e verifica le linee della mossa giocata e dell'alternativa; boi battler
+cita la risposta di quella linea, non la cattura legale di valore più alto.
+Una variante prevista non è un piano garantito: l'IA di gioco può cercare a una
+profondità diversa. In assenza di continuazione, il commento dichiara il limite.

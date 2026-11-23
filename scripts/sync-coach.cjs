@@ -4,6 +4,34 @@ const html = fs.readFileSync('index.html', 'utf8');
 const constants = html.slice(html.indexOf('const Ht ='), html.indexOf('// French is a separate'));
 const engine = html.slice(html.indexOf('class rr {'), html.indexOf('const Jh ='));
 const handler = `
+const encode = move => ({ from: move.from, to: move.to, promo: move.promo });
+// Keep the continuation alongside each score: explanation and rating share a search.
+function coachSearch(pos, depth, alpha, beta, ply, state) {
+  if (Date.now() > state.deadline) throw Error('Deadline');
+  const key = pos.key(), visits = state.repetitions.get(key) || 0;
+  if (visits >= 2 || pos.half >= 100 || pos.insufficientMaterial()) return { score: 0, pv: [] };
+  state.repetitions.set(key, visits + 1);
+  try {
+    const moves = pos.legalMoves();
+    if (!moves.length) return { score: pos.inCheck() ? -vr + ply : 0, pv: [] };
+    if (depth === 0) return { score: pos.turn * hr(pos), pv: [] };
+    $f(moves);
+    let best = { score: -1e9, pv: [] };
+    for (const move of moves) {
+      pos.make(move);
+      let reply;
+      try { reply = coachSearch(pos, depth - 1, -beta, -alpha, ply + 1, state); }
+      finally { pos.unmake(); }
+      const score = -reply.score;
+      if (score > best.score) best = { score, pv: [encode(move), ...reply.pv] };
+      alpha = Math.max(alpha, score);
+      if (alpha >= beta) break;
+    }
+    return best;
+  } finally {
+    if (visits) state.repetitions.set(key, visits); else state.repetitions.delete(key);
+  }
+}
 self.onmessage = ({ data }) => {
   try {
     FRENCH_MODE = !!data.french;
@@ -17,20 +45,23 @@ self.onmessage = ({ data }) => {
     if (!played) throw Error('Invalid move');
     const candidates = pos.legalMoves(); $f(candidates);
     let complete, depth = 0;
-    const deadline = Date.now() + 1000;
-    for (let d = 1; d <= 2; d++) {
+    const deadline = Date.now() + 4000;
+    for (let d = 1; d <= 4; d++) {
       const state = { nodes: 0, deadline, check: true, aborted: false, repetitions: new Map() };
       for (const key of history) state.repetitions.set(key, (state.repetitions.get(key) || 0) + 1);
       const scores = [];
+      let timedOut = false;
       for (const move of candidates) {
         pos.make(move);
-        const score = -gr(pos, d - 1, -1e9, 1e9, 1, state);
-        pos.unmake();
-        if (state.aborted || Date.now() > deadline) { state.aborted = true; break; }
-        scores.push({ move, score });
+        try {
+          const reply = coachSearch(pos, d - 1, -1e9, 1e9, 1, state);
+          scores.push({ move, score: -reply.score, pv: [encode(move), ...reply.pv] });
+        } catch { timedOut = true; break; }
+        finally { pos.unmake(); }
       }
-      if (state.aborted) break;
+      if (timedOut) break;
       complete = scores; depth = d;
+      candidates.sort((a, b) => scores.find(s => s.move === b).score - scores.find(s => s.move === a).score);
     }
     if (!complete) throw Error('Analysis timed out');
     complete.sort((a, b) => b.score - a.score);
@@ -39,7 +70,7 @@ self.onmessage = ({ data }) => {
     // Conservative heuristic, not chess.com's proprietary brilliant algorithm.
     pos.make(played);
     const sacrifice = pos.legalMoves().some(m => m.to === played.to && Math.abs(m.captured) === Math.abs(played.piece) && Vf[Math.abs(played.piece)] > Vf[Math.abs(m.piece)] + (Vf[Math.abs(played.captured)] || 0));
-    self.postMessage({ best: complete[0].score, played: chosen.score, second: complete[1]?.score ?? complete[0].score, bestMove, sacrifice, depth, alternative: { from: complete[0].move.from, to: complete[0].move.to, promo: complete[0].move.promo }, whiteScore: chosen.score * Math.sign(played.piece) });
+    self.postMessage({ best: complete[0].score, played: chosen.score, second: complete[1]?.score ?? complete[0].score, bestMove, sacrifice, depth, alternative: encode(complete[0].move), playedLine: chosen.pv, alternativeLine: complete[0].pv, whiteScore: chosen.score * Math.sign(played.piece) });
   } catch { self.postMessage({ error: true }); }
 };
 `;

@@ -70,3 +70,20 @@ test('browser requests explanations from same-origin API and preserves local fal
   c.fetch = async () => { throw Error('offline'); };
   assert.equal(await new Promise(resolve => c.MoveCoach.explain(data.moves, false, data, resolve)), null);
 });
+test('explanation follows the supplied searched line and never selects an unrelated capture', () => {
+  const data = body(), { rr } = rules();
+  function line(initial) {
+    const p = new rr(); p.make(p.legalMoves().find(m => m.from === initial.from && m.to === initial.to));
+    const reply = p.legalMoves()[0];
+    return [initial, { from: reply.from, to: reply.to, promo: reply.promo }];
+  }
+  data.playedLine = line(data.moves[0]); data.alternativeLine = line(data.alternative); data.depth = 4;
+  const facts = context(data), { fallback } = require('../lib/coach.cjs');
+  const comment = fallback(facts);
+  assert(comment.includes('risposta prevista dalla ricerca è ' + facts.playedLine[1].notation));
+  assert(comment.includes('Variante calcolata:'));
+  assert(!('possibleCapture' in facts.played));
+  assert(!comment.includes('possibilità legale'));
+  assert.throws(() => context({ ...data, playedLine: [data.moves[0], { from: 0, to: 99 }] }));
+  assert.throws(() => context({ ...data, playedLine: [data.alternative] }));
+});
