@@ -439,3 +439,9 @@ Il collegamento al provider è testato con risposte simulate, non con una chiave
 reale in questo ambiente. Le spiegazioni generate possono comunque sbagliare e
 non modificano simboli o punteggi. Il browser invia solo richieste same-origin;
 l'endpoint accetta POST JSON, limita il corpo e rifiuta origini diverse.
+
+Navigazione nel tempo: ogni clic su indietro/avanti percorre una singola
+semimossa (Bianco oppure Nero), anche contro IA. Durante la navigazione
+IA, timer, suggerimenti e conseguenze di sconfitta sono sospesi. “Riprendi
+da qui” scarta le mosse future e riparte dalla posizione visualizzata; se
+tocca al Nero contro IA, il motore riprende a giocare. Reset esce dalla pausa.
