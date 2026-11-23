@@ -966,7 +966,7 @@ function Wh(o, h) {
   }
   return { san: z, lan: x };
 }
-function Iu(o, h, b) {
+function Iu(o, h, b, playerOnly = false) {
   const f = o.pos,
     z = Wh(f, h);
   if ((f.make(h), f.inCheck())) {
@@ -979,6 +979,7 @@ function Iu(o, h, b) {
     const opening = openingTheory(o.pos.hist.map(entry => entry.move));
     if (opening) z.review = { symbol: "📖", label: "Theory", comment: `Apertura: ${opening}. Questa sequenza è nel repertorio del sito.`, theory: true };
   }
+  if (playerOnly && h.piece < 0) delete z.review;
 }
 function $h(o) {
   const h = o.pos.hist[o.pos.hist.length - 1];
@@ -1533,17 +1534,17 @@ function a1() {
               ra.from === Ot && ra.to === da && (!ra.promo || ra.promo === Lt),
           );
         if (!me) break;
-        Iu(o, me, !0);
+        Iu(o, me, !0, !RISIO_MODE && B === "pvc");
       }
     (x(B), f());
   }
   function liveRisioMove(move) {
-    Iu(o, move, !0);
+    Iu(o, move, !0, !RISIO_MODE && z === "pvc");
     const note = o.notes[o.notes.length - 1];
     if (RISIO_MODE) {
       note.review = window.MoveCoach.risio(z, move.piece);
       window.RisioEffects?.move(move);
-    } else if (z !== "online" && window.MoveCoach && !note.review?.theory) {
+    } else if (z !== "online" && (z !== "pvc" || move.piece > 0) && window.MoveCoach && !note.review?.theory) {
       const moves = R.hist.map(entry => ({ from: entry.move.from, to: entry.move.to, promo: entry.move.promo }));
       note.review = { pending: true };
       window.MoveCoach.analyze(moves, FRENCH_MODE, result => {
@@ -1610,7 +1611,7 @@ function a1() {
     }
     for (let I = 0; I < B; I++) {
       const _l = o.redo.pop();
-      Iu(o, _l, !1);
+      Iu(o, _l, !1, !RISIO_MODE && z === "pvc");
     }
     setHistoryPaused(o.redo.length > 0);
     (q(null), K(null), f());
@@ -1706,7 +1707,11 @@ function a1() {
     oa = [];
   for (let B = 0; B < o.notes.length; B += 2)
     oa.push({ n: B / 2 + 1, w: sa(o.notes[B]), b: sa(o.notes[B + 1]), wr: o.notes[B]?.review, br: o.notes[B + 1]?.review });
-  const lastCoachNote = o.notes[o.notes.length - 1];
+  let coachIndex = o.notes.length - 1;
+  if (!RISIO_MODE && z === "pvc") {
+    while (coachIndex >= 0 && !(R.hist[coachIndex]?.move.piece > 0)) coachIndex--;
+  }
+  const lastCoachNote = o.notes[coachIndex];
   const lastCoachReview = lastCoachNote?.review;
   const en = oa.map((B) => `${B.n}. ${B.w}${B.b ? " " + B.b : ""}`).join(" "),
     Ll = (B, I) =>
@@ -1776,7 +1781,7 @@ function a1() {
                     selected: L,
                     source: el ? G : null,
                     targets: el ? W : new Set(),
-                    moveReview: lastCoachNote ? { to: R.hist[R.hist.length - 1]?.move.to, review: lastCoachReview } : null,
+                    moveReview: lastCoachNote ? { to: R.hist[coachIndex]?.move.to, review: lastCoachReview } : null,
                     lastWhite: ol,
                     lastBlack: Hl,
                     hint: O,
@@ -1998,7 +2003,7 @@ function a1() {
                   lastCoachReview?.explanationSource && v.jsx("p", { className: "text-xs text-slate-500", children: lastCoachReview.explanationSource === "ai" ? "Spiegazione AI basata sui dati del motore; può contenere errori." : "Spiegazione API basata su mosse legali e dati del motore." }),
                   !RISIO_MODE && z !== "online" && v.jsxs("p", {
                     className: "font-mono",
-                    children: ["Valutazione: ", v.jsx("b", { children: window.MoveCoach?.evaluation(lastCoachReview?.whiteScore) ?? "—" }), Number.isFinite(lastCoachReview?.whiteScore) ? ` · profondità ${lastCoachReview.depth}/4` : "", " (+ Bianco / − Nero)"],
+                    children: [z === "pvc" ? "Valutazione dopo la tua mossa: " : "Valutazione: ", v.jsx("b", { children: window.MoveCoach?.evaluation(lastCoachReview?.whiteScore) ?? "—" }), Number.isFinite(lastCoachReview?.whiteScore) ? ` · profondità ${lastCoachReview.depth}/4` : "", " (+ Bianco / − Nero)"],
                   }),
                   !RISIO_MODE && v.jsx("p", { className: "text-xs text-slate-500", children: "Stima del motore 10×10 del sito, non Stockfish né analisi chess.com. Ricerca breve: anche Brillante è una valutazione euristica." }),
                 ],

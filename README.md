@@ -459,3 +459,9 @@ L'API riceve e verifica le linee della mossa giocata e dell'alternativa; boi bat
 cita la risposta di quella linea, non la cattura legale di valore più alto.
 Una variante prevista non è un piano garantito: l'IA di gioco può cercare a una
 profondità diversa. In assenza di continuazione, il commento dichiara il limite.
+
+In giocatore vs IA (normale e francese), solo le mosse umane avviano ricerca
+e richieste a `/api/coach`. Dopo la risposta dell’IA commento, evaluation e badge
+restano riferiti all’ultima mossa umana; non valutano la posizione dopo l’IA.
+Le mosse IA non ricevono voti o Theory, anche con aperture caricate e ripeti.
+PvP, IA vs IA e la parodia RISIO mantengono il comportamento precedente.
