@@ -204,7 +204,11 @@ function risioText(text) {
     .replace(/L'estremo/g, "L'enfoso")
     .replace(/dell'Estremo/g, "dell'Enfoso")
     .replace(/Doppio Estremo/g, 'Doppio Enfoso')
-    .replace(/un estremo/g, 'un enfoso');
+    .replace(/un estremo/g, 'un enfoso')
+    .replace(/\bBianco\b/g, 'Bianco Glaggles')
+    .replace(/\bNero\b/g, 'Nero Enfosi')
+    .replace(/\bbianco\b/g, 'bianco glaggles')
+    .replace(/\bnero\b/g, 'nero enfosi');
 }
 // Translate presentation props only, never game identifiers, URLs or notation.
 for (const method of ["jsx", "jsxs"]) {

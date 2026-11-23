@@ -346,3 +346,7 @@ Solo RISIO: ogni mossa giocata dal vivo mostra per 2,2 s il fumetto “RISIO: bi
 Ogni arrocco (corto o lungo, di entrambi i colori) aggiunge una pioggia decorativa
 di enfosi per circa un secondo, senza bloccare i clic. Con movimento ridotto
 le immagini restano ferme. Caricamento aperture, annulla e ripeti non generano effetti.
+
+Solo in `/risio`, i nomi visibili dei colori sono **Bianco Glaggles** e
+**Nero Enfosi**, anche nei turni, timer, profondità e risultati. I colori
+interni del motore e le altre versioni restano invariati.
