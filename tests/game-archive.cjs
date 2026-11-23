@@ -63,16 +63,23 @@ test('archive dialog lists a saved game and sequentially analyzes missing moves'
   const store = new Map();
   const window = { localStorage: { getItem: key => store.get(key), setItem: (key, value) => store.set(key, value) }, MoveCoach: {
     evaluation: score => (score / 100).toFixed(2),
-    analyze(moves, french, callback) { calls++; callback({ symbol: 'V', whiteScore: 10, depth: 4, comment: 'Analisi di prova' }); return () => {}; },
+    analyze(moves, french, callback, target) { assert.equal(target, 4); calls++; callback({ symbol: 'V', whiteScore: 10, depth: 4, comment: 'Analisi di prova' }); return () => {}; },
   } };
   vm.runInNewContext(code, { window, document });
-  window.GameArchive.save({ ...snapshot(), notes: [{ san: 'f4' }] });
+  window.GameArchive.save({ ...snapshot(), moves: [...snapshot().moves, { from: 15, to: 35, piece: -1 }], notes: [{ san: 'f4', review: { symbol: 'V', depth: 3, targetDepth: 3 } }, { san: 'f7', review: { symbol: 'V', depth: 3, targetDepth: 3 } }] });
   window.GameArchive.open();
   const findButton = label => all(body).find(n => n.tag === 'button' && n.textContent === label);
   findButton('Apri e analizza').onclick();
   await findButton('Analizza / riprendi').onclick();
-  assert.equal(calls, 1);
+  assert.equal(calls, 2);
   assert.equal(window.GameArchive.read()[0].notes[0].review.depth, 4);
+  assert.equal(window.GameArchive.read()[0].notes[1].review.targetDepth, 4);
   assert(all(body).some(n => n.textContent === 'Analisi di prova'));
   findButton('Chiudi').onclick(); assert.equal(body.children.length, 0);
+});
+test('live saves cannot downgrade an archived full-depth review to a quick one', () => {
+  const { api } = harness();
+  api.save({ ...snapshot(), notes: [{ san: 'f4', review: { symbol: 'V', targetDepth: 4, depth: 4 } }] });
+  api.save({ ...snapshot(), notes: [{ san: 'f4', review: { symbol: 'X', targetDepth: 3, depth: 3 } }] });
+  assert.equal(api.read()[0].notes[0].review.targetDepth, 4);
 });

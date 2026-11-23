@@ -595,7 +595,7 @@ self.onmessage = ({ data }) => {
     const candidates = pos.legalMoves(); $f(candidates);
     let complete, depth = 0;
     const deadline = Date.now() + 4000;
-    for (let d = 1; d <= 4; d++) {
+    for (let d = 1; d <= (data.targetDepth === 4 ? 4 : 3); d++) {
       const state = { nodes: 0, deadline, check: true, aborted: false, repetitions: new Map() };
       for (const key of history) state.repetitions.set(key, (state.repetitions.get(key) || 0) + 1);
       const scores = [];

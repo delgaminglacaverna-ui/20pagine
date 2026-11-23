@@ -489,4 +489,20 @@ Il pulsante “Le tue partite · Analisi” apre l'elenco, dettaglio mosse ed el
 risultato e mostrando evaluation/variante; si può interrompere o chiudere. Non fa
 chiamate linguistiche a pagamento in blocco. La profondità resta fino a 4 semimosse
 con budget e indicazione del livello effettivo. RISIO conserva i voti parodistici.
-Il dettaglio non riprende la partita sulla scacchiera: è un archivio e analisi.
+Il dettaglio riproduce la partita su una scacchiera di analisi in sola lettura, separata dalla partita live.
+
+
+La ricerca rapida durante la partita ha ora obiettivo **3 semimosse**; l'analisi
+completa nell'archivio ha obiettivo **4**. Il livello completato e il relativo
+obiettivo sono indicati separatamente; il budget resta di 4 s per posizione.
+L'archivio ricalcola a obiettivo 4 anche le mosse già valutate rapidamente e
+analizza entrambi i colori, comprese le mosse dell'IA. I risultati completi già
+salvati possono essere ripresi senza ripartire dall'inizio. Theory e parodia
+RISIO restano riconoscibili; gli errori di analisi si possono ritentare.
+
+Il dettaglio dell'archivio include ora la stessa UI della scacchiera, in sola
+lettura: inizio, mossa precedente/successiva, fine, rotazione e selezione di una
+mossa dal registro. Durante l'analisi passa alla mossa esaminata e mostra il voto
+appena disponibile. Replay e regole rispettano la variante salvata (normale,
+francese o RISIO), anche aprendola da un'altra versione del sito. Non avvia IA,
+Chronos, pubblicità, effetti RISIO né modifica la partita live.
