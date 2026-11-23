@@ -442,6 +442,8 @@ l'endpoint accetta POST JSON, limita il corpo e rifiuta origini diverse.
 
 Navigazione nel tempo: ogni clic su indietro/avanti percorre una singola
 semimossa (Bianco oppure Nero), anche contro IA. Durante la navigazione
-IA, timer, suggerimenti e conseguenze di sconfitta sono sospesi. “Riprendi
+IA, timer, suggerimenti e conseguenze di sconfitta sono sospesi. Tornando
+all’ultima mossa con Avanti, la pausa termina automaticamente e puoi giocare
+(o riparte l’IA se tocca a lei). “Riprendi
 da qui” scarta le mosse future e riparte dalla posizione visualizzata; se
 tocca al Nero contro IA, il motore riprende a giocare. Reset esce dalla pausa.
