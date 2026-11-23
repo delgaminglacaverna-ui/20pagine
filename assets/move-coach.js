@@ -28,12 +28,18 @@
     };
     try {
       worker = new root.Worker('/assets/coach-worker.js');
-      worker.onmessage = event => finish(event.data.error ? { unavailable: true } : { ...classify(event.data), depth: event.data.depth });
+      worker.onmessage = event => finish(event.data.error ? { unavailable: true } : { ...classify(event.data), depth: event.data.depth, whiteScore: event.data.whiteScore });
       worker.onerror = () => finish({ unavailable: true });
       timer = root.setTimeout(() => finish({ unavailable: true }), 2500);
       worker.postMessage({ moves, french });
     } catch { finish({ unavailable: true }); }
     return () => { done = true; root.clearTimeout(timer); worker?.terminate(); };
   }
-  root.MoveCoach = { classify, risio, analyze };
+  function evaluation(score) {
+    if (!Number.isFinite(score)) return '—';
+    if (Math.abs(score) > 999000) return score > 0 ? 'Matto per il Bianco' : 'Matto per il Nero';
+    const value = score / 100;
+    return (value > 0 ? '+' : '') + value.toFixed(2);
+  }
+  root.MoveCoach = { classify, risio, analyze, evaluation };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

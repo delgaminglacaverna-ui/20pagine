@@ -386,3 +386,14 @@ Aggiornamento occhio ripasso: gli upgrade a 5/10/15/20 sono rispettivamente
 -0,25/-0,50/-0,375/-0,75 s. Ogni coppia successiva moltiplica le riduzioni
 per 1,5; intervalli 4,75/4,25/3,875/3,125 s, minimo 1,5 s dalla streak 30.
 Il numero configurato di orologi non cambia e l'errore ripristina 5 s.
+
+
+Il commentatore espone anche la valutazione del motore in unità di pedone,
+sempre dal punto di vista del Bianco (+ Bianco, − Nero), con profondità raggiunta.
+Non è la confidenza di un modello linguistico: è la stima scacchistica della
+posizione dopo la mossa. Se l'analisi manca/fallisce resta “—”, senza inventare
+punteggi. In RISIO non si mostra un'evaluation numerica per non confondere
+le valutazioni parodistiche con un'analisi reale.
+Il simbolo dell'ultima mossa appare nell'angolo in alto a destra della casa
+di arrivo, anche a scacchiera ruotata, oltre che nel registro. Si aggiorna con
+annulla/ripeti e scompare al reset, in assenza di analisi e durante l'analisi online disabilitata.

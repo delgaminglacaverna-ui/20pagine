@@ -10,6 +10,7 @@
     <title>HAI FATTO I COMPITI???</title>
     <link rel="stylesheet" href="/assets/entry-gate.css" />
     <link rel="stylesheet" href="/assets/risio.css" />
+    <link rel="stylesheet" href="/assets/move-coach.css" />
     <script src="/assets/site-text.js"></script>
     <link id="tab-icon" rel="icon" type="image/png" href="/assets/tabs/chronos-eye.png" />
     <script src="/assets/tab-state.js"></script>
@@ -898,6 +899,13 @@ function wh(o) {
                   className: `flex h-full w-full items-center justify-center ${o.movable(U) ? "cursor-grab" : ""}`,
                   children: v.jsx(Ff, { code: L }),
                 }),
+              o.moveReview?.to === U && o.moveReview?.review?.symbol && v.jsx("span", {
+                className: "move-quality-badge",
+                "data-quality": o.moveReview.review.symbol,
+                title: o.moveReview.review.parody ? "bip bup" : o.moveReview.review.label,
+                "aria-label": `${o.moveReview.review.symbol}: ${o.moveReview.review.parody ? "bip bup" : o.moveReview.review.label}`,
+                children: o.moveReview.review.symbol,
+              }),
             ],
           },
           U,
@@ -1744,6 +1752,7 @@ function a1() {
                     selected: L,
                     source: el ? G : null,
                     targets: el ? W : new Set(),
+                    moveReview: lastCoachNote ? { to: R.hist[R.hist.length - 1]?.move.to, review: lastCoachReview } : null,
                     lastWhite: ol,
                     lastBlack: Hl,
                     hint: O,
@@ -1962,6 +1971,10 @@ function a1() {
                 children: [
                   v.jsx("h2", { className: "font-bold", children: RISIO_MODE ? "RISIO commenta" : "Il commentatore · 20 Pagine" }),
                   v.jsx("p", { role: "status", children: z === "online" ? "Commenti disabilitati durante le partite online." : !lastCoachReview ? "Gioca una mossa per ricevere un commento." : lastCoachReview.pending ? "Analisi della mossa…" : lastCoachReview.unavailable ? "Analisi non disponibile per questa mossa." : `${lastCoachReview.symbol} ${lastCoachReview.parody ? "bip bup" : lastCoachReview.label + ": " + lastCoachReview.comment}` }),
+                  !RISIO_MODE && z !== "online" && v.jsxs("p", {
+                    className: "font-mono",
+                    children: ["Valutazione: ", v.jsx("b", { children: window.MoveCoach?.evaluation(lastCoachReview?.whiteScore) ?? "—" }), Number.isFinite(lastCoachReview?.whiteScore) ? ` · profondità ${lastCoachReview.depth}` : "", " (+ Bianco / − Nero)"],
+                  }),
                   !RISIO_MODE && v.jsx("p", { className: "text-xs text-slate-500", children: "Stima del motore 10×10 del sito, non Stockfish né analisi chess.com. Ricerca breve: anche Brillante è una valutazione euristica." }),
                 ],
               }),

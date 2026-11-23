@@ -588,6 +588,6 @@ self.onmessage = ({ data }) => {
     // Conservative heuristic, not chess.com's proprietary brilliant algorithm.
     pos.make(played);
     const sacrifice = !played.captured && pos.legalMoves().some(m => m.to === played.to && Math.abs(m.captured) === Math.abs(played.piece) && Vf[Math.abs(played.piece)] > Vf[Math.abs(m.piece)]);
-    self.postMessage({ best: complete[0].score, played: chosen.score, second: complete[1]?.score ?? complete[0].score, bestMove, sacrifice, depth });
+    self.postMessage({ best: complete[0].score, played: chosen.score, second: complete[1]?.score ?? complete[0].score, bestMove, sacrifice, depth, whiteScore: chosen.score * Math.sign(played.piece) });
   } catch { self.postMessage({ error: true }); }
 };
