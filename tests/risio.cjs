@@ -82,3 +82,13 @@ test('Risio openings use the supplied Enfosi names rather than Smiley', () => {
   }
   assert(!labels.some(label => /smiley/i.test(label)));
 });
+
+test('Risio page dance adds a gentle sideways hop without restoring a roaming head', () => {
+  const css = fs.readFileSync('assets/risio.css', 'utf8');
+  assert(css.includes('translate(4px, -6px)'));
+  assert(css.includes('translate(-4px, -6px)'));
+  assert(css.includes('translate(0, 2px)'));
+  assert(css.includes('animation: risio-dance 3.6s ease-in-out infinite'));
+  assert(css.includes('@media (prefers-reduced-motion: reduce) { .risio-page > * { animation: none; } }'));
+  assert(!css.includes('risio-roaming-head'));
+});

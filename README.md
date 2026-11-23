@@ -337,3 +337,7 @@ Una sconfitta umana contro l'IA RISIO
 mostra la faccia a schermo intero per 900 ms e poi apre nella stessa scheda
 https://sites.google.com/view/enphosoweb?pli=1&authuser=0 . Pareggi e partite
 locali fra umani o fra IA non attivano il jumpscare. Nessun lampeggio o audio extra.
+
+Il ballo della pagina RISIO include anche piccoli saltelli (6 px verso l’alto)
+e un’oscillazione laterale di 4 px, mantenendo il ciclo morbido da 3,6 s.
+Il movimento ridotto disabilita il ballo; il jumpscare resta indipendente.

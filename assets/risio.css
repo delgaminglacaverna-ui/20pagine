@@ -4,10 +4,10 @@
 .risio-page::after { content: ''; position: fixed; inset: 0; z-index: 9999; background: rgba(255, 217, 0, .16); pointer-events: none; }
 .risio-piece { display: inline-block; flex-shrink: 0; }
 @keyframes risio-dance {
-  0%, 100% { transform: rotate(-.7deg) scale(1, 1); }
-  25% { transform: rotate(.7deg) scale(1.025, .94); }
-  50% { transform: rotate(-.7deg) scale(.98, 1.045); }
-  75% { transform: rotate(.7deg) scale(1.025, .94); }
+  0%, 100% { transform: translate(0, 0) rotate(-.7deg) scale(1, 1); }
+  25% { transform: translate(4px, -6px) rotate(.7deg) scale(1.025, .94); }
+  50% { transform: translate(0, 2px) rotate(-.7deg) scale(.98, 1.045); }
+  75% { transform: translate(-4px, -6px) rotate(.7deg) scale(1.025, .94); }
 }
 @media (prefers-reduced-motion: reduce) { .risio-page > * { animation: none; } }
 
