@@ -360,3 +360,8 @@ Playlist ENFOSI aggiornata: **14 GIF + 2 video**, con le aggiunte:
   file originale `v12044gd0000dbijqp7og65ogbohiss0.mov`, conservato nella root.
 Il video usa lo stesso autoplay muto, skip dopo 2,5 s e avanzamento a fine video
 previsti per gli altri contenuti RISIO. Le ad del sito normale non cambiano.
+
+Chronos browser-tab icons (open eye, closed eye and mouth) use separate
+light-blue-tinted PNGs in `assets/tabs/chronos-*.png` for visibility on light
+browser chrome. Original in-page animation frames, titles and other mode icons
+are unchanged. The initial HTML favicon uses the same tinted eye.
