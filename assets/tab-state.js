@@ -1,5 +1,6 @@
 (function (root) {
   const states = {
+    dash: { title: 'Scacchi Dash', icon: '/assets/dash/Cube001.webp', type: 'image/webp' },
     risio: { title: 'RISIO', icon: '/assets/enfosi/smiley.png', type: 'image/png' },
     compiti: { title: 'HAI FATTO I COMPITI???', icon: '/assets/tabs/chronos-eye.png', type: 'image/png' },
     chess: { title: 'TEMPO ESTREMO COME IL DIH', icon: '/assets/tabs/pawn.svg', type: 'image/svg+xml' },
@@ -12,8 +13,7 @@
     review: 'perchè è tutto blanc',
     enraged: 'los tempos es bellos hahahas',
   };
-  const french = typeof root.URLSearchParams === 'function'
-    && new root.URLSearchParams(root.location?.search || '').get('version') === 'french';
+  const french = /^\/french\/?$/.test(root.location?.pathname || '');
   let current = 'compiti';
   function set(mode) {
     if (!Object.prototype.hasOwnProperty.call(states, mode)) return;

@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync('index.html', 'utf8');
 for (const french of [false, true]) {
   const context = vm.createContext({
-    URLSearchParams, location: { search: french ? '?version=french' : '' },
+    URLSearchParams, location: { pathname: french ? '/french' : '/', search: '' },
     document: { documentElement: {} },
     v: { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) },
   });

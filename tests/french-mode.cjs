@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const html = fs.readFileSync('index.html', 'utf8');
 const engine = html.slice(html.indexOf('const Ht ='), html.indexOf('function ir('));
 function load(french) {
-  const context = vm.createContext({ URLSearchParams, location: { search: french ? '?version=french' : '' }, document: { documentElement: {} }, v: { jsx() {}, jsxs() {} } });
+  const context = vm.createContext({ URLSearchParams, location: { pathname: french ? '/french' : '/', search: '' }, document: { documentElement: {} }, v: { jsx() {}, jsxs() {} } });
   vm.runInContext(engine + '\nglobalThis.Engine = rr;', context);
   return new context.Engine();
 }

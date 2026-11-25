@@ -107,7 +107,7 @@ async function click(square) {
   if (generation === version) { busy = false; render(); }
 }
 function reset() { generation++; game.reset(); reviews.clear(); selected = null; busy = false; online = null; notice(); history.replaceState(null,'','/boring'); render(); }
-function route(mode,id) { return (mode === 'risio' ? '/risio?' : mode === 'boring' ? '/boring?' : '/?' + (mode === 'french' ? 'version=french&' : '')) + 'partita=' + encodeURIComponent(id); }
+function route(mode,id) { return (mode === 'dash' ? '/dash?' : mode === 'french' ? '/french?' : mode === 'risio' ? '/risio?' : mode === 'boring' ? '/boring?' : '/?') + 'partita=' + encodeURIComponent(id); }
 function sync(state) {
   if (state.mode && state.mode !== 'boring') { location.assign(route(state.mode,state.id)); return; }
   const local = game.history({verbose:true}).map(encode), codes = state.moves || [];

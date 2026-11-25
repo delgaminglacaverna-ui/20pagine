@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const html = fs.readFileSync('index.html', 'utf8');
 for (const french of [false, true]) {
-  const context = vm.createContext({ URLSearchParams, location: { search: french ? '?version=french' : '' }, document: { documentElement: {} }, v: { jsx: (type, props) => ({type, props}), jsxs: (type, props) => ({type, props}) } });
+  const context = vm.createContext({ URLSearchParams, location: { pathname: french ? '/french' : '/', search: '' }, document: { documentElement: {} }, v: { jsx: (type, props) => ({type, props}), jsxs: (type, props) => ({type, props}) } });
   vm.runInContext(html.slice(html.indexOf('const Ht ='), html.indexOf('function wh(')) + '\nglobalThis.api = { rr, sr, gr, searchPosition, Ff };', context);
   const { rr, sr, gr, searchPosition, Ff } = context.api;
   const pos = new rr(), key = pos.key();
