@@ -538,7 +538,7 @@ successivi alle proprie mosse, sia Bianco sia Nero.
 Pagina separata, raggiungibile digitando `/boring` (o con un invito a una partita
 boring), senza collegamenti nei menu delle altre pagine. Usa `chess.js` 1.4.0 per
 regole classiche, scacchiera 8×8, arrocco, en passant, quattro promozioni, scacco,
-matto, stallo e patte. Non carica gate/orologi-quiz, Ripassa, pubblicità, riferimenti
+matto, stallo e patte. Non carica Ripassa, pubblicità, riferimenti
 all’Estremo o alle aperture di fantasia. I nomi classici sono riconosciuti da un
 piccolo repertorio di sequenze SAN vere, non da un database completo ECO.
 
@@ -562,8 +562,8 @@ nella pagina (`https://github.com/nmrugg/stockfish.js/tree/v18.0.8`).
 ### /dash e /french
 La versione Geometry Dash è raggiungibile da `/dash` (online: `/dash?partita=CODICE`).
 Conserva le regole 10×10 normali; cambia le immagini dei pezzi con gli upload forniti:
-Cube001=pedone, Ball001=cavallo, Robot001=alfiere, Cube408=torre, UFO001=regina,
-Ship001=re, Wave001=Estremo. Spider e Swing non sono usati. Le immagini sono locali;
+Cube001=pedone, Robot001=cavallo, Wave001=alfiere, Cube408=torre, UFO001=regina,
+Ship001=re, Ball001=Estremo. Spider e Swing non sono usati. Le immagini sono locali;
 i pezzi neri sono invertiti e ruotati per distinguerli dai bianchi. La stessa skin
 si usa nelle promozioni e nei replay salvati, anche se aperti da un’altra versione.
 Online il prefisso 4 fissa Dash per entrambi i giocatori, senza cambiare le regole.
@@ -580,8 +580,7 @@ selettore degli stage o cambi di colore per livello. Restano le icone caricate,
 i nomi delle aperture a tema e uno stile fisso. La distinzione bianco/nero resta
 indipendente dai livelli. I metadati dei 22 livelli sono conservati per gli alias
 URL, non per un selettore nell'interfaccia.
-La variante non monta la pubblicità (nessun player/iframe o timer pubblicitario),
-non riserva spazio per l'ad, salta il quiz d'ingresso, non mostra Ripassa e non
+La variante monta una GD AD dedicata alla playlist di walkthrough scelta; richiede il pass compiti come le altre versioni, non mostra Ripassa e non
 attiva la punizione Chronos alle sconfitte. Le altre versioni restano invariate.
 
 ### Pagine /gd e memento mori
@@ -632,3 +631,103 @@ I percorsi inesistenti usano `404.html`: solo l'immagine fornita a schermo inter
 L'asset ha URL assoluto rispetto al sito, funzionante anche su percorsi annidati.
 Vercel mantiene lo status HTTP 404 senza redirect generico né interferenze con API
 o alias esistenti. Nessuno script di blocco uscita o riapertura delle schede.
+
+
+### Chessometry Dash e compiti su tutte le versioni
+La variante GD si chiama **Chessometry Dash** (anche nella scheda); i testi non
+usano separatori a punto mediano. I pezzi sono Cube, Ball, Robot, Torre, UFO,
+Ship e Wave, inclusi i nomi accessibili delle immagini; restano le regole 10×10.
+La frase introduttiva è `THE SOCIETY IS GONNA BE IN GRIEF FOR YEARS`.
+
+Tutte le versioni giocabili (normale, /french, /risio, /dash, /boring) richiedono
+il pass compiti condiviso. Senza pass valido si apre la stessa prova d'ingresso,
+anche tramite alias e inviti online. Con il pass giornaliero valido non viene
+ripetuta inutilmente. In /boring il modulo di gioco e l'autojoin non vengono
+nemmeno caricati prima del superamento. La GD AD usa solo la playlist dedicata; nessuna modifica alle pagine segrete non giocabili o ai redirect esterni.
+
+
+### Boss di The Battle Bricks: riferimenti aggiuntivi
+Elenco di 58 voci verificato sulla categoria wiki (incluse forme alternative e
+rimosse): https://the-battle-bricks.fandom.com/wiki/Category:Bosses . Le associazioni
+qui sotto sono easter egg scelti per il sito, **non affermazioni sulla lore**.
+I riferimenti già richiesti per Chronos, Mortis, X-TREME e Doomsday Muffin sono
+preservati; Catalog Muffin usa la destinazione muffin, Cesus usa il riferimento
+Dio già scelto per penna. I percorsi accettano minuscole, spazi/trattini o parole
+unite e slash finale. Le destinazioni sono fisse e le parentesi URL sono codificate.
+
+Il registro completo è `data/boss-references.json`; `node scripts/sync-boss-aliases.cjs`
+aggiunge solo gli alias mancanti senza sovrascrivere route esistenti.
+
+| Boss | Riferimento scelto | Destinazione |
+| --- | --- | --- |
+| Allan | Alan Wake | https://en.wikipedia.org/wiki/Alan_Wake |
+| American Fatboy | Fat Man | https://en.wikipedia.org/wiki/Fat_Man |
+| Apostle | Dodici apostoli | https://en.wikipedia.org/wiki/Apostles_in_Christianity |
+| Bedridden | La bella addormentata | https://en.wikipedia.org/wiki/Sleeping_Beauty |
+| Birthday Battler | Torta di compleanno | https://en.wikipedia.org/wiki/Birthday_cake |
+| Blackmail | Phishing | https://en.wikipedia.org/wiki/Phishing |
+| Bulldozer | Bulldozer | https://en.wikipedia.org/wiki/Bulldozer |
+| Captain Red | L’isola del tesoro | https://en.wikipedia.org/wiki/Treasure_Island |
+| Casual Battler | Casual game | https://en.wikipedia.org/wiki/Casual_game |
+| Casual Challenger | Space Invaders | https://en.wikipedia.org/wiki/Space_Invaders |
+| Catalog Muffin | Muffin: riferimento già scelto | /muffin |
+| Celebration Battler | Coriandoli | https://en.wikipedia.org/wiki/Confetti |
+| Cesus | Dio: destinazione già scelta per penna | /penna |
+| Chef Sarge | Hell’s Kitchen | https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29 |
+| Chronos | Occhio di Chronos | /chronos |
+| Crusher | Pressa idraulica | https://en.wikipedia.org/wiki/Hydraulic_press |
+| Cyborg Crocket Battle | RoboCop | https://en.wikipedia.org/wiki/RoboCop |
+| Cyborg Rocket Battle | Lanciarazzi | https://en.wikipedia.org/wiki/Rocket_launcher |
+| Dark Pelican | Il cigno nero | https://en.wikipedia.org/wiki/Black_Swan_%28film%29 |
+| Deathbringer | Tracciato cardiaco | /morte |
+| DJ Radical | Turntablism | https://en.wikipedia.org/wiki/Turntablism |
+| Doctor Despair | Danganronpa | https://en.wikipedia.org/wiki/Danganronpa |
+| Doombringer | Doom | https://en.wikipedia.org/wiki/Doom_%281993_video_game%29 |
+| Doomsday Muffin | THE END IS NEAR | /doomsdaymuffin |
+| Enigma II Battler | Macchina Enigma | https://en.wikipedia.org/wiki/Enigma_machine |
+| EXEC | File eseguibile | https://en.wikipedia.org/wiki/Executable |
+| Father | Darth Vader | https://en.wikipedia.org/wiki/Darth_Vader |
+| FunK1d | Five Nights at Freddy’s | https://en.wikipedia.org/wiki/Five_Nights_at_Freddy%27s |
+| Fusecoil | Bobina di Tesla | https://en.wikipedia.org/wiki/Tesla_coil |
+| GameK1d | Game Boy | https://en.wikipedia.org/wiki/Game_Boy |
+| Grimace Battler | McDonaldland | https://en.wikipedia.org/wiki/McDonaldland |
+| Hellfighter | Doom | https://en.wikipedia.org/wiki/Doom_%281993_video_game%29 |
+| Infernus | Inferno di Dante | https://en.wikipedia.org/wiki/Inferno_%28Dante%29 |
+| Insecure | Sindrome dell’impostore | https://en.wikipedia.org/wiki/Impostor_syndrome |
+| Jetrock | Jet pack | https://en.wikipedia.org/wiki/Jet_pack |
+| Lichen | Licheni | https://en.wikipedia.org/wiki/Lichen |
+| Martyr | Giovanna d’Arco | https://en.wikipedia.org/wiki/Joan_of_Arc |
+| McDonald Battler | McDonald’s | https://en.wikipedia.org/wiki/McDonald%27s |
+| Mister Mancer | Negromanzia | https://en.wikipedia.org/wiki/Necromancy |
+| Monolith | Monolito di 2001 | https://en.wikipedia.org/wiki/Monolith_%28Space_Odyssey%29 |
+| Monsalt | Cloruro di sodio | https://en.wikipedia.org/wiki/Sodium_chloride |
+| Mortis | Tracciato cardiaco | /mortis |
+| Mystery II Battler | Giallo | https://en.wikipedia.org/wiki/Mystery_fiction |
+| Outcast | Il gobbo di Notre-Dame | https://en.wikipedia.org/wiki/The_Hunchback_of_Notre-Dame |
+| Paintmaster | Microsoft Paint | https://en.wikipedia.org/wiki/Microsoft_Paint |
+| Pancake | Pancake | https://en.wikipedia.org/wiki/Pancake |
+| Pancake Pelican Of Truth | The X-Files | https://en.wikipedia.org/wiki/The_X-Files |
+| Patriot Warhead | Il dottor Stranamore | https://en.wikipedia.org/wiki/Dr._Strangelove |
+| Redbeard | Barbanera | https://en.wikipedia.org/wiki/Blackbeard |
+| Reinbo | Arcobaleno | https://en.wikipedia.org/wiki/Rainbow |
+| Rockstar Radical | Guitar Hero | https://en.wikipedia.org/wiki/Guitar_Hero |
+| Sargent | Full Metal Jacket | https://en.wikipedia.org/wiki/Full_Metal_Jacket |
+| Scarlet Storm | Temporale | https://en.wikipedia.org/wiki/Thunderstorm |
+| Soulfuse | Musica soul | https://en.wikipedia.org/wiki/Soul_music |
+| Terminator | The Terminator | https://en.wikipedia.org/wiki/The_Terminator |
+| Treachstone | Giuda Iscariota | https://en.wikipedia.org/wiki/Judas_Iscariot |
+| Turking | King of the Hill | https://en.wikipedia.org/wiki/King_of_the_Hill |
+| X-TREME | Tortura: riferimento già scelto | /x-treme |
+
+Aggiunta successiva richiesta: `/blight` e `/hell` → https://en.wikipedia.org/wiki/Hell . Blight è registrato come aggiunta dell’utente oltre alle 58 voci della categoria consultata.
+
+Aggiornamento Chessometry Dash: Robot è il cavallo, Wave è l’alfiere, Ball è l’Estremo. Immagini, nomi accessibili, promozioni e replay seguono questa associazione; le regole di movimento dei ruoli non cambiano.
+
+
+### GD AD
+Chessometry Dash mostra una finestra trascinabile **GD AD** con la playlist YouTube
+`PLFEp265cKO3ZM_IpuwB_Htbht8T0kFPG4` (Geometry Dash, complete walkthrough).
+Il player carica direttamente la playlist, non video TBB: velocità normale 1×,
+autoplay muto secondo le regole del browser, pulsante salto pronto dopo 2,5 secondi.
+Il salto passa al prossimo video; a fine video la playlist prosegue da sola.
+TBB AD nelle altre versioni ed ENFOSI AD in RISIO restano invariate.

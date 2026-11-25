@@ -1288,6 +1288,1026 @@
       "source": "/fingerdash/",
       "destination": "/dash",
       "permanent": false
+    },
+    {
+      "source": "/allan",
+      "destination": "https://en.wikipedia.org/wiki/Alan_Wake",
+      "permanent": false
+    },
+    {
+      "source": "/allan/",
+      "destination": "https://en.wikipedia.org/wiki/Alan_Wake",
+      "permanent": false
+    },
+    {
+      "source": "/american fatboy",
+      "destination": "https://en.wikipedia.org/wiki/Fat_Man",
+      "permanent": false
+    },
+    {
+      "source": "/american fatboy/",
+      "destination": "https://en.wikipedia.org/wiki/Fat_Man",
+      "permanent": false
+    },
+    {
+      "source": "/american-fatboy",
+      "destination": "https://en.wikipedia.org/wiki/Fat_Man",
+      "permanent": false
+    },
+    {
+      "source": "/american-fatboy/",
+      "destination": "https://en.wikipedia.org/wiki/Fat_Man",
+      "permanent": false
+    },
+    {
+      "source": "/americanfatboy",
+      "destination": "https://en.wikipedia.org/wiki/Fat_Man",
+      "permanent": false
+    },
+    {
+      "source": "/americanfatboy/",
+      "destination": "https://en.wikipedia.org/wiki/Fat_Man",
+      "permanent": false
+    },
+    {
+      "source": "/apostle",
+      "destination": "https://en.wikipedia.org/wiki/Apostles_in_Christianity",
+      "permanent": false
+    },
+    {
+      "source": "/apostle/",
+      "destination": "https://en.wikipedia.org/wiki/Apostles_in_Christianity",
+      "permanent": false
+    },
+    {
+      "source": "/bedridden",
+      "destination": "https://en.wikipedia.org/wiki/Sleeping_Beauty",
+      "permanent": false
+    },
+    {
+      "source": "/bedridden/",
+      "destination": "https://en.wikipedia.org/wiki/Sleeping_Beauty",
+      "permanent": false
+    },
+    {
+      "source": "/birthday battler",
+      "destination": "https://en.wikipedia.org/wiki/Birthday_cake",
+      "permanent": false
+    },
+    {
+      "source": "/birthday battler/",
+      "destination": "https://en.wikipedia.org/wiki/Birthday_cake",
+      "permanent": false
+    },
+    {
+      "source": "/birthday-battler",
+      "destination": "https://en.wikipedia.org/wiki/Birthday_cake",
+      "permanent": false
+    },
+    {
+      "source": "/birthday-battler/",
+      "destination": "https://en.wikipedia.org/wiki/Birthday_cake",
+      "permanent": false
+    },
+    {
+      "source": "/birthdaybattler",
+      "destination": "https://en.wikipedia.org/wiki/Birthday_cake",
+      "permanent": false
+    },
+    {
+      "source": "/birthdaybattler/",
+      "destination": "https://en.wikipedia.org/wiki/Birthday_cake",
+      "permanent": false
+    },
+    {
+      "source": "/blackmail",
+      "destination": "https://en.wikipedia.org/wiki/Phishing",
+      "permanent": false
+    },
+    {
+      "source": "/blackmail/",
+      "destination": "https://en.wikipedia.org/wiki/Phishing",
+      "permanent": false
+    },
+    {
+      "source": "/bulldozer",
+      "destination": "https://en.wikipedia.org/wiki/Bulldozer",
+      "permanent": false
+    },
+    {
+      "source": "/bulldozer/",
+      "destination": "https://en.wikipedia.org/wiki/Bulldozer",
+      "permanent": false
+    },
+    {
+      "source": "/captain red",
+      "destination": "https://en.wikipedia.org/wiki/Treasure_Island",
+      "permanent": false
+    },
+    {
+      "source": "/captain red/",
+      "destination": "https://en.wikipedia.org/wiki/Treasure_Island",
+      "permanent": false
+    },
+    {
+      "source": "/captain-red",
+      "destination": "https://en.wikipedia.org/wiki/Treasure_Island",
+      "permanent": false
+    },
+    {
+      "source": "/captain-red/",
+      "destination": "https://en.wikipedia.org/wiki/Treasure_Island",
+      "permanent": false
+    },
+    {
+      "source": "/captainred",
+      "destination": "https://en.wikipedia.org/wiki/Treasure_Island",
+      "permanent": false
+    },
+    {
+      "source": "/captainred/",
+      "destination": "https://en.wikipedia.org/wiki/Treasure_Island",
+      "permanent": false
+    },
+    {
+      "source": "/casual battler",
+      "destination": "https://en.wikipedia.org/wiki/Casual_game",
+      "permanent": false
+    },
+    {
+      "source": "/casual battler/",
+      "destination": "https://en.wikipedia.org/wiki/Casual_game",
+      "permanent": false
+    },
+    {
+      "source": "/casual-battler",
+      "destination": "https://en.wikipedia.org/wiki/Casual_game",
+      "permanent": false
+    },
+    {
+      "source": "/casual-battler/",
+      "destination": "https://en.wikipedia.org/wiki/Casual_game",
+      "permanent": false
+    },
+    {
+      "source": "/casualbattler",
+      "destination": "https://en.wikipedia.org/wiki/Casual_game",
+      "permanent": false
+    },
+    {
+      "source": "/casualbattler/",
+      "destination": "https://en.wikipedia.org/wiki/Casual_game",
+      "permanent": false
+    },
+    {
+      "source": "/casual challenger",
+      "destination": "https://en.wikipedia.org/wiki/Space_Invaders",
+      "permanent": false
+    },
+    {
+      "source": "/casual challenger/",
+      "destination": "https://en.wikipedia.org/wiki/Space_Invaders",
+      "permanent": false
+    },
+    {
+      "source": "/casual-challenger",
+      "destination": "https://en.wikipedia.org/wiki/Space_Invaders",
+      "permanent": false
+    },
+    {
+      "source": "/casual-challenger/",
+      "destination": "https://en.wikipedia.org/wiki/Space_Invaders",
+      "permanent": false
+    },
+    {
+      "source": "/casualchallenger",
+      "destination": "https://en.wikipedia.org/wiki/Space_Invaders",
+      "permanent": false
+    },
+    {
+      "source": "/casualchallenger/",
+      "destination": "https://en.wikipedia.org/wiki/Space_Invaders",
+      "permanent": false
+    },
+    {
+      "source": "/catalog muffin",
+      "destination": "/muffin",
+      "permanent": false
+    },
+    {
+      "source": "/catalog muffin/",
+      "destination": "/muffin",
+      "permanent": false
+    },
+    {
+      "source": "/catalog-muffin",
+      "destination": "/muffin",
+      "permanent": false
+    },
+    {
+      "source": "/catalog-muffin/",
+      "destination": "/muffin",
+      "permanent": false
+    },
+    {
+      "source": "/catalogmuffin",
+      "destination": "/muffin",
+      "permanent": false
+    },
+    {
+      "source": "/catalogmuffin/",
+      "destination": "/muffin",
+      "permanent": false
+    },
+    {
+      "source": "/celebration battler",
+      "destination": "https://en.wikipedia.org/wiki/Confetti",
+      "permanent": false
+    },
+    {
+      "source": "/celebration battler/",
+      "destination": "https://en.wikipedia.org/wiki/Confetti",
+      "permanent": false
+    },
+    {
+      "source": "/celebration-battler",
+      "destination": "https://en.wikipedia.org/wiki/Confetti",
+      "permanent": false
+    },
+    {
+      "source": "/celebration-battler/",
+      "destination": "https://en.wikipedia.org/wiki/Confetti",
+      "permanent": false
+    },
+    {
+      "source": "/celebrationbattler",
+      "destination": "https://en.wikipedia.org/wiki/Confetti",
+      "permanent": false
+    },
+    {
+      "source": "/celebrationbattler/",
+      "destination": "https://en.wikipedia.org/wiki/Confetti",
+      "permanent": false
+    },
+    {
+      "source": "/cesus",
+      "destination": "/penna",
+      "permanent": false
+    },
+    {
+      "source": "/cesus/",
+      "destination": "/penna",
+      "permanent": false
+    },
+    {
+      "source": "/chef sarge",
+      "destination": "https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29",
+      "permanent": false
+    },
+    {
+      "source": "/chef sarge/",
+      "destination": "https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29",
+      "permanent": false
+    },
+    {
+      "source": "/chef-sarge",
+      "destination": "https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29",
+      "permanent": false
+    },
+    {
+      "source": "/chef-sarge/",
+      "destination": "https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29",
+      "permanent": false
+    },
+    {
+      "source": "/chefsarge",
+      "destination": "https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29",
+      "permanent": false
+    },
+    {
+      "source": "/chefsarge/",
+      "destination": "https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29",
+      "permanent": false
+    },
+    {
+      "source": "/crusher",
+      "destination": "https://en.wikipedia.org/wiki/Hydraulic_press",
+      "permanent": false
+    },
+    {
+      "source": "/crusher/",
+      "destination": "https://en.wikipedia.org/wiki/Hydraulic_press",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg crocket battle",
+      "destination": "https://en.wikipedia.org/wiki/RoboCop",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg crocket battle/",
+      "destination": "https://en.wikipedia.org/wiki/RoboCop",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg-crocket-battle",
+      "destination": "https://en.wikipedia.org/wiki/RoboCop",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg-crocket-battle/",
+      "destination": "https://en.wikipedia.org/wiki/RoboCop",
+      "permanent": false
+    },
+    {
+      "source": "/cyborgcrocketbattle",
+      "destination": "https://en.wikipedia.org/wiki/RoboCop",
+      "permanent": false
+    },
+    {
+      "source": "/cyborgcrocketbattle/",
+      "destination": "https://en.wikipedia.org/wiki/RoboCop",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg rocket battle",
+      "destination": "https://en.wikipedia.org/wiki/Rocket_launcher",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg rocket battle/",
+      "destination": "https://en.wikipedia.org/wiki/Rocket_launcher",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg-rocket-battle",
+      "destination": "https://en.wikipedia.org/wiki/Rocket_launcher",
+      "permanent": false
+    },
+    {
+      "source": "/cyborg-rocket-battle/",
+      "destination": "https://en.wikipedia.org/wiki/Rocket_launcher",
+      "permanent": false
+    },
+    {
+      "source": "/cyborgrocketbattle",
+      "destination": "https://en.wikipedia.org/wiki/Rocket_launcher",
+      "permanent": false
+    },
+    {
+      "source": "/cyborgrocketbattle/",
+      "destination": "https://en.wikipedia.org/wiki/Rocket_launcher",
+      "permanent": false
+    },
+    {
+      "source": "/dark pelican",
+      "destination": "https://en.wikipedia.org/wiki/Black_Swan_%28film%29",
+      "permanent": false
+    },
+    {
+      "source": "/dark pelican/",
+      "destination": "https://en.wikipedia.org/wiki/Black_Swan_%28film%29",
+      "permanent": false
+    },
+    {
+      "source": "/dark-pelican",
+      "destination": "https://en.wikipedia.org/wiki/Black_Swan_%28film%29",
+      "permanent": false
+    },
+    {
+      "source": "/dark-pelican/",
+      "destination": "https://en.wikipedia.org/wiki/Black_Swan_%28film%29",
+      "permanent": false
+    },
+    {
+      "source": "/darkpelican",
+      "destination": "https://en.wikipedia.org/wiki/Black_Swan_%28film%29",
+      "permanent": false
+    },
+    {
+      "source": "/darkpelican/",
+      "destination": "https://en.wikipedia.org/wiki/Black_Swan_%28film%29",
+      "permanent": false
+    },
+    {
+      "source": "/deathbringer",
+      "destination": "/morte",
+      "permanent": false
+    },
+    {
+      "source": "/deathbringer/",
+      "destination": "/morte",
+      "permanent": false
+    },
+    {
+      "source": "/dj radical",
+      "destination": "https://en.wikipedia.org/wiki/Turntablism",
+      "permanent": false
+    },
+    {
+      "source": "/dj radical/",
+      "destination": "https://en.wikipedia.org/wiki/Turntablism",
+      "permanent": false
+    },
+    {
+      "source": "/dj-radical",
+      "destination": "https://en.wikipedia.org/wiki/Turntablism",
+      "permanent": false
+    },
+    {
+      "source": "/dj-radical/",
+      "destination": "https://en.wikipedia.org/wiki/Turntablism",
+      "permanent": false
+    },
+    {
+      "source": "/djradical",
+      "destination": "https://en.wikipedia.org/wiki/Turntablism",
+      "permanent": false
+    },
+    {
+      "source": "/djradical/",
+      "destination": "https://en.wikipedia.org/wiki/Turntablism",
+      "permanent": false
+    },
+    {
+      "source": "/doctor despair",
+      "destination": "https://en.wikipedia.org/wiki/Danganronpa",
+      "permanent": false
+    },
+    {
+      "source": "/doctor despair/",
+      "destination": "https://en.wikipedia.org/wiki/Danganronpa",
+      "permanent": false
+    },
+    {
+      "source": "/doctor-despair",
+      "destination": "https://en.wikipedia.org/wiki/Danganronpa",
+      "permanent": false
+    },
+    {
+      "source": "/doctor-despair/",
+      "destination": "https://en.wikipedia.org/wiki/Danganronpa",
+      "permanent": false
+    },
+    {
+      "source": "/doctordespair",
+      "destination": "https://en.wikipedia.org/wiki/Danganronpa",
+      "permanent": false
+    },
+    {
+      "source": "/doctordespair/",
+      "destination": "https://en.wikipedia.org/wiki/Danganronpa",
+      "permanent": false
+    },
+    {
+      "source": "/doombringer",
+      "destination": "https://en.wikipedia.org/wiki/Doom_%281993_video_game%29",
+      "permanent": false
+    },
+    {
+      "source": "/doombringer/",
+      "destination": "https://en.wikipedia.org/wiki/Doom_%281993_video_game%29",
+      "permanent": false
+    },
+    {
+      "source": "/enigma ii battler",
+      "destination": "https://en.wikipedia.org/wiki/Enigma_machine",
+      "permanent": false
+    },
+    {
+      "source": "/enigma ii battler/",
+      "destination": "https://en.wikipedia.org/wiki/Enigma_machine",
+      "permanent": false
+    },
+    {
+      "source": "/enigma-ii-battler",
+      "destination": "https://en.wikipedia.org/wiki/Enigma_machine",
+      "permanent": false
+    },
+    {
+      "source": "/enigma-ii-battler/",
+      "destination": "https://en.wikipedia.org/wiki/Enigma_machine",
+      "permanent": false
+    },
+    {
+      "source": "/enigmaiibattler",
+      "destination": "https://en.wikipedia.org/wiki/Enigma_machine",
+      "permanent": false
+    },
+    {
+      "source": "/enigmaiibattler/",
+      "destination": "https://en.wikipedia.org/wiki/Enigma_machine",
+      "permanent": false
+    },
+    {
+      "source": "/exec",
+      "destination": "https://en.wikipedia.org/wiki/Executable",
+      "permanent": false
+    },
+    {
+      "source": "/exec/",
+      "destination": "https://en.wikipedia.org/wiki/Executable",
+      "permanent": false
+    },
+    {
+      "source": "/father",
+      "destination": "https://en.wikipedia.org/wiki/Darth_Vader",
+      "permanent": false
+    },
+    {
+      "source": "/father/",
+      "destination": "https://en.wikipedia.org/wiki/Darth_Vader",
+      "permanent": false
+    },
+    {
+      "source": "/funk1d",
+      "destination": "https://en.wikipedia.org/wiki/Five_Nights_at_Freddy%27s",
+      "permanent": false
+    },
+    {
+      "source": "/funk1d/",
+      "destination": "https://en.wikipedia.org/wiki/Five_Nights_at_Freddy%27s",
+      "permanent": false
+    },
+    {
+      "source": "/fusecoil",
+      "destination": "https://en.wikipedia.org/wiki/Tesla_coil",
+      "permanent": false
+    },
+    {
+      "source": "/fusecoil/",
+      "destination": "https://en.wikipedia.org/wiki/Tesla_coil",
+      "permanent": false
+    },
+    {
+      "source": "/gamek1d",
+      "destination": "https://en.wikipedia.org/wiki/Game_Boy",
+      "permanent": false
+    },
+    {
+      "source": "/gamek1d/",
+      "destination": "https://en.wikipedia.org/wiki/Game_Boy",
+      "permanent": false
+    },
+    {
+      "source": "/grimace battler",
+      "destination": "https://en.wikipedia.org/wiki/McDonaldland",
+      "permanent": false
+    },
+    {
+      "source": "/grimace battler/",
+      "destination": "https://en.wikipedia.org/wiki/McDonaldland",
+      "permanent": false
+    },
+    {
+      "source": "/grimace-battler",
+      "destination": "https://en.wikipedia.org/wiki/McDonaldland",
+      "permanent": false
+    },
+    {
+      "source": "/grimace-battler/",
+      "destination": "https://en.wikipedia.org/wiki/McDonaldland",
+      "permanent": false
+    },
+    {
+      "source": "/grimacebattler",
+      "destination": "https://en.wikipedia.org/wiki/McDonaldland",
+      "permanent": false
+    },
+    {
+      "source": "/grimacebattler/",
+      "destination": "https://en.wikipedia.org/wiki/McDonaldland",
+      "permanent": false
+    },
+    {
+      "source": "/hellfighter",
+      "destination": "https://en.wikipedia.org/wiki/Doom_%281993_video_game%29",
+      "permanent": false
+    },
+    {
+      "source": "/hellfighter/",
+      "destination": "https://en.wikipedia.org/wiki/Doom_%281993_video_game%29",
+      "permanent": false
+    },
+    {
+      "source": "/infernus",
+      "destination": "https://en.wikipedia.org/wiki/Inferno_%28Dante%29",
+      "permanent": false
+    },
+    {
+      "source": "/infernus/",
+      "destination": "https://en.wikipedia.org/wiki/Inferno_%28Dante%29",
+      "permanent": false
+    },
+    {
+      "source": "/insecure",
+      "destination": "https://en.wikipedia.org/wiki/Impostor_syndrome",
+      "permanent": false
+    },
+    {
+      "source": "/insecure/",
+      "destination": "https://en.wikipedia.org/wiki/Impostor_syndrome",
+      "permanent": false
+    },
+    {
+      "source": "/jetrock",
+      "destination": "https://en.wikipedia.org/wiki/Jet_pack",
+      "permanent": false
+    },
+    {
+      "source": "/jetrock/",
+      "destination": "https://en.wikipedia.org/wiki/Jet_pack",
+      "permanent": false
+    },
+    {
+      "source": "/lichen",
+      "destination": "https://en.wikipedia.org/wiki/Lichen",
+      "permanent": false
+    },
+    {
+      "source": "/lichen/",
+      "destination": "https://en.wikipedia.org/wiki/Lichen",
+      "permanent": false
+    },
+    {
+      "source": "/martyr",
+      "destination": "https://en.wikipedia.org/wiki/Joan_of_Arc",
+      "permanent": false
+    },
+    {
+      "source": "/martyr/",
+      "destination": "https://en.wikipedia.org/wiki/Joan_of_Arc",
+      "permanent": false
+    },
+    {
+      "source": "/mcdonald battler",
+      "destination": "https://en.wikipedia.org/wiki/McDonald%27s",
+      "permanent": false
+    },
+    {
+      "source": "/mcdonald battler/",
+      "destination": "https://en.wikipedia.org/wiki/McDonald%27s",
+      "permanent": false
+    },
+    {
+      "source": "/mcdonald-battler",
+      "destination": "https://en.wikipedia.org/wiki/McDonald%27s",
+      "permanent": false
+    },
+    {
+      "source": "/mcdonald-battler/",
+      "destination": "https://en.wikipedia.org/wiki/McDonald%27s",
+      "permanent": false
+    },
+    {
+      "source": "/mcdonaldbattler",
+      "destination": "https://en.wikipedia.org/wiki/McDonald%27s",
+      "permanent": false
+    },
+    {
+      "source": "/mcdonaldbattler/",
+      "destination": "https://en.wikipedia.org/wiki/McDonald%27s",
+      "permanent": false
+    },
+    {
+      "source": "/mister mancer",
+      "destination": "https://en.wikipedia.org/wiki/Necromancy",
+      "permanent": false
+    },
+    {
+      "source": "/mister mancer/",
+      "destination": "https://en.wikipedia.org/wiki/Necromancy",
+      "permanent": false
+    },
+    {
+      "source": "/mister-mancer",
+      "destination": "https://en.wikipedia.org/wiki/Necromancy",
+      "permanent": false
+    },
+    {
+      "source": "/mister-mancer/",
+      "destination": "https://en.wikipedia.org/wiki/Necromancy",
+      "permanent": false
+    },
+    {
+      "source": "/mistermancer",
+      "destination": "https://en.wikipedia.org/wiki/Necromancy",
+      "permanent": false
+    },
+    {
+      "source": "/mistermancer/",
+      "destination": "https://en.wikipedia.org/wiki/Necromancy",
+      "permanent": false
+    },
+    {
+      "source": "/monolith",
+      "destination": "https://en.wikipedia.org/wiki/Monolith_%28Space_Odyssey%29",
+      "permanent": false
+    },
+    {
+      "source": "/monolith/",
+      "destination": "https://en.wikipedia.org/wiki/Monolith_%28Space_Odyssey%29",
+      "permanent": false
+    },
+    {
+      "source": "/monsalt",
+      "destination": "https://en.wikipedia.org/wiki/Sodium_chloride",
+      "permanent": false
+    },
+    {
+      "source": "/monsalt/",
+      "destination": "https://en.wikipedia.org/wiki/Sodium_chloride",
+      "permanent": false
+    },
+    {
+      "source": "/mystery ii battler",
+      "destination": "https://en.wikipedia.org/wiki/Mystery_fiction",
+      "permanent": false
+    },
+    {
+      "source": "/mystery ii battler/",
+      "destination": "https://en.wikipedia.org/wiki/Mystery_fiction",
+      "permanent": false
+    },
+    {
+      "source": "/mystery-ii-battler",
+      "destination": "https://en.wikipedia.org/wiki/Mystery_fiction",
+      "permanent": false
+    },
+    {
+      "source": "/mystery-ii-battler/",
+      "destination": "https://en.wikipedia.org/wiki/Mystery_fiction",
+      "permanent": false
+    },
+    {
+      "source": "/mysteryiibattler",
+      "destination": "https://en.wikipedia.org/wiki/Mystery_fiction",
+      "permanent": false
+    },
+    {
+      "source": "/mysteryiibattler/",
+      "destination": "https://en.wikipedia.org/wiki/Mystery_fiction",
+      "permanent": false
+    },
+    {
+      "source": "/outcast",
+      "destination": "https://en.wikipedia.org/wiki/The_Hunchback_of_Notre-Dame",
+      "permanent": false
+    },
+    {
+      "source": "/outcast/",
+      "destination": "https://en.wikipedia.org/wiki/The_Hunchback_of_Notre-Dame",
+      "permanent": false
+    },
+    {
+      "source": "/paintmaster",
+      "destination": "https://en.wikipedia.org/wiki/Microsoft_Paint",
+      "permanent": false
+    },
+    {
+      "source": "/paintmaster/",
+      "destination": "https://en.wikipedia.org/wiki/Microsoft_Paint",
+      "permanent": false
+    },
+    {
+      "source": "/pancake",
+      "destination": "https://en.wikipedia.org/wiki/Pancake",
+      "permanent": false
+    },
+    {
+      "source": "/pancake/",
+      "destination": "https://en.wikipedia.org/wiki/Pancake",
+      "permanent": false
+    },
+    {
+      "source": "/pancake pelican of truth",
+      "destination": "https://en.wikipedia.org/wiki/The_X-Files",
+      "permanent": false
+    },
+    {
+      "source": "/pancake pelican of truth/",
+      "destination": "https://en.wikipedia.org/wiki/The_X-Files",
+      "permanent": false
+    },
+    {
+      "source": "/pancake-pelican-of-truth",
+      "destination": "https://en.wikipedia.org/wiki/The_X-Files",
+      "permanent": false
+    },
+    {
+      "source": "/pancake-pelican-of-truth/",
+      "destination": "https://en.wikipedia.org/wiki/The_X-Files",
+      "permanent": false
+    },
+    {
+      "source": "/pancakepelicanoftruth",
+      "destination": "https://en.wikipedia.org/wiki/The_X-Files",
+      "permanent": false
+    },
+    {
+      "source": "/pancakepelicanoftruth/",
+      "destination": "https://en.wikipedia.org/wiki/The_X-Files",
+      "permanent": false
+    },
+    {
+      "source": "/patriot warhead",
+      "destination": "https://en.wikipedia.org/wiki/Dr._Strangelove",
+      "permanent": false
+    },
+    {
+      "source": "/patriot warhead/",
+      "destination": "https://en.wikipedia.org/wiki/Dr._Strangelove",
+      "permanent": false
+    },
+    {
+      "source": "/patriot-warhead",
+      "destination": "https://en.wikipedia.org/wiki/Dr._Strangelove",
+      "permanent": false
+    },
+    {
+      "source": "/patriot-warhead/",
+      "destination": "https://en.wikipedia.org/wiki/Dr._Strangelove",
+      "permanent": false
+    },
+    {
+      "source": "/patriotwarhead",
+      "destination": "https://en.wikipedia.org/wiki/Dr._Strangelove",
+      "permanent": false
+    },
+    {
+      "source": "/patriotwarhead/",
+      "destination": "https://en.wikipedia.org/wiki/Dr._Strangelove",
+      "permanent": false
+    },
+    {
+      "source": "/redbeard",
+      "destination": "https://en.wikipedia.org/wiki/Blackbeard",
+      "permanent": false
+    },
+    {
+      "source": "/redbeard/",
+      "destination": "https://en.wikipedia.org/wiki/Blackbeard",
+      "permanent": false
+    },
+    {
+      "source": "/reinbo",
+      "destination": "https://en.wikipedia.org/wiki/Rainbow",
+      "permanent": false
+    },
+    {
+      "source": "/reinbo/",
+      "destination": "https://en.wikipedia.org/wiki/Rainbow",
+      "permanent": false
+    },
+    {
+      "source": "/rockstar radical",
+      "destination": "https://en.wikipedia.org/wiki/Guitar_Hero",
+      "permanent": false
+    },
+    {
+      "source": "/rockstar radical/",
+      "destination": "https://en.wikipedia.org/wiki/Guitar_Hero",
+      "permanent": false
+    },
+    {
+      "source": "/rockstar-radical",
+      "destination": "https://en.wikipedia.org/wiki/Guitar_Hero",
+      "permanent": false
+    },
+    {
+      "source": "/rockstar-radical/",
+      "destination": "https://en.wikipedia.org/wiki/Guitar_Hero",
+      "permanent": false
+    },
+    {
+      "source": "/rockstarradical",
+      "destination": "https://en.wikipedia.org/wiki/Guitar_Hero",
+      "permanent": false
+    },
+    {
+      "source": "/rockstarradical/",
+      "destination": "https://en.wikipedia.org/wiki/Guitar_Hero",
+      "permanent": false
+    },
+    {
+      "source": "/sargent",
+      "destination": "https://en.wikipedia.org/wiki/Full_Metal_Jacket",
+      "permanent": false
+    },
+    {
+      "source": "/sargent/",
+      "destination": "https://en.wikipedia.org/wiki/Full_Metal_Jacket",
+      "permanent": false
+    },
+    {
+      "source": "/scarlet storm",
+      "destination": "https://en.wikipedia.org/wiki/Thunderstorm",
+      "permanent": false
+    },
+    {
+      "source": "/scarlet storm/",
+      "destination": "https://en.wikipedia.org/wiki/Thunderstorm",
+      "permanent": false
+    },
+    {
+      "source": "/scarlet-storm",
+      "destination": "https://en.wikipedia.org/wiki/Thunderstorm",
+      "permanent": false
+    },
+    {
+      "source": "/scarlet-storm/",
+      "destination": "https://en.wikipedia.org/wiki/Thunderstorm",
+      "permanent": false
+    },
+    {
+      "source": "/scarletstorm",
+      "destination": "https://en.wikipedia.org/wiki/Thunderstorm",
+      "permanent": false
+    },
+    {
+      "source": "/scarletstorm/",
+      "destination": "https://en.wikipedia.org/wiki/Thunderstorm",
+      "permanent": false
+    },
+    {
+      "source": "/soulfuse",
+      "destination": "https://en.wikipedia.org/wiki/Soul_music",
+      "permanent": false
+    },
+    {
+      "source": "/soulfuse/",
+      "destination": "https://en.wikipedia.org/wiki/Soul_music",
+      "permanent": false
+    },
+    {
+      "source": "/terminator",
+      "destination": "https://en.wikipedia.org/wiki/The_Terminator",
+      "permanent": false
+    },
+    {
+      "source": "/terminator/",
+      "destination": "https://en.wikipedia.org/wiki/The_Terminator",
+      "permanent": false
+    },
+    {
+      "source": "/treachstone",
+      "destination": "https://en.wikipedia.org/wiki/Judas_Iscariot",
+      "permanent": false
+    },
+    {
+      "source": "/treachstone/",
+      "destination": "https://en.wikipedia.org/wiki/Judas_Iscariot",
+      "permanent": false
+    },
+    {
+      "source": "/turking",
+      "destination": "https://en.wikipedia.org/wiki/King_of_the_Hill",
+      "permanent": false
+    },
+    {
+      "source": "/turking/",
+      "destination": "https://en.wikipedia.org/wiki/King_of_the_Hill",
+      "permanent": false
+    },
+    {
+      "source": "/doomsday muffin",
+      "destination": "/doomsdaymuffin",
+      "permanent": false
+    },
+    {
+      "source": "/doomsday muffin/",
+      "destination": "/doomsdaymuffin",
+      "permanent": false
+    },
+    {
+      "source": "/doomsday-muffin",
+      "destination": "/doomsdaymuffin",
+      "permanent": false
+    },
+    {
+      "source": "/doomsday-muffin/",
+      "destination": "/doomsdaymuffin",
+      "permanent": false
+    },
+    {
+      "source": "/hell",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
+    },
+    {
+      "source": "/hell/",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
+    },
+    {
+      "source": "/blight",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
+    },
+    {
+      "source": "/blight/",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
     }
   ]
 }

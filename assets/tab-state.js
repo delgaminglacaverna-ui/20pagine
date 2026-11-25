@@ -1,6 +1,6 @@
 (function (root) {
   const states = {
-    dash: { title: 'Scacchi Dash', icon: '/assets/dash/Cube001.webp', type: 'image/webp' },
+    dash: { title: 'Chessometry Dash', icon: '/assets/dash/Cube001.webp', type: 'image/webp' },
     risio: { title: 'RISIO', icon: '/assets/enfosi/smiley.png', type: 'image/png' },
     compiti: { title: 'HAI FATTO I COMPITI???', icon: '/assets/tabs/chronos-eye.png', type: 'image/png' },
     chess: { title: 'TEMPO ESTREMO COME IL DIH', icon: '/assets/tabs/pawn.svg', type: 'image/svg+xml' },

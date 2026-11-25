@@ -50,7 +50,7 @@ test('boring browser renders 64 squares, legal moves, real openings and private 
 });
 test('boring route is isolated and ships only the small single-thread Stockfish build', () => {
   const page = fs.readFileSync('boring.html','utf8');
-  for (const forbidden of ['entry-gate','enfosi','game-archive','site-ads','Ripassa','boi battler','Estremo']) assert(!page.includes(forbidden));
+  for (const forbidden of ['enfosi','game-archive','site-ads','Ripassa','boi battler','Estremo']) assert(!page.includes(forbidden));
   const config = JSON.parse(fs.readFileSync('vercel.json','utf8'));
   assert(config.rewrites.some(r => r.source === '/boring' && r.destination === '/boring.html'));
   assert(!fs.readFileSync('index.html','utf8').includes('href: "/boring"'));

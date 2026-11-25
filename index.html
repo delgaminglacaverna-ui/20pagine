@@ -767,8 +767,8 @@ function Ff({ code: o, size: h, variant }) {
   const frenchPiece = variant ? variant === "french" : FRENCH_MODE;
   const dashPiece = variant ? variant === "dash" : DASH_MODE;
   if (dashPiece) {
-    const images = { 1: "Cube001", 2: "Ball001", 3: "Robot001", 4: "Cube408", 5: "UFO001", 6: "Ship001", 7: "Wave001" };
-    const names = { 1: "Pedone · Cube001", 2: "Cavallo · Ball", 3: "Alfiere · Robot", 4: "Torre · Cube408", 5: "Regina · UFO", 6: "Re · Ship", 7: "Estremo · Wave" };
+    const images = { 1: "Cube001", 2: "Robot001", 3: "Wave001", 4: "Cube408", 5: "UFO001", 6: "Ship001", 7: "Ball001" };
+    const names = { 1: "Cube", 2: "Robot", 3: "Wave", 4: "Torre", 5: "UFO", 6: "Ship", 7: "Ball" };
     return v.jsx("img", {
       src: "/assets/dash/" + images[b] + ".webp", alt: names[b], draggable: false,
       className: "dash-piece pointer-events-none select-none",
@@ -1796,7 +1796,7 @@ function a1() {
 
       });
   return v.jsxs("div", {
-    className: "min-h-screen bg-slate-100 text-slate-800" + (DASH_MODE ? "" : " pb-72") + (RISIO_MODE ? " risio-page" : ""),
+    className: "min-h-screen bg-slate-100 pb-72 text-slate-800" + (RISIO_MODE ? " risio-page" : ""),
     children: [
       v.jsx("header", {
         className: "bg-[#343a40] px-4 py-4 text-white shadow",
@@ -2409,7 +2409,7 @@ function a1() {
           children: FRENCH_MODE ? "Réviser" : "Ripassa",
         }),
       }),
-      !DASH_MODE && v.jsx(i1, {}),
+      v.jsx(i1, {}),
     ],
   });
 }
@@ -2546,10 +2546,11 @@ const ENFOSI_MEDIA = [
   { type: 'video', src: '/assets/enfosi/enfosi-upload.mp4', alt: 'Enfosi video caricato' },
   { type: 'video', src: '/assets/enfosi/rushing.mp4', alt: 'Rushing muh wave 7 solo' },
 ];
+const GD_AD_PLAYLIST = "PLFEp265cKO3ZM_IpuwB_Htbht8T0kFPG4";
 function i1() {
   const enfosi = RISIO_MODE,
     [mediaIndex, setMediaIndex] = ul.useState(() => Math.floor(Math.random() * ENFOSI_MEDIA.length)),
-    music = ul.useRef(null), trigger = ul.useRef(createEnfosiTrigger());
+    music = ul.useRef(null), gdLastVideo = ul.useRef(null), trigger = ul.useRef(createEnfosiTrigger());
   ul.useEffect(() => {
     if (!enfosi) return;
     let disposed = false;
@@ -2571,12 +2572,12 @@ function i1() {
     };
   }, [enfosi]);
   function clockTap() {
-    if (enfosi || !trigger.current(Date.now())) return false;
+    if (enfosi || DASH_MODE || !trigger.current(Date.now())) return false;
     location.href = "/risio"; return true;
   }
   const media = ENFOSI_MEDIA[mediaIndex];
   const [o, h] = ul.useState(() => or()),
-    [b, f] = ul.useState(enfosi ? 2.5 : dr),
+    [b, f] = ul.useState(enfosi || DASH_MODE ? 2.5 : dr),
     z = ul.useRef(null),
     x = ul.useRef(null),
     [j, D] = ul.useState(null),
@@ -2623,10 +2624,11 @@ function i1() {
           !z.current ||
           q.current ||
           (q.current = new K.Player(z.current, {
-            videoId: o,
+            ...(DASH_MODE ? {} : { videoId: o }),
             width: "100%",
             height: "100%",
             playerVars: {
+              ...(DASH_MODE ? { listType: "playlist", list: GD_AD_PLAYLIST } : {}),
               autoplay: 1,
               mute: 1,
               rel: 0,
@@ -2640,14 +2642,18 @@ function i1() {
             events: {
               onReady: (F) => {
                 (F.target.mute(),
-                  F.target.setPlaybackRate(wf),
+                  F.target.setPlaybackRate(DASH_MODE ? 1 : wf),
                   F.target.playVideo());
               },
               onStateChange: (F) => {
+                if (DASH_MODE && F.data === 1) {
+                  const id = F.target.getVideoData?.().video_id;
+                  if (id && id !== gdLastVideo.current) { gdLastVideo.current = id; setMediaIndex(index => index + 1); }
+                }
                 (F.data === 1 &&
-                  F.target.getPlaybackRate() !== wf &&
-                  F.target.setPlaybackRate(wf),
-                  F.data === 0 && il());
+                  F.target.getPlaybackRate() !== (DASH_MODE ? 1 : wf) &&
+                  F.target.setPlaybackRate(DASH_MODE ? 1 : wf),
+                  F.data === 0 && !DASH_MODE && il());
               },
             },
           }));
@@ -2658,10 +2664,11 @@ function i1() {
     );
   }, [enfosi]),
     ul.useEffect(() => {
-      return startSkipCountdown(f, enfosi ? 2.5 : dr);
+      return startSkipCountdown(f, enfosi || DASH_MODE ? 2.5 : dr);
     }, [o, enfosi, mediaIndex]));
   const $ = ul.useRef(o);
   function il() {
+    if (DASH_MODE) { f(2.5); q.current?.nextVideo?.(); setMediaIndex(index => index + 1); return; }
     if (enfosi) { f(2.5); setMediaIndex(index => (index + 1 + Math.floor(Math.random() * (ENFOSI_MEDIA.length - 1))) % ENFOSI_MEDIA.length); return; }
     const Q = or($.current);
     (($.current = Q), f(dr), q.current?.loadVideoById?.(Q), h(Q));
@@ -2676,7 +2683,7 @@ function i1() {
       children: [
         v.jsxs("div", {
           className: `flex touch-none select-none items-center justify-between gap-2 px-2 py-1.5 text-xs ${M ? "cursor-grabbing" : "cursor-grab"}`,
-          title: enfosi ? "Trascina per spostare la ENFOSI AD" : "Trascina per spostare la TBB AD",
+          title: DASH_MODE ? "Trascina per spostare la GD AD" : enfosi ? "Trascina per spostare la ENFOSI AD" : "Trascina per spostare la TBB AD",
           onPointerDown: C,
           onPointerMove: k,
           onPointerUp: L,
@@ -2692,7 +2699,7 @@ function i1() {
                 v.jsx("span", {
                   className:
                     "mr-1.5 rounded bg-amber-400 px-1.5 py-0.5 font-bold text-amber-950",
-                  children: enfosi ? "ENFOSI AD" : "TBB AD",
+                  children: DASH_MODE ? "GD AD" : enfosi ? "ENFOSI AD" : "TBB AD",
                 }),
               ],
             }),
@@ -2707,7 +2714,13 @@ function i1() {
               : v.jsx("img", { key: media.src, src: media.src, alt: media.alt, className: "enfosi-media", onError: event => { event.currentTarget.onerror = null; event.currentTarget.src = '/assets/enfosi/smiley.png'; } })
             : v.jsx("div", {
               className: "pointer-events-none absolute inset-0",
-              children: v.jsx("div", { ref: z, className: "h-full w-full" }),
+              children: DASH_MODE
+                ? v.jsx("iframe", {
+                    ref: z, className: "h-full w-full", title: "GD AD",
+                    src: `https://www.youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}&enablejsapi=1&autoplay=1&mute=1&controls=0&playsinline=1&origin=${encodeURIComponent(location.origin)}`,
+                    allow: "autoplay; encrypted-media; picture-in-picture", referrerPolicy: "strict-origin-when-cross-origin",
+                  })
+                : v.jsx("div", { ref: z, className: "h-full w-full" }),
             }),
         }),
       ],
@@ -2767,7 +2780,6 @@ function mountSite() {
 }
 async function enterSite() {
   if (typeof SiteText !== "undefined") await SiteText.load();
-  if (RISIO_MODE || DASH_MODE) { mountSite(); return; }
   if (typeof EntryGate === "undefined") {
     document.getElementById("root").textContent = "Impossibile caricare la prova di ingresso. Ricarica la pagina.";
     return;

@@ -33,7 +33,8 @@ test('normal routes retain text pieces and French behavior without Risio styling
   }
   assert.equal(renderContext('/risio/').RISIO_MODE, true);
   assert.equal(renderContext('/french').FRENCH_MODE, true);
-  assert(html.includes('if (RISIO_MODE || DASH_MODE) { mountSite(); return; }'));
+  assert(!html.includes('if (RISIO_MODE || DASH_MODE) { mountSite(); return; }'));
+  assert(html.includes('if (await EntryGate.start({ french: FRENCH_MODE })) mountSite();'));
   assert(html.includes('if (RISIO_MODE || DASH_MODE || reviewActive || historyPaused || typeof EntryGate'));
   assert(!html.includes('RISIO_MODE && B === "online" ? null'));
   assert(html.includes('!RISIO_MODE && !DASH_MODE && v.jsx("footer"'));
