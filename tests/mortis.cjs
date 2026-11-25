@@ -19,23 +19,20 @@ function setup(path,reduced=false){
   }
   w.AudioContext=Audio;w.eval(script);return {dom,w,calls};
 }
-test('all death routes show their own title, green decorative monitor, and opt-in heartbeat',async()=>{
-  for(const [path,title] of [['/morte','Morte'],['/mortis/','Mortis'],['/memento-mori','Memento mori'],['/memento%20mori','Memento mori']]){
-    const {dom,w,calls}=setup(path);
-    try{
-      assert.equal(w.document.title,title);assert.equal(w.document.querySelector('h1').textContent,title+'.');
-      assert(!calls.includes('context'),'never start audio without consent');
-      const button=w.document.getElementById('sound');button.click();await new Promise(resolve=>setImmediate(resolve));
-      assert.equal(button.getAttribute('aria-pressed'),'true');assert(calls.includes('resume'));
-      assert(calls.some(c=>Array.isArray(c)&&c[0]==='volume'&&c[1]===.175));
-      button.click();assert.equal(button.getAttribute('aria-pressed'),'false');
-      assert(w.document.body.textContent.includes('non dati medici'));
-    }finally{w.dispatchEvent(new w.Event('pagehide'));dom.window.close();}
-  }
+test('death pages show only a variable green trace and toggle audio by touching it',async()=>{
+  const {dom,w,calls}=setup('/mementomori');
+  try{
+    assert.equal(w.document.body.children.length,2);
+    assert.equal(w.document.querySelectorAll('h1,header,footer,button,p,input').length,0);
+    const canvas=w.document.getElementById('ecg');assert.equal(canvas.getAttribute('aria-pressed'),'false');
+    canvas.click();await new Promise(resolve=>setImmediate(resolve));assert.equal(canvas.getAttribute('aria-pressed'),'true');
+    assert(calls.includes('resume'));canvas.click();assert.equal(canvas.getAttribute('aria-pressed'),'false');
+    assert(script.includes('duration:.62+noise(id)*.46'));assert(script.includes('amplitude:.7+noise(id+500)*.5'));
+  }finally{w.dispatchEvent(new w.Event('pagehide'));dom.window.close();}
 });
-test('reduced motion renders a static waveform and unsupported audio is reported',async()=>{
+test('reduced motion uses a static trace and unsupported audio fails silently',async()=>{
   const {dom,w,calls}=setup('/mortis',true);
-  try{assert(!calls.includes('frame'));w.AudioContext=undefined;w.document.getElementById('sound').click();await new Promise(resolve=>setImmediate(resolve));assert.match(w.document.getElementById('audio-status').textContent,/non disponibile/);}finally{dom.window.close();}
+  try{assert(!calls.includes('frame'));w.AudioContext=undefined;w.document.getElementById('ecg').click();await new Promise(resolve=>setImmediate(resolve));assert.equal(w.document.getElementById('ecg').getAttribute('aria-pressed'),'false');}finally{dom.window.close();}
 });
 test('GD alias redirects to Dash and death pages are included in production routes/build',()=>{
   const config=JSON.parse(fs.readFileSync('vercel.json','utf8'));

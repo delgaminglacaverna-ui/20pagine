@@ -9,6 +9,94 @@
   },
   "rewrites": [
     {
+      "source": "/chronos",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/chronos/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/tempo",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/tempo/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/67",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/67/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/doomsday",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/doomsday/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/doom",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/doom/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/muffin",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/muffin/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/doomsdaymuffin",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/doomsdaymuffin/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/harken",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/harken/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/sybau",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/sybau/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/stfu",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/stfu/",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/sybauken",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/sybauken/",
+      "destination": "/secret.html"
+    },
+    {
       "source": "/morte",
       "destination": "/mortis.html"
     },
@@ -172,6 +260,96 @@
       ],
       "destination": "/french",
       "permanent": true
+    },
+    {
+      "source": "/x-treme",
+      "destination": "https://it.wikipedia.org/wiki/Tortura#Dal_medioevo_all'et%C3%A0_moderna",
+      "permanent": false
+    },
+    {
+      "source": "/x-treme/",
+      "destination": "https://it.wikipedia.org/wiki/Tortura#Dal_medioevo_all'et%C3%A0_moderna",
+      "permanent": false
+    },
+    {
+      "source": "/estremo",
+      "destination": "https://it.wikipedia.org/wiki/Tortura#Dal_medioevo_all'et%C3%A0_moderna",
+      "permanent": false
+    },
+    {
+      "source": "/estremo/",
+      "destination": "https://it.wikipedia.org/wiki/Tortura#Dal_medioevo_all'et%C3%A0_moderna",
+      "permanent": false
+    },
+    {
+      "source": "/xtreme",
+      "destination": "https://it.wikipedia.org/wiki/Tortura#Dal_medioevo_all'et%C3%A0_moderna",
+      "permanent": false
+    },
+    {
+      "source": "/xtreme/",
+      "destination": "https://it.wikipedia.org/wiki/Tortura#Dal_medioevo_all'et%C3%A0_moderna",
+      "permanent": false
+    },
+    {
+      "source": "/teiera",
+      "destination": "https://en.wikipedia.org/wiki/Martin_Newell_(computer_scientist)",
+      "permanent": false
+    },
+    {
+      "source": "/teiera/",
+      "destination": "https://en.wikipedia.org/wiki/Martin_Newell_(computer_scientist)",
+      "permanent": false
+    },
+    {
+      "source": "/newell",
+      "destination": "https://en.wikipedia.org/wiki/Martin_Newell_(computer_scientist)",
+      "permanent": false
+    },
+    {
+      "source": "/newell/",
+      "destination": "https://en.wikipedia.org/wiki/Martin_Newell_(computer_scientist)",
+      "permanent": false
+    },
+    {
+      "source": "/tazza",
+      "destination": "https://en.wikipedia.org/wiki/Martin_Newell_(computer_scientist)",
+      "permanent": false
+    },
+    {
+      "source": "/tazza/",
+      "destination": "https://en.wikipedia.org/wiki/Martin_Newell_(computer_scientist)",
+      "permanent": false
+    },
+    {
+      "source": "/tiki",
+      "destination": "https://the-battle-bricks.fandom.com/wiki/Tiki_Battler",
+      "permanent": false
+    },
+    {
+      "source": "/tiki/",
+      "destination": "https://the-battle-bricks.fandom.com/wiki/Tiki_Battler",
+      "permanent": false
+    },
+    {
+      "source": "/boi",
+      "destination": "https://www.youtube.com/@TheRealLowTierGod",
+      "permanent": false
+    },
+    {
+      "source": "/boi/",
+      "destination": "https://www.youtube.com/@TheRealLowTierGod",
+      "permanent": false
+    },
+    {
+      "source": "/son",
+      "destination": "https://www.youtube.com/@TheRealLowTierGod",
+      "permanent": false
+    },
+    {
+      "source": "/son/",
+      "destination": "https://www.youtube.com/@TheRealLowTierGod",
+      "permanent": false
     }
   ]
 }
