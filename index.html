@@ -2624,7 +2624,7 @@ function i1() {
           !z.current ||
           q.current ||
           (q.current = new K.Player(z.current, {
-            videoId: DASH_MODE ? void 0 : o,
+            ...(DASH_MODE ? {} : { videoId: o }),
             width: "100%",
             height: "100%",
             playerVars: {
@@ -2714,7 +2714,13 @@ function i1() {
               : v.jsx("img", { key: media.src, src: media.src, alt: media.alt, className: "enfosi-media", onError: event => { event.currentTarget.onerror = null; event.currentTarget.src = '/assets/enfosi/smiley.png'; } })
             : v.jsx("div", {
               className: "pointer-events-none absolute inset-0",
-              children: v.jsx("div", { ref: z, className: "h-full w-full" }),
+              children: DASH_MODE
+                ? v.jsx("iframe", {
+                    ref: z, className: "h-full w-full", title: "GD AD",
+                    src: `https://www.youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}&enablejsapi=1&autoplay=1&mute=1&controls=0&playsinline=1&origin=${encodeURIComponent(location.origin)}`,
+                    allow: "autoplay; encrypted-media; picture-in-picture", referrerPolicy: "strict-origin-when-cross-origin",
+                  })
+                : v.jsx("div", { ref: z, className: "h-full w-full" }),
             }),
         }),
       ],
