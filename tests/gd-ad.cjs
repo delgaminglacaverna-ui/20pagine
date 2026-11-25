@@ -13,3 +13,11 @@ test('GD chooses verified video IDs randomly without immediate repeats, with 15 
  assert(clock.includes('/assets/dash/Cube001.webp'));assert(clock.includes('rotate('));assert(clock.includes('!enfosi && !gd'));
  assert(fs.readFileSync('assets/dash-theme.css','utf8').includes('.gd-skip-cube .skip-clock-hand { display:none; }'));
 });
+
+test('rotating cube has sufficient clearance for its full diagonal and no circular clipping',()=>{
+ const css=fs.readFileSync('assets/dash-theme.css','utf8');
+ const cube=css.match(/\.gd-timer-cube \{([^}]+)\}/)[1];
+ const width=Number(cube.match(/width:(\d+)%/)[1]);assert(width*Math.SQRT2<100);
+ const frame=css.match(/\.gd-skip-cube \{([^}]+)\}/)[1];
+ assert(frame.includes('place-items:center'));assert(frame.includes('overflow:visible!important'));assert(frame.includes('border-radius:0!important'));
+});
