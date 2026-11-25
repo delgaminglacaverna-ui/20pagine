@@ -25,8 +25,8 @@ test('Dash has no stage selector or Ripassa, but requires homework', () => {
   assert(html.includes('v.jsx(i1, {})'));
   assert(html.includes('DASH_MODE ? "GD AD"'));
   assert(html.includes('PLFEp265cKO3ZM_IpuwB_Htbht8T0kFPG4'));
-  assert(html.includes('listType: "playlist", list: GD_AD_PLAYLIST'));
-  assert(html.includes('q.current?.nextVideo?.()'));
+  assert(html.includes('youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}'));
+  assert(!html.includes('q.current?.nextVideo?.()'));
   assert(!html.includes('if (RISIO_MODE || DASH_MODE) { mountSite(); return; }'));
   assert(html.includes('if (await EntryGate.start({ french: FRENCH_MODE })) mountSite();'));
   assert(html.includes('!RISIO_MODE && !DASH_MODE && v.jsx("footer"'));

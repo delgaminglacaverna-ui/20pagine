@@ -731,3 +731,11 @@ Il player carica direttamente la playlist, non video TBB: velocità normale 1×,
 autoplay muto secondo le regole del browser, pulsante salto pronto dopo 2,5 secondi.
 Il salto passa al prossimo video; a fine video la playlist prosegue da sola.
 TBB AD nelle altre versioni ed ENFOSI AD in RISIO restano invariate.
+
+
+Correzione GD AD: la playlist ora usa esclusivamente l'iframe nativo
+`/embed/videoseries`, **senza YouTube Widget/IFrame API**, senza `videoId` vuoto e
+senza `enablejsapi`. I controlli nativi sono disponibili; il salto della GD AD
+ricrea l'iframe con l'indice playlist successivo. I test verificano che il loader
+Widget API non venga chiamato in GD. La riproduzione resta soggetta alla
+disponibilità pubblica della playlist e ai permessi embed dei video su YouTube.
