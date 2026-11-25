@@ -1,6 +1,7 @@
 (function (root) {
   'use strict';
   const strings = {
+    'Crea una partita e manda il codice a un amico. La prima cifra indica la modalità condivisa: 0 normale, 1 francese, 2 RISIO, 3 scacchi 8×8. Chi entra usa la stessa modalità.': 'Créez une partie et partagez le code. Le premier chiffre indique la version commune : 0 normale, 1 française, 2 RISIO, 3 échecs 8×8. Les deux joueurs utilisent la même version.',
     "Apertura del Re (fuori tempo)": "Ouverture du roi (hors du temps)",
     "Gambetto del Tempo": "Gambit du temps",
     "Attacco dell'Estremo": "Attaque de l’extrême",
@@ -55,7 +56,7 @@
   function text(value, french = true) {
     if (!french || typeof value !== 'string') return value;
     if (Object.hasOwn(strings, value)) return strings[value];
-    return value.replace(/^Limiti francesi \(sinistra e arrocco vietati\): (.*)\. Regole fissate all’ingresso, aspetto personale\.$/, (_, sides) => `Restrictions françaises (gauche et roque interdits) : ${sides.replace(/Bianco/g, 'Blancs').replace(/Nero/g, 'Noirs').replace(/nessuno/g, 'aucune')}. Règles fixées à l’entrée, apparence personnelle.`)
+    return value.replace(/^Limiti francesi \(sinistra e arrocco vietati\): (.*)\. Modalità condivisa da entrambi i giocatori\.$/, (_, sides) => `Restrictions françaises (gauche et roque interdits) : ${sides.replace(/Bianco/g, 'Blancs').replace(/Nero/g, 'Noirs').replace(/nessuno/g, 'aucune')}. Version commune aux deux joueurs.`)
       .replace(/^Analisi (\d+\/\d+)…$/, 'Analyse $1…')
       .replace(/^Posizione /, 'Position ').replace(/Inizio partita/g, 'Début de partie').replace(/\bMossa (\d+)/g, 'Coup $1')
       .replace(/ · profondità /g, ' · profondeur ').replace(/^Evaluation: /, 'Évaluation : ').replace(/^Variante prevista: /, 'Variante prévue : ')

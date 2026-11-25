@@ -1180,7 +1180,7 @@ function OnlinePanel(o) {
         v.jsx("p", {
           className: "mb-3 text-slate-600",
           children:
-            "Crea una partita e manda il codice a un amico, oppure inserisci il suo codice per sfidarlo in tempo reale.",
+            "Crea una partita e manda il codice a un amico. La prima cifra indica la modalità condivisa: 0 normale, 1 francese, 2 RISIO, 3 scacchi 8×8. Chi entra usa la stessa modalità.",
         }),
         v.jsx("button", {
           className: l1,
@@ -1225,7 +1225,7 @@ function OnlinePanel(o) {
     className: box,
     children: [
       h2,
-      v.jsx("p", { className: "mb-2 text-slate-600", children: `Limiti francesi (sinistra e arrocco vietati): ${n.frenchSides?.length ? n.frenchSides.map(side => side === 1 ? "Bianco" : "Nero").join(", ") : "nessuno"}. Regole fissate all’ingresso, aspetto personale.` }),
+      v.jsx("p", { className: "mb-2 text-slate-600", children: `Limiti francesi (sinistra e arrocco vietati): ${n.frenchSides?.length ? n.frenchSides.map(side => side === 1 ? "Bianco" : "Nero").join(", ") : "nessuno"}. Modalità condivisa da entrambi i giocatori.` }),
       v.jsxs("div", {
         className: "flex flex-wrap items-center gap-x-4 gap-y-2",
         children: [
@@ -1477,6 +1477,15 @@ function a1() {
     }
     setOnlBusy(!0);
     try {
+      const info = await onlApi(`/api/matches/${code}`, void 0, onlTokens()[code], "GET");
+      if (info.ok && info.data.mode && info.data.mode !== onlVariant()) {
+        const path = info.data.mode === "boring" ? "/boring" : info.data.mode === "risio" ? "/risio" : "/";
+        const params = new URLSearchParams();
+        if (info.data.mode === "french") params.set("version", "french");
+        params.set("partita", code);
+        location.assign(path + "?" + params.toString());
+        return;
+      }
       const r = await onlApi(`/api/matches/${code}/join`, { variant: onlVariant() }, onlTokens()[code]);
       r.ok ? onlEnter(r.data) : $l(r.data.error || "Partita non trovata.");
     } catch {
@@ -1798,7 +1807,7 @@ function a1() {
             }),
             FRENCH_MODE && v.jsx("p", {
               className: "text-sm",
-              children: "Version française : aucun déplacement vers la colonne a, même après rotation. Roque interdit. En ligne, ces restrictions ne concernent que les joueurs ayant choisi la version française en rejoignant la partie.",
+              children: "Version française : aucun déplacement vers la colonne a, même après rotation. Roque interdit. En ligne, les deux joueurs utilisent la même version française.",
             }),
             v.jsxs("p", {
               className: "text-sm text-slate-300",

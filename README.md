@@ -408,14 +408,14 @@ punteggi. In RISIO non si mostra un'evaluation numerica per non confondere
 le valutazioni parodistiche con un'analisi reale.
 Il simbolo dell'ultima mossa appare nell'angolo in alto a destra della casa
 di arrivo, anche a scacchiera ruotata, oltre che nel registro. Si aggiorna con
-annulla/ripeti e scompare al reset, in assenza di analisi e durante l'analisi online disabilitata.
+annulla/ripeti e scompare al reset, in assenza di analisi e quando la mossa online appartiene all’avversario.
 
 
 ### Theory e API di boi battler
 Le sequenze che corrispondono a un prefisso esatto di una delle dieci aperture
 del sito sono **📖 Theory**, sia giocate sia caricate. Non è un database di teoria
 8×8: la prima deviazione smette di essere Theory. I voti scherzosi RISIO hanno
-precedenza e non chiamano API; online il commentatore mostra soltanto le proprie mosse, con analisi locale a profondità 3 e regole personali miste. Alla riconnessione recupera il commento della propria ultima mossa.
+precedenza e non chiamano API; online il commentatore mostra soltanto le proprie mosse, con analisi locale a profondità 3 (Stockfish nella pagina boring). Alla riconnessione recupera il commento della propria ultima mossa.
 
 Dopo l'analisi di una mossa locale fuori repertorio, il client chiama `POST /api/coach`
 con la cronologia, l'alternativa trovata, perdita stimata e profondità. Il server
@@ -516,19 +516,43 @@ française du vote ; les nouvelles explications sont générées directement en 
 Les valeurs numériques, les symboles et les règles du jeu ne sont pas modifiés.
 
 
-### Online con versioni personali
-Online 1v1 è disponibile in tutte le interfacce. URL personali canonici:
-`/?partita=CODICE`, `/?version=french&partita=CODICE`, `/risio?partita=CODICE`.
-Il link di invito copiato è neutro (`/?partita=CODICE`): l'avversario può aprirlo
-normalmente o scegliere la propria versione prima di creare/entrare nella lobby.
-L'aspetto non cambia quello dell'altro giocatore.
+### Modalità online condivisa (prefisso del codice)
+Le nuove lobby fissano una sola modalità per entrambi i giocatori. La prima cifra
+del codice a 8 caratteri identifica la modalità:
 
-Il server salva la variante di ciascun posto alla creazione/ingresso. Solo i colori
-iscritti come francesi non possono muovere verso colonne più a sinistra né arroccare;
-le regole valgono anche per attacchi/scacco/matto e non cambiano ruotando la tavola.
-RISIO ha regole normali con la propria UI. Riconnettersi o cambiare URL non cambia
-le restrizioni del posto: per cambiarle serve una nuova partita. La lobby mostra
-i colori sottoposti ai limiti. Il server è autoritativo su legalità e risultato;
-non accetta dal browser un elenco arbitrario di colori francesi. Le vecchie lobby
-senza metadati restano normali. Replay e analisi archivio conservano i limiti per
-colore, anche se la versione visiva del browser è diversa.
+- **0** normale 10×10
+- **1** francese (niente mosse verso sinistra né arrocco, per entrambi)
+- **2** RISIO
+- **3** boring, scacchi classici 8×8
+
+Creazione e ingresso sono verificati dal server: il browser che entra legge la
+modalità e raggiunge la pagina corretta prima di occupare il posto. Cambiare URL
+o inviare una variante diversa non cambia le regole della lobby. Gli URL restano
+`/?partita=CODICE`, `/?version=french&partita=CODICE`, `/risio?partita=CODICE`,
+`/boring?partita=CODICE`. I vecchi codici senza metadato `mode` conservano le regole
+originali personali per compatibilità. I commenti online restano privati e solo
+successivi alle proprie mosse, sia Bianco sia Nero.
+
+### /boring
+Pagina separata, raggiungibile digitando `/boring` (o con un invito a una partita
+boring), senza collegamenti nei menu delle altre pagine. Usa `chess.js` 1.4.0 per
+regole classiche, scacchiera 8×8, arrocco, en passant, quattro promozioni, scacco,
+matto, stallo e patte. Non carica gate/orologi-quiz, Ripassa, pubblicità, riferimenti
+all’Estremo o alle aperture di fantasia. I nomi classici sono riconosciuti da un
+piccolo repertorio di sequenze SAN vere, non da un database completo ECO.
+
+Avversario e review usano **Stockfish 18 Lite single-thread WASM**, non il motore
+10×10 ribattezzato. La ricerca locale ha limite profondità 12 / 700 ms per posizione;
+la review mostra la profondità effettiva minima delle due ricerche (prima e dopo).
+I simboli sono classificati in base alla perdita stimata; non vengono attribuiti
+riconoscimenti di unicità/sacrificio senza dati sufficienti. Errori di caricamento
+sono mostrati esplicitamente, senza risultati simulati. Sono disponibili partita
+contro Stockfish, due giocatori locali e online 1v1. Online solo il proprio ultimo
+commento viene recuperato alla riconnessione; non si chiamano API esplicative né
+si trasmettono valutazioni al rivale. Il server ricostruisce le mosse boring con
+`chess.js` e decide il risultato, senza fidarsi di quello inviato dal client.
+
+La build copia solo il motore Lite single-thread (~7 MB WASM), wrapper, licenza e
+modulo chess.js dalle dipendenze bloccate in package-lock; binari e dipendenze non
+sono committati. Stockfish è GPLv3: sorgenti esatti/tag e licenza sono collegati
+nella pagina (`https://github.com/nmrugg/stockfish.js/tree/v18.0.8`).

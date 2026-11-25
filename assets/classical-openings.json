@@ -1,0 +1,6 @@
+{
+ "e4":"Apertura di re", "d4":"Apertura di donna", "c4":"Apertura inglese", "Nf3":"Apertura Réti",
+ "e4 e5":"Gioco aperto", "e4 c5":"Difesa siciliana", "e4 e6":"Difesa francese", "e4 c6":"Difesa Caro-Kann", "e4 d5":"Difesa scandinava", "e4 Nf6":"Difesa Alekhine", "e4 d6":"Difesa Pirc", "e4 g6":"Difesa moderna",
+ "e4 e5 Nf3 Nc6 Bb5":"Partita spagnola", "e4 e5 Nf3 Nc6 Bc4":"Partita italiana", "e4 e5 Nf3 Nc6 d4":"Partita scozzese", "e4 e5 Nf3 Nf6":"Difesa russa", "e4 e5 f4":"Gambetto di re", "e4 e5 Nc3":"Partita viennese", "e4 e5 Nf3 d6":"Difesa Philidor",
+ "d4 d5 c4":"Gambetto di donna", "d4 d5 c4 e6":"Gambetto di donna rifiutato", "d4 d5 c4 dxc4":"Gambetto di donna accettato", "d4 d5 c4 c6":"Difesa slava", "d4 Nf6 c4 e6 Nc3 Bb4":"Difesa nimzo-indiana", "d4 Nf6 c4 g6 Nc3 Bg7 e4 d6":"Difesa est-indiana", "d4 f5":"Difesa olandese", "d4 Nf6 c4 c5":"Difesa Benoni", "d4 d5 Bf4":"Sistema di Londra"
+}

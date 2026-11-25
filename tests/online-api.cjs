@@ -121,24 +121,42 @@ test('Vercel routes target the same Node handler and static output includes asse
   assert(config.rewrites.some(route => route.source === '/api/matches/:id' && route.destination === '/api/matches?id=:id'));
   assert(fs.existsSync('api/matches.js'));
 });
-test('online variants are personal, French restrictions are server-enforced and reconnect cannot change them', async () => {
+test('new online lobbies use a shared mode encoded by the first digit', async () => {
   const service = createService(memoryStore());
-  const white = await request(service, 'POST', undefined, undefined, undefined, { variant: 'french' });
-  const black = await request(service, 'POST', white.id, 'join', undefined, { variant: 'risio' });
-  assert.deepEqual(black.frenchSides, [1]);
-  await rejects(request(service, 'POST', white.id, 'move', white.token, { ply: 0, move: '92,71,0', variant: 'normal' }), 400);
-  await request(service, 'POST', white.id, 'move', white.token, { ply: 0, move: '85,65,0' });
-  const state = await request(service, 'POST', white.id, 'move', black.token, { ply: 1, move: '2,21,0' });
-  assert.equal(state.moves.length, 2, 'normal-rules opponent can move left');
-  const reconnect = await request(service, 'POST', white.id, 'join', white.token, { variant: 'normal' });
-  assert.equal(reconnect.variants.white, 'french');
-  assert.deepEqual(reconnect.frenchSides, [1]);
-  const { pos } = replay(state.moves, state.variants);
-  assert(pos.legalMoves().every(m => m.to % 10 >= m.from % 10));
-  const white2 = await request(service, 'POST', undefined, undefined, undefined, { variant: 'normal' });
-  const black2 = await request(service, 'POST', white2.id, 'join', undefined, { variant: 'french' });
-  await request(service, 'POST', white2.id, 'move', white2.token, { ply: 0, move: '92,71,0' });
-  await rejects(request(service, 'POST', white2.id, 'move', black2.token, { ply: 1, move: '2,21,0' }), 400);
+  for (const [mode, prefix] of [['normal','0'], ['french','1'], ['risio','2'], ['boring','3']]) {
+    const white = await request(service, 'POST', undefined, undefined, undefined, { variant: mode });
+    assert.equal(white.id[0], prefix); assert.equal(white.mode, mode);
+    const black = await request(service, 'POST', white.id, 'join', undefined, { variant: 'normal' });
+    assert.equal(black.variants.white, mode); assert.equal(black.variants.black, mode);
+    assert.deepEqual(black.frenchSides, mode === 'french' ? [1,-1] : []);
+    const reconnect = await request(service, 'POST', white.id, 'join', white.token, { variant: 'risio' });
+    assert.equal(reconnect.mode, mode);
+    if (mode === 'french') {
+      await rejects(request(service, 'POST', white.id, 'move', white.token, { ply:0, move:'92,71,0' }), 400);
+      await request(service, 'POST', white.id, 'move', white.token, { ply:0, move:'85,65,0' });
+      await rejects(request(service, 'POST', white.id, 'move', black.token, { ply:1, move:'2,21,0' }), 400);
+    }
+  }
+});
+test('legacy lobbies without a mode remain readable with their original personal rules', async () => {
+  const store = memoryStore(), service = createService(store);
+  const white = await request(service, 'POST', undefined, undefined, undefined, { variant:'french' });
+  const stored = JSON.parse(store.values.get(white.id)); delete stored.mode; stored.variants.black = null;
+  store.values.set(white.id,JSON.stringify(stored));
+  const black = await request(service, 'POST', white.id, 'join', undefined, { variant:'normal' });
+  assert.equal(black.mode, null); assert.deepEqual(black.frenchSides,[1]);
+});
+test('boring online uses standard rules and server-authoritative checkmate', async () => {
+  const service = createService(memoryStore());
+  const white = await request(service,'POST',undefined,undefined,undefined,{ variant:'boring' });
+  const black = await request(service,'POST',white.id,'join',undefined,{ variant:'risio' });
+  // Fool's mate: f3 e5 g4 Qh4# on a genuine 8x8 board.
+  await rejects(request(service,'POST',white.id,'move',white.token,{ ply:0,move:'85,65,0' }),400);
+  let state;
+  for (const [ply,move] of ['53,45,0','12,28,0','54,38,0','3,39,0'].entries())
+    state = await request(service,'POST',white.id,'move',ply%2 ? black.token : white.token,{ ply,move });
+  assert.equal(state.reason,'mate'); assert.equal(state.winner,'black');
+  assert.equal(replay(state.moves,state.variants).pos.chess.isCheckmate(),true);
 });
 test('invalid online variants are rejected without changing an existing seat', async () => {
   const service = createService(memoryStore());

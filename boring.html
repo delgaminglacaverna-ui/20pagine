@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="it">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Scacchi · 20 Pagine</title><link rel="stylesheet" href="/assets/boring.css"></head>
+<body>
+<main>
+<header><h1>Scacchi</h1><p>8 × 8 · regole classiche</p></header>
+<section class="controls" aria-label="Modalità di gioco">
+<label>Gioco <select id="mode"><option value="pvc">Giocatore vs Stockfish</option><option value="pvp">Due giocatori</option><option value="online">Online 1v1</option></select></label>
+<button id="new">Nuova partita</button><button id="flip">Ruota scacchiera</button><button id="undo">Annulla mossa</button>
+</section>
+<section id="lobby" hidden>
+<button id="create">Crea partita</button><form id="join"><label>Codice <input id="code" maxlength="8" required autocomplete="off"></label><button>Entra</button></form>
+<p id="match"></p><button id="copy" hidden>Copia invito</button><button id="resign" hidden>Abbandona</button>
+<small>Prima cifra: 0 classica 10×10 · 1 francese · 2 RISIO · 3 scacchi 8×8.</small>
+</section>
+<p id="notice" role="status"></p>
+<div class="layout"><section><p id="status" aria-live="polite"></p><div id="board" role="group" aria-label="Scacchiera 8 per 8"></div><p id="opening">Posizione iniziale</p></section>
+<aside><h2>Stockfish dice:</h2><p id="review" aria-live="polite">Gioca una mossa per ricevere una valutazione.</p><small>Stockfish 18 Lite · analisi locale. Online vedi solo le valutazioni delle tue mosse.</small><h2>Mosse</h2><ol id="moves"></ol><a href="https://github.com/nmrugg/stockfish.js/tree/v18.0.8">Stockfish: sorgente GPLv3</a> · <a href="/assets/vendor/STOCKFISH-LICENSE.txt">Licenza</a></aside></div>
+</main>
+<script src="/assets/move-coach.js"></script><script type="module" src="/assets/boring.js"></script>
+</body></html>

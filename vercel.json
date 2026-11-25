@@ -9,6 +9,14 @@
   },
   "rewrites": [
     {
+      "source": "/boring",
+      "destination": "/boring.html"
+    },
+    {
+      "source": "/boring/",
+      "destination": "/boring.html"
+    },
+    {
       "source": "/risio",
       "destination": "/index.html"
     },
