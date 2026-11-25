@@ -9,6 +9,46 @@
   },
   "rewrites": [
     {
+      "source": "/morte",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/morte/",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/mortis",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/mortis/",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/memento-mori",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/memento-mori/",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/mementomori",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/mementomori/",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/memento mori",
+      "destination": "/mortis.html"
+    },
+    {
+      "source": "/memento mori/",
+      "destination": "/mortis.html"
+    },
+    {
       "source": "/dash",
       "destination": "/index.html"
     },
@@ -111,6 +151,16 @@
     }
   ],
   "redirects": [
+    {
+      "source": "/gd",
+      "destination": "/dash",
+      "permanent": true
+    },
+    {
+      "source": "/gd/",
+      "destination": "/dash",
+      "permanent": true
+    },
     {
       "source": "/",
       "has": [

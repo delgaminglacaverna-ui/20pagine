@@ -585,3 +585,17 @@ Le dieci aperture 10×10 conservano le mosse ma hanno nomi-omaggio ai livelli
 Jumper, Geometrical Dominator, Cycles, Electroman Adventures e Deadlocked).
 Non sono livelli platformer giocabili né contenuto ufficiale RobTop. Tema e
 termini come New Attempt / Dual Mode sono confinati a `/dash`.
+
+### Pagine /gd e memento mori
+`/gd` e `/gd/` reindirizzano a `/dash`; i parametri della richiesta (incluso
+`partita`) sono conservati dal redirect Vercel.
+
+`/morte`, `/mortis`, `/memento-mori` (anche `/mementomori` e `/memento%20mori`)
+aprono una pagina audiovisiva indipendente con titolo dedicato, fondo nero,
+monitor ECG verde animato e battito lub-dub sintetizzato localmente con Web Audio.
+Il valore 72 BPM e il tracciato sono decorativi, non misurazioni mediche.
+Nessun microfono o audio esterno; pulsante per attivare/disattivare il suono e
+volume regolabile. L'audio parte solo dopo un gesto per rispettare i blocchi
+autoplay. In background il contesto audio si sospende; uscendo si chiude.
+`prefers-reduced-motion` rende statico il tracciato e ferma l'animazione del cuore.
+Le pagine non caricano il gioco, i quiz o le pubblicità.
