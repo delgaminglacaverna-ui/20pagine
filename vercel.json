@@ -9,6 +9,14 @@
   },
   "rewrites": [
     {
+      "source": "/mattone",
+      "destination": "/secret.html"
+    },
+    {
+      "source": "/mattone/",
+      "destination": "/secret.html"
+    },
+    {
       "source": "/chronos",
       "destination": "/secret.html"
     },
@@ -349,6 +357,936 @@
     {
       "source": "/son/",
       "destination": "https://www.youtube.com/@TheRealLowTierGod",
+      "permanent": false
+    },
+    {
+      "source": "/blud",
+      "destination": "https://www.roblox.com/communities/35498183/WE-BLUDDIN-OUT-OF-THIS-ONE#!/about",
+      "permanent": false
+    },
+    {
+      "source": "/blud/",
+      "destination": "https://www.roblox.com/communities/35498183/WE-BLUDDIN-OUT-OF-THIS-ONE#!/about",
+      "permanent": false
+    },
+    {
+      "source": "/bludda",
+      "destination": "https://www.roblox.com/communities/35498183/WE-BLUDDIN-OUT-OF-THIS-ONE#!/about",
+      "permanent": false
+    },
+    {
+      "source": "/bludda/",
+      "destination": "https://www.roblox.com/communities/35498183/WE-BLUDDIN-OUT-OF-THIS-ONE#!/about",
+      "permanent": false
+    },
+    {
+      "source": "/omori",
+      "destination": "https://www.omocat-shop.com/products/omori-plush",
+      "permanent": false
+    },
+    {
+      "source": "/omori/",
+      "destination": "https://www.omocat-shop.com/products/omori-plush",
+      "permanent": false
+    },
+    {
+      "source": "/rizz",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/rizz/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/tung",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/tung/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/triple t",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/triple t/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/triple-t",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/triple-t/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/triplet",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/triplet/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/ttt",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/ttt/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/skibidi",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/skibidi/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/gyatt",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/gyatt/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/puh",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/puh/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/dih",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/dih/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/hawktuah",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/hawktuah/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/rizzler",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/rizzler/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/aura",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/aura/",
+      "destination": "https://en.wikipedia.org/wiki/Brain_rot",
+      "permanent": false
+    },
+    {
+      "source": "/are you",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/are you/",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/are-you",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/are-you/",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/areyou",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/areyou/",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/ru",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/ru/",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/tree",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/tree/",
+      "destination": "https://www.youtube.com/watch?v=ZKAM_Hk4eZ0&list=RDZKAM_Hk4eZ0&start_radio=1",
+      "permanent": false
+    },
+    {
+      "source": "/penna",
+      "destination": "https://it.wikipedia.org/wiki/Dio",
+      "permanent": false
+    },
+    {
+      "source": "/penna/",
+      "destination": "https://it.wikipedia.org/wiki/Dio",
+      "permanent": false
+    },
+    {
+      "source": "/pennabic",
+      "destination": "https://it.wikipedia.org/wiki/Dio",
+      "permanent": false
+    },
+    {
+      "source": "/pennabic/",
+      "destination": "https://it.wikipedia.org/wiki/Dio",
+      "permanent": false
+    },
+    {
+      "source": "/bic",
+      "destination": "https://it.wikipedia.org/wiki/Dio",
+      "permanent": false
+    },
+    {
+      "source": "/bic/",
+      "destination": "https://it.wikipedia.org/wiki/Dio",
+      "permanent": false
+    },
+    {
+      "source": "/blood",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/blood/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/bloodbath",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/bloodbath/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/golden",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/golden/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/glaggle",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glaggle/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glaggles",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glaggles/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enfosi",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enfosi/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enfoso",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enfoso/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enphoso",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enphoso/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enphosian",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/enphosian/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glaggleland",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glaggleland/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/floopfang",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/floopfang/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gazo",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gazo/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/giggler",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/giggler/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gloober",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gloober/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gembo",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gembo/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/cheerer",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/cheerer/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gleeber",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/gleeber/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glaaber",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glaaber/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glogga",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/glogga/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/kruzzit",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/kruzzit/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/zorker",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/zorker/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/blepzo",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/blepzo/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/yippeeyay",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/yippeeyay/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/smiley",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/smiley/",
+      "destination": "/risio",
+      "permanent": false
+    },
+    {
+      "source": "/stereo madness",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/stereo madness/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/stereo-madness",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/stereo-madness/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/stereomadness",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/stereomadness/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/back on track",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/back on track/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/back-on-track",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/back-on-track/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/backontrack",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/backontrack/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/polargeist",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/polargeist/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/dry out",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/dry out/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/dry-out",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/dry-out/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/dryout",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/dryout/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/base after base",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/base after base/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/base-after-base",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/base-after-base/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/baseafterbase",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/baseafterbase/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/can't let go",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/can't let go/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/can't-let-go",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/can't-let-go/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/cantletgo",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/cantletgo/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/jumper",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/jumper/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/time machine",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/time machine/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/time-machine",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/time-machine/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/timemachine",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/timemachine/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/cycles",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/cycles/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/xstep",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/xstep/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/clutterfunk",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/clutterfunk/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory of everything",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory of everything/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory-of-everything",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory-of-everything/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theoryofeverything",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theoryofeverything/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electroman adventures",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electroman adventures/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electroman-adventures",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electroman-adventures/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electromanadventures",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electromanadventures/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/clubstep",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/clubstep/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electrodynamix",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/electrodynamix/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/hexagon force",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/hexagon force/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/hexagon-force",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/hexagon-force/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/hexagonforce",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/hexagonforce/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/blast processing",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/blast processing/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/blast-processing",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/blast-processing/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/blastprocessing",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/blastprocessing/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory of everything 2",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory of everything 2/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory-of-everything-2",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theory-of-everything-2/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theoryofeverything2",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/theoryofeverything2/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/geometrical dominator",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/geometrical dominator/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/geometrical-dominator",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/geometrical-dominator/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/geometricaldominator",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/geometricaldominator/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/deadlocked",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/deadlocked/",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/fingerdash",
+      "destination": "/dash",
+      "permanent": false
+    },
+    {
+      "source": "/fingerdash/",
+      "destination": "/dash",
       "permanent": false
     }
   ]
