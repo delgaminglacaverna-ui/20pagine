@@ -1,0 +1,354 @@
+{
+  "source": "https://the-battle-bricks.fandom.com/wiki/Category:Bosses",
+  "note": "Elenco wiki verificato; riferimenti assegnati dal sito, non lore ufficiale. Include boss rimossi e alternativi.",
+  "bosses": [
+    {
+      "name": "Allan",
+      "reference": "Alan Wake",
+      "destination": "https://en.wikipedia.org/wiki/Alan_Wake",
+      "preserve": false
+    },
+    {
+      "name": "American Fatboy",
+      "reference": "Fat Man",
+      "destination": "https://en.wikipedia.org/wiki/Fat_Man",
+      "preserve": false
+    },
+    {
+      "name": "Apostle",
+      "reference": "Dodici apostoli",
+      "destination": "https://en.wikipedia.org/wiki/Apostles_in_Christianity",
+      "preserve": false
+    },
+    {
+      "name": "Bedridden",
+      "reference": "La bella addormentata",
+      "destination": "https://en.wikipedia.org/wiki/Sleeping_Beauty",
+      "preserve": false
+    },
+    {
+      "name": "Birthday Battler",
+      "reference": "Torta di compleanno",
+      "destination": "https://en.wikipedia.org/wiki/Birthday_cake",
+      "preserve": false
+    },
+    {
+      "name": "Blackmail",
+      "reference": "Phishing",
+      "destination": "https://en.wikipedia.org/wiki/Phishing",
+      "preserve": false
+    },
+    {
+      "name": "Bulldozer",
+      "reference": "Bulldozer",
+      "destination": "https://en.wikipedia.org/wiki/Bulldozer",
+      "preserve": false
+    },
+    {
+      "name": "Captain Red",
+      "reference": "L’isola del tesoro",
+      "destination": "https://en.wikipedia.org/wiki/Treasure_Island",
+      "preserve": false
+    },
+    {
+      "name": "Casual Battler",
+      "reference": "Casual game",
+      "destination": "https://en.wikipedia.org/wiki/Casual_game",
+      "preserve": false
+    },
+    {
+      "name": "Casual Challenger",
+      "reference": "Space Invaders",
+      "destination": "https://en.wikipedia.org/wiki/Space_Invaders",
+      "preserve": false
+    },
+    {
+      "name": "Catalog Muffin",
+      "reference": "Muffin: riferimento già scelto",
+      "destination": "/muffin",
+      "preserve": false
+    },
+    {
+      "name": "Celebration Battler",
+      "reference": "Coriandoli",
+      "destination": "https://en.wikipedia.org/wiki/Confetti",
+      "preserve": false
+    },
+    {
+      "name": "Cesus",
+      "reference": "Dio: destinazione già scelta per penna",
+      "destination": "/penna",
+      "preserve": false
+    },
+    {
+      "name": "Chef Sarge",
+      "reference": "Hell’s Kitchen",
+      "destination": "https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29",
+      "preserve": false
+    },
+    {
+      "name": "Chronos",
+      "reference": "Occhio di Chronos",
+      "destination": "/chronos",
+      "preserve": true
+    },
+    {
+      "name": "Crusher",
+      "reference": "Pressa idraulica",
+      "destination": "https://en.wikipedia.org/wiki/Hydraulic_press",
+      "preserve": false
+    },
+    {
+      "name": "Cyborg Crocket Battle",
+      "reference": "RoboCop",
+      "destination": "https://en.wikipedia.org/wiki/RoboCop",
+      "preserve": false
+    },
+    {
+      "name": "Cyborg Rocket Battle",
+      "reference": "Lanciarazzi",
+      "destination": "https://en.wikipedia.org/wiki/Rocket_launcher",
+      "preserve": false
+    },
+    {
+      "name": "Dark Pelican",
+      "reference": "Il cigno nero",
+      "destination": "https://en.wikipedia.org/wiki/Black_Swan_%28film%29",
+      "preserve": false
+    },
+    {
+      "name": "Deathbringer",
+      "reference": "Tracciato cardiaco",
+      "destination": "/morte",
+      "preserve": false
+    },
+    {
+      "name": "DJ Radical",
+      "reference": "Turntablism",
+      "destination": "https://en.wikipedia.org/wiki/Turntablism",
+      "preserve": false
+    },
+    {
+      "name": "Doctor Despair",
+      "reference": "Danganronpa",
+      "destination": "https://en.wikipedia.org/wiki/Danganronpa",
+      "preserve": false
+    },
+    {
+      "name": "Doombringer",
+      "reference": "Doom",
+      "destination": "https://en.wikipedia.org/wiki/Doom_%281993_video_game%29",
+      "preserve": false
+    },
+    {
+      "name": "Doomsday Muffin",
+      "reference": "THE END IS NEAR",
+      "destination": "/doomsdaymuffin",
+      "preserve": true
+    },
+    {
+      "name": "Enigma II Battler",
+      "reference": "Macchina Enigma",
+      "destination": "https://en.wikipedia.org/wiki/Enigma_machine",
+      "preserve": false
+    },
+    {
+      "name": "EXEC",
+      "reference": "File eseguibile",
+      "destination": "https://en.wikipedia.org/wiki/Executable",
+      "preserve": false
+    },
+    {
+      "name": "Father",
+      "reference": "Darth Vader",
+      "destination": "https://en.wikipedia.org/wiki/Darth_Vader",
+      "preserve": false
+    },
+    {
+      "name": "FunK1d",
+      "reference": "Five Nights at Freddy’s",
+      "destination": "https://en.wikipedia.org/wiki/Five_Nights_at_Freddy%27s",
+      "preserve": false
+    },
+    {
+      "name": "Fusecoil",
+      "reference": "Bobina di Tesla",
+      "destination": "https://en.wikipedia.org/wiki/Tesla_coil",
+      "preserve": false
+    },
+    {
+      "name": "GameK1d",
+      "reference": "Game Boy",
+      "destination": "https://en.wikipedia.org/wiki/Game_Boy",
+      "preserve": false
+    },
+    {
+      "name": "Grimace Battler",
+      "reference": "McDonaldland",
+      "destination": "https://en.wikipedia.org/wiki/McDonaldland",
+      "preserve": false
+    },
+    {
+      "name": "Hellfighter",
+      "reference": "Doom",
+      "destination": "https://en.wikipedia.org/wiki/Doom_%281993_video_game%29",
+      "preserve": false
+    },
+    {
+      "name": "Infernus",
+      "reference": "Inferno di Dante",
+      "destination": "https://en.wikipedia.org/wiki/Inferno_%28Dante%29",
+      "preserve": false
+    },
+    {
+      "name": "Insecure",
+      "reference": "Sindrome dell’impostore",
+      "destination": "https://en.wikipedia.org/wiki/Impostor_syndrome",
+      "preserve": false
+    },
+    {
+      "name": "Jetrock",
+      "reference": "Jet pack",
+      "destination": "https://en.wikipedia.org/wiki/Jet_pack",
+      "preserve": false
+    },
+    {
+      "name": "Lichen",
+      "reference": "Licheni",
+      "destination": "https://en.wikipedia.org/wiki/Lichen",
+      "preserve": false
+    },
+    {
+      "name": "Martyr",
+      "reference": "Giovanna d’Arco",
+      "destination": "https://en.wikipedia.org/wiki/Joan_of_Arc",
+      "preserve": false
+    },
+    {
+      "name": "McDonald Battler",
+      "reference": "McDonald’s",
+      "destination": "https://en.wikipedia.org/wiki/McDonald%27s",
+      "preserve": false
+    },
+    {
+      "name": "Mister Mancer",
+      "reference": "Negromanzia",
+      "destination": "https://en.wikipedia.org/wiki/Necromancy",
+      "preserve": false
+    },
+    {
+      "name": "Monolith",
+      "reference": "Monolito di 2001",
+      "destination": "https://en.wikipedia.org/wiki/Monolith_%28Space_Odyssey%29",
+      "preserve": false
+    },
+    {
+      "name": "Monsalt",
+      "reference": "Cloruro di sodio",
+      "destination": "https://en.wikipedia.org/wiki/Sodium_chloride",
+      "preserve": false
+    },
+    {
+      "name": "Mortis",
+      "reference": "Tracciato cardiaco",
+      "destination": "/mortis",
+      "preserve": true
+    },
+    {
+      "name": "Mystery II Battler",
+      "reference": "Giallo",
+      "destination": "https://en.wikipedia.org/wiki/Mystery_fiction",
+      "preserve": false
+    },
+    {
+      "name": "Outcast",
+      "reference": "Il gobbo di Notre-Dame",
+      "destination": "https://en.wikipedia.org/wiki/The_Hunchback_of_Notre-Dame",
+      "preserve": false
+    },
+    {
+      "name": "Paintmaster",
+      "reference": "Microsoft Paint",
+      "destination": "https://en.wikipedia.org/wiki/Microsoft_Paint",
+      "preserve": false
+    },
+    {
+      "name": "Pancake",
+      "reference": "Pancake",
+      "destination": "https://en.wikipedia.org/wiki/Pancake",
+      "preserve": false
+    },
+    {
+      "name": "Pancake Pelican Of Truth",
+      "reference": "The X-Files",
+      "destination": "https://en.wikipedia.org/wiki/The_X-Files",
+      "preserve": false
+    },
+    {
+      "name": "Patriot Warhead",
+      "reference": "Il dottor Stranamore",
+      "destination": "https://en.wikipedia.org/wiki/Dr._Strangelove",
+      "preserve": false
+    },
+    {
+      "name": "Redbeard",
+      "reference": "Barbanera",
+      "destination": "https://en.wikipedia.org/wiki/Blackbeard",
+      "preserve": false
+    },
+    {
+      "name": "Reinbo",
+      "reference": "Arcobaleno",
+      "destination": "https://en.wikipedia.org/wiki/Rainbow",
+      "preserve": false
+    },
+    {
+      "name": "Rockstar Radical",
+      "reference": "Guitar Hero",
+      "destination": "https://en.wikipedia.org/wiki/Guitar_Hero",
+      "preserve": false
+    },
+    {
+      "name": "Sargent",
+      "reference": "Full Metal Jacket",
+      "destination": "https://en.wikipedia.org/wiki/Full_Metal_Jacket",
+      "preserve": false
+    },
+    {
+      "name": "Scarlet Storm",
+      "reference": "Temporale",
+      "destination": "https://en.wikipedia.org/wiki/Thunderstorm",
+      "preserve": false
+    },
+    {
+      "name": "Soulfuse",
+      "reference": "Musica soul",
+      "destination": "https://en.wikipedia.org/wiki/Soul_music",
+      "preserve": false
+    },
+    {
+      "name": "Terminator",
+      "reference": "The Terminator",
+      "destination": "https://en.wikipedia.org/wiki/The_Terminator",
+      "preserve": false
+    },
+    {
+      "name": "Treachstone",
+      "reference": "Giuda Iscariota",
+      "destination": "https://en.wikipedia.org/wiki/Judas_Iscariot",
+      "preserve": false
+    },
+    {
+      "name": "Turking",
+      "reference": "King of the Hill",
+      "destination": "https://en.wikipedia.org/wiki/King_of_the_Hill",
+      "preserve": false
+    },
+    {
+      "name": "X-TREME",
+      "reference": "Tortura: riferimento già scelto",
+      "destination": "/x-treme",
+      "preserve": true
+    }
+  ]
+}

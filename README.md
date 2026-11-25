@@ -646,3 +646,77 @@ anche tramite alias e inviti online. Con il pass giornaliero valido non viene
 ripetuta inutilmente. In /boring il modulo di gioco e l'autojoin non vengono
 nemmeno caricati prima del superamento. Nessuna pubblicità aggiunta a GD e
 nessuna modifica alle pagine segrete non giocabili o ai redirect esterni.
+
+
+### Boss di The Battle Bricks: riferimenti aggiuntivi
+Elenco di 58 voci verificato sulla categoria wiki (incluse forme alternative e
+rimosse): https://the-battle-bricks.fandom.com/wiki/Category:Bosses . Le associazioni
+qui sotto sono easter egg scelti per il sito, **non affermazioni sulla lore**.
+I riferimenti già richiesti per Chronos, Mortis, X-TREME e Doomsday Muffin sono
+preservati; Catalog Muffin usa la destinazione muffin, Cesus usa il riferimento
+Dio già scelto per penna. I percorsi accettano minuscole, spazi/trattini o parole
+unite e slash finale. Le destinazioni sono fisse e le parentesi URL sono codificate.
+
+Il registro completo è `data/boss-references.json`; `node scripts/sync-boss-aliases.cjs`
+aggiunge solo gli alias mancanti senza sovrascrivere route esistenti.
+
+| Boss | Riferimento scelto | Destinazione |
+| --- | --- | --- |
+| Allan | Alan Wake | https://en.wikipedia.org/wiki/Alan_Wake |
+| American Fatboy | Fat Man | https://en.wikipedia.org/wiki/Fat_Man |
+| Apostle | Dodici apostoli | https://en.wikipedia.org/wiki/Apostles_in_Christianity |
+| Bedridden | La bella addormentata | https://en.wikipedia.org/wiki/Sleeping_Beauty |
+| Birthday Battler | Torta di compleanno | https://en.wikipedia.org/wiki/Birthday_cake |
+| Blackmail | Phishing | https://en.wikipedia.org/wiki/Phishing |
+| Bulldozer | Bulldozer | https://en.wikipedia.org/wiki/Bulldozer |
+| Captain Red | L’isola del tesoro | https://en.wikipedia.org/wiki/Treasure_Island |
+| Casual Battler | Casual game | https://en.wikipedia.org/wiki/Casual_game |
+| Casual Challenger | Space Invaders | https://en.wikipedia.org/wiki/Space_Invaders |
+| Catalog Muffin | Muffin: riferimento già scelto | /muffin |
+| Celebration Battler | Coriandoli | https://en.wikipedia.org/wiki/Confetti |
+| Cesus | Dio: destinazione già scelta per penna | /penna |
+| Chef Sarge | Hell’s Kitchen | https://en.wikipedia.org/wiki/Hell%27s_Kitchen_%28American_TV_series%29 |
+| Chronos | Occhio di Chronos | /chronos |
+| Crusher | Pressa idraulica | https://en.wikipedia.org/wiki/Hydraulic_press |
+| Cyborg Crocket Battle | RoboCop | https://en.wikipedia.org/wiki/RoboCop |
+| Cyborg Rocket Battle | Lanciarazzi | https://en.wikipedia.org/wiki/Rocket_launcher |
+| Dark Pelican | Il cigno nero | https://en.wikipedia.org/wiki/Black_Swan_%28film%29 |
+| Deathbringer | Tracciato cardiaco | /morte |
+| DJ Radical | Turntablism | https://en.wikipedia.org/wiki/Turntablism |
+| Doctor Despair | Danganronpa | https://en.wikipedia.org/wiki/Danganronpa |
+| Doombringer | Doom | https://en.wikipedia.org/wiki/Doom_%281993_video_game%29 |
+| Doomsday Muffin | THE END IS NEAR | /doomsdaymuffin |
+| Enigma II Battler | Macchina Enigma | https://en.wikipedia.org/wiki/Enigma_machine |
+| EXEC | File eseguibile | https://en.wikipedia.org/wiki/Executable |
+| Father | Darth Vader | https://en.wikipedia.org/wiki/Darth_Vader |
+| FunK1d | Five Nights at Freddy’s | https://en.wikipedia.org/wiki/Five_Nights_at_Freddy%27s |
+| Fusecoil | Bobina di Tesla | https://en.wikipedia.org/wiki/Tesla_coil |
+| GameK1d | Game Boy | https://en.wikipedia.org/wiki/Game_Boy |
+| Grimace Battler | McDonaldland | https://en.wikipedia.org/wiki/McDonaldland |
+| Hellfighter | Doom | https://en.wikipedia.org/wiki/Doom_%281993_video_game%29 |
+| Infernus | Inferno di Dante | https://en.wikipedia.org/wiki/Inferno_%28Dante%29 |
+| Insecure | Sindrome dell’impostore | https://en.wikipedia.org/wiki/Impostor_syndrome |
+| Jetrock | Jet pack | https://en.wikipedia.org/wiki/Jet_pack |
+| Lichen | Licheni | https://en.wikipedia.org/wiki/Lichen |
+| Martyr | Giovanna d’Arco | https://en.wikipedia.org/wiki/Joan_of_Arc |
+| McDonald Battler | McDonald’s | https://en.wikipedia.org/wiki/McDonald%27s |
+| Mister Mancer | Negromanzia | https://en.wikipedia.org/wiki/Necromancy |
+| Monolith | Monolito di 2001 | https://en.wikipedia.org/wiki/Monolith_%28Space_Odyssey%29 |
+| Monsalt | Cloruro di sodio | https://en.wikipedia.org/wiki/Sodium_chloride |
+| Mortis | Tracciato cardiaco | /mortis |
+| Mystery II Battler | Giallo | https://en.wikipedia.org/wiki/Mystery_fiction |
+| Outcast | Il gobbo di Notre-Dame | https://en.wikipedia.org/wiki/The_Hunchback_of_Notre-Dame |
+| Paintmaster | Microsoft Paint | https://en.wikipedia.org/wiki/Microsoft_Paint |
+| Pancake | Pancake | https://en.wikipedia.org/wiki/Pancake |
+| Pancake Pelican Of Truth | The X-Files | https://en.wikipedia.org/wiki/The_X-Files |
+| Patriot Warhead | Il dottor Stranamore | https://en.wikipedia.org/wiki/Dr._Strangelove |
+| Redbeard | Barbanera | https://en.wikipedia.org/wiki/Blackbeard |
+| Reinbo | Arcobaleno | https://en.wikipedia.org/wiki/Rainbow |
+| Rockstar Radical | Guitar Hero | https://en.wikipedia.org/wiki/Guitar_Hero |
+| Sargent | Full Metal Jacket | https://en.wikipedia.org/wiki/Full_Metal_Jacket |
+| Scarlet Storm | Temporale | https://en.wikipedia.org/wiki/Thunderstorm |
+| Soulfuse | Musica soul | https://en.wikipedia.org/wiki/Soul_music |
+| Terminator | The Terminator | https://en.wikipedia.org/wiki/The_Terminator |
+| Treachstone | Giuda Iscariota | https://en.wikipedia.org/wiki/Judas_Iscariot |
+| Turking | King of the Hill | https://en.wikipedia.org/wiki/King_of_the_Hill |
+| X-TREME | Tortura: riferimento già scelto | /x-treme |
