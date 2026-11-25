@@ -1,15 +1,14 @@
 /* Fan-made Geometry Dash reference. Scoped: no changes to the other versions. */
 .dash-theme { --dash-accent:#713cce; --dash-glow:#61f6fd; }
-.dash-theme body { background:#10142b; }
-.dash-theme #root > div,.dash-theme .min-h-screen { background:linear-gradient(135deg,#10142bf0,#151c39e8),repeating-linear-gradient(0deg,transparent 0 39px,#68cce422 40px),repeating-linear-gradient(90deg,transparent 0 39px,#68cce422 40px)!important;color:#effcff; }
-.dash-theme header { background:linear-gradient(110deg,#151229,var(--dash-accent))!important;border-bottom:4px solid #5cf8b0; }
-.dash-theme h1,.dash-theme h2 { font-family:Impact,'Arial Black',sans-serif;letter-spacing:.06em; }
-.dash-theme h1 { color:#8fff65;text-shadow:2px 2px #111,-1px -1px #111; }
-.dash-theme main .bg-white,.dash-theme aside { background:#17233c!important;color:#f2faff;border-color:#4a8ba0!important; }
-.dash-theme .text-slate-500,.dash-theme .text-slate-600 { color:#bacfe6!important; }
-.dash-theme button:not([data-square]),.dash-theme select { border-radius:5px;border:2px solid #77cfe0; }
-.dash-theme select { background:#19233e;color:#fff;max-width:100%; }
-.dash-theme button:focus-visible,.dash-theme select:focus-visible { outline:3px solid #c4ff4d;outline-offset:3px; }
-.dash-theme [data-chess-board] { border-color:#58f3e5!important;box-shadow:0 0 22px #43f8ee40!important; }
-.dash-theme [data-chess-board] button { background-image:linear-gradient(#36577620,#36577620); }
+.dash-game { background:linear-gradient(135deg,#10142bf0,#151c39e8),repeating-linear-gradient(0deg,transparent 0 39px,#68cce422 40px),repeating-linear-gradient(90deg,transparent 0 39px,#68cce422 40px)!important;color:#effcff; }
+.dash-game header { background:linear-gradient(110deg,#151229,var(--dash-accent))!important;border-bottom:4px solid #5cf8b0; }
+.dash-game h1,.dash-game h2 { font-family:Impact,'Arial Black',sans-serif;letter-spacing:.06em; }
+.dash-game h1 { color:#8fff65;text-shadow:2px 2px #111,-1px -1px #111; }
+.dash-game main .bg-white,.dash-game aside { background:#17233c!important;color:#f2faff;border-color:#4a8ba0!important; }
+.dash-game .text-slate-500,.dash-game .text-slate-600 { color:#bacfe6!important; }
+.dash-game button:not([data-square]),.dash-game select { border-radius:5px;border:2px solid #77cfe0; }
+.dash-game select { background:#19233e;color:#fff;max-width:100%; }
+.dash-game button:focus-visible,.dash-game select:focus-visible { outline:3px solid #c4ff4d;outline-offset:3px; }
+.dash-game [data-chess-board] { border-color:#58f3e5!important;box-shadow:0 0 22px #43f8ee40!important; }
+.dash-game [data-chess-board] button { background-image:linear-gradient(#36577620,#36577620); }
 .dash-piece { filter:drop-shadow(0 0 2px #7bf6ff); }
