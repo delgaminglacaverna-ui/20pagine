@@ -29,7 +29,7 @@
     "Il nuovo pezzo: L'estremo (X)":'Wave · il pezzo Estremo',
     '⟲ Torna indietro nel tempo':'⟲ Checkpoint precedente',
     'Aperture':'Level openings', 'Carica apertura':'Carica sequenza',
-    ': sfida il tempo contro 20 Pagine o contro un amico. Estremo nel gioco, estremo nel tempo.':': Cube, Ship, Ball, UFO, Robot e Wave sulla scacchiera. Un omaggio a Geometry Dash.',
+    ': sfida il tempo contro 20 Pagine o contro un amico. Estremo nel gioco, estremo nel tempo.':': Cube, Ship, Ball, UFO, Robot e Wave sulla scacchiera. GEOMETRY CHESS.',
     'Puoi giocare solo se studi 20 pagine':'READY? Cube on board!',
   };
   function text(value) { return typeof value === 'string' && Object.hasOwn(names,value) ? names[value] : value; }
