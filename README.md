@@ -612,3 +612,18 @@ rende statico il disegno. È una simulazione decorativa, non una misura medica.
 
 Alias validi anche con slash finale; redirect esterni a destinazioni fisse.
 Nessuna di queste pagine carica pubblicità, gate, quiz o l'app degli scacchi.
+
+
+Ulteriori alias: `/blud` e `/bludda` aprono il gruppo Roblox WE BLUDDIN OUT OF THIS ONE;
+`/blood`, `/bloodbath`, `/golden` e i 22 nomi dei livelli classici portano a `/dash`.
+I nomi composti accettano spazi, trattini o nessun separatore, in minuscolo (es.
+`/stereo-madness`, `/stereomadness`). `/dash` stesso resta la pagina, senza loop.
+Tutti i nomi Glaggle presenti nel sito (Floopfang, Gazo, Giggler, Gloober, Gembo,
+Cheerer, Gleeber, Glaaber, Glogga, Kruzzit, Zorker, Blepzo, Yippeeyay, Smiley),
+`/glaggle`, `/glaggles`, `/enfosi`, `/enfoso`, `/enphoso`, `/enphosian`,
+`/glaggleland` portano a `/risio`; `/risio` rimane la pagina originale.
+`/mattone` mostra il Brick Notifier caricato. `/omori` apre OMORI Plush su OMOCAT.
+`/rizz`, `/tung`, `/triple-t` (anche spazio o unito), `/ttt`, `/skibidi`, `/gyatt`,
+`/puh`, `/dih`, `/hawktuah`, `/rizzler`, `/aura` aprono Wikipedia Brain rot.
+`/are-you` (anche spazio o unito), `/ru`, `/tree` aprono il video Hanging Tree indicato.
+`/penna`, `/pennabic`, `/bic` aprono Wikipedia Dio. Alias validi anche con slash finale.
