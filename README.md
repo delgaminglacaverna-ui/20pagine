@@ -538,7 +538,7 @@ successivi alle proprie mosse, sia Bianco sia Nero.
 Pagina separata, raggiungibile digitando `/boring` (o con un invito a una partita
 boring), senza collegamenti nei menu delle altre pagine. Usa `chess.js` 1.4.0 per
 regole classiche, scacchiera 8×8, arrocco, en passant, quattro promozioni, scacco,
-matto, stallo e patte. Non carica gate/orologi-quiz, Ripassa, pubblicità, riferimenti
+matto, stallo e patte. Non carica Ripassa, pubblicità, riferimenti
 all’Estremo o alle aperture di fantasia. I nomi classici sono riconosciuti da un
 piccolo repertorio di sequenze SAN vere, non da un database completo ECO.
 
@@ -581,7 +581,7 @@ i nomi delle aperture a tema e uno stile fisso. La distinzione bianco/nero resta
 indipendente dai livelli. I metadati dei 22 livelli sono conservati per gli alias
 URL, non per un selettore nell'interfaccia.
 La variante non monta la pubblicità (nessun player/iframe o timer pubblicitario),
-non riserva spazio per l'ad, salta il quiz d'ingresso, non mostra Ripassa e non
+non riserva spazio per l'ad, richiede il pass compiti come le altre versioni, non mostra Ripassa e non
 attiva la punizione Chronos alle sconfitte. Le altre versioni restano invariate.
 
 ### Pagine /gd e memento mori
@@ -632,3 +632,17 @@ I percorsi inesistenti usano `404.html`: solo l'immagine fornita a schermo inter
 L'asset ha URL assoluto rispetto al sito, funzionante anche su percorsi annidati.
 Vercel mantiene lo status HTTP 404 senza redirect generico né interferenze con API
 o alias esistenti. Nessuno script di blocco uscita o riapertura delle schede.
+
+
+### Chessometry Dash e compiti su tutte le versioni
+La variante GD si chiama **Chessometry Dash** (anche nella scheda); i testi non
+usano separatori a punto mediano. I pezzi sono Cube, Ball, Robot, Torre, UFO,
+Ship e Wave, inclusi i nomi accessibili delle immagini; restano le regole 10×10.
+La frase introduttiva è `THE SOCIETY IS GONNA BE IN GRIEF FOR YEARS`.
+
+Tutte le versioni giocabili (normale, /french, /risio, /dash, /boring) richiedono
+il pass compiti condiviso. Senza pass valido si apre la stessa prova d'ingresso,
+anche tramite alias e inviti online. Con il pass giornaliero valido non viene
+ripetuta inutilmente. In /boring il modulo di gioco e l'autojoin non vengono
+nemmeno caricati prima del superamento. Nessuna pubblicità aggiunta a GD e
+nessuna modifica alle pagine segrete non giocabili o ai redirect esterni.

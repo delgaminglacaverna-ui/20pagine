@@ -768,7 +768,7 @@ function Ff({ code: o, size: h, variant }) {
   const dashPiece = variant ? variant === "dash" : DASH_MODE;
   if (dashPiece) {
     const images = { 1: "Cube001", 2: "Ball001", 3: "Robot001", 4: "Cube408", 5: "UFO001", 6: "Ship001", 7: "Wave001" };
-    const names = { 1: "Pedone · Cube001", 2: "Cavallo · Ball", 3: "Alfiere · Robot", 4: "Torre · Cube408", 5: "Regina · UFO", 6: "Re · Ship", 7: "Estremo · Wave" };
+    const names = { 1: "Cube", 2: "Ball", 3: "Robot", 4: "Torre", 5: "UFO", 6: "Ship", 7: "Wave" };
     return v.jsx("img", {
       src: "/assets/dash/" + images[b] + ".webp", alt: names[b], draggable: false,
       className: "dash-piece pointer-events-none select-none",
@@ -2767,7 +2767,6 @@ function mountSite() {
 }
 async function enterSite() {
   if (typeof SiteText !== "undefined") await SiteText.load();
-  if (RISIO_MODE || DASH_MODE) { mountSite(); return; }
   if (typeof EntryGate === "undefined") {
     document.getElementById("root").textContent = "Impossibile caricare la prova di ingresso. Ricarica la pagina.";
     return;

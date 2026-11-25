@@ -17,13 +17,14 @@ test('Dash has the 22 classic levels in order with factual metadata and scoped p
   assert.equal(c.DashTheme.text('a2a4'),'a2a4');
   for(const level of levels) {assert(/^#[a-f0-9]{6}$/.test(level.color));assert(level.stars>0);}
 });
-test('Dash is a direct variant without stage selector, ad, entry quiz or Ripassa', () => {
+test('Dash has no stage selector, ad or Ripassa, but requires homework', () => {
   const html=fs.readFileSync('index.html','utf8');
   assert(!html.includes('DashLevelPanel'));
   assert(!html.includes('SELECT LEVEL'));
   assert(!html.includes('setProperty("--dash-accent"'));
   assert(html.includes('!DASH_MODE && v.jsx(i1, {})'));
-  assert(html.includes('if (RISIO_MODE || DASH_MODE) { mountSite(); return; }'));
+  assert(!html.includes('if (RISIO_MODE || DASH_MODE) { mountSite(); return; }'));
+  assert(html.includes('if (await EntryGate.start({ french: FRENCH_MODE })) mountSite();'));
   assert(html.includes('!RISIO_MODE && !DASH_MODE && v.jsx("footer"'));
   assert(html.includes('if (RISIO_MODE || DASH_MODE || reviewActive || historyPaused || typeof EntryGate'));
   assert(!fs.readFileSync('assets/dash-theme.css','utf8').includes('.dash-level-panel'));
