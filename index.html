@@ -2549,8 +2549,8 @@ const ENFOSI_MEDIA = [
 const GD_AD_PLAYLIST = "PLFEp265cKO3ZM_IpuwB_Htbht8T0kFPG4";
 function i1() {
   const enfosi = RISIO_MODE,
-    [mediaIndex, setMediaIndex] = ul.useState(() => Math.floor(Math.random() * ENFOSI_MEDIA.length)),
-    music = ul.useRef(null), gdLastVideo = ul.useRef(null), trigger = ul.useRef(createEnfosiTrigger());
+    [mediaIndex, setMediaIndex] = ul.useState(() => DASH_MODE ? 0 : Math.floor(Math.random() * ENFOSI_MEDIA.length)),
+    music = ul.useRef(null), trigger = ul.useRef(createEnfosiTrigger());
   ul.useEffect(() => {
     if (!enfosi) return;
     let disposed = false;
@@ -2616,7 +2616,7 @@ function i1() {
   }, []);
   const q = ul.useRef(null);
   (ul.useEffect(() => {
-    if (enfosi) return;
+    if (enfosi || DASH_MODE) return;
     let Q = !1;
     return (
       c1().then((K) => {
@@ -2624,11 +2624,10 @@ function i1() {
           !z.current ||
           q.current ||
           (q.current = new K.Player(z.current, {
-            ...(DASH_MODE ? {} : { videoId: o }),
+            videoId: o,
             width: "100%",
             height: "100%",
             playerVars: {
-              ...(DASH_MODE ? { listType: "playlist", list: GD_AD_PLAYLIST } : {}),
               autoplay: 1,
               mute: 1,
               rel: 0,
@@ -2642,18 +2641,14 @@ function i1() {
             events: {
               onReady: (F) => {
                 (F.target.mute(),
-                  F.target.setPlaybackRate(DASH_MODE ? 1 : wf),
+                  F.target.setPlaybackRate(wf),
                   F.target.playVideo());
               },
               onStateChange: (F) => {
-                if (DASH_MODE && F.data === 1) {
-                  const id = F.target.getVideoData?.().video_id;
-                  if (id && id !== gdLastVideo.current) { gdLastVideo.current = id; setMediaIndex(index => index + 1); }
-                }
                 (F.data === 1 &&
-                  F.target.getPlaybackRate() !== (DASH_MODE ? 1 : wf) &&
-                  F.target.setPlaybackRate(DASH_MODE ? 1 : wf),
-                  F.data === 0 && !DASH_MODE && il());
+                  F.target.getPlaybackRate() !== (wf) &&
+                  F.target.setPlaybackRate(wf),
+                  F.data === 0 && il());
               },
             },
           }));
@@ -2668,7 +2663,7 @@ function i1() {
     }, [o, enfosi, mediaIndex]));
   const $ = ul.useRef(o);
   function il() {
-    if (DASH_MODE) { f(2.5); q.current?.nextVideo?.(); setMediaIndex(index => index + 1); return; }
+    if (DASH_MODE) { f(2.5); setMediaIndex(index => index + 1); return; }
     if (enfosi) { f(2.5); setMediaIndex(index => (index + 1 + Math.floor(Math.random() * (ENFOSI_MEDIA.length - 1))) % ENFOSI_MEDIA.length); return; }
     const Q = or($.current);
     (($.current = Q), f(dr), q.current?.loadVideoById?.(Q), h(Q));
@@ -2713,11 +2708,11 @@ function i1() {
               ? v.jsx("video", { key: media.src, src: media.src, autoPlay: true, muted: true, playsInline: true, controls: true, onEnded: il, onError: il, className: "enfosi-media" })
               : v.jsx("img", { key: media.src, src: media.src, alt: media.alt, className: "enfosi-media", onError: event => { event.currentTarget.onerror = null; event.currentTarget.src = '/assets/enfosi/smiley.png'; } })
             : v.jsx("div", {
-              className: "pointer-events-none absolute inset-0",
+              className: (DASH_MODE ? "" : "pointer-events-none ") + "absolute inset-0",
               children: DASH_MODE
                 ? v.jsx("iframe", {
-                    ref: z, className: "h-full w-full", title: "GD AD",
-                    src: `https://www.youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}&enablejsapi=1&autoplay=1&mute=1&controls=0&playsinline=1&origin=${encodeURIComponent(location.origin)}`,
+                    key: mediaIndex, className: "h-full w-full", title: "GD AD",
+                    src: `https://www.youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}&index=${mediaIndex}&autoplay=1&mute=1&controls=1&playsinline=1`,
                     allow: "autoplay; encrypted-media; picture-in-picture", referrerPolicy: "strict-origin-when-cross-origin",
                   })
                 : v.jsx("div", { ref: z, className: "h-full w-full" }),
