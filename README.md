@@ -739,3 +739,5 @@ senza `enablejsapi`. I controlli nativi sono disponibili; il salto della GD AD
 ricrea l'iframe con l'indice playlist successivo. I test verificano che il loader
 Widget API non venga chiamato in GD. La riproduzione resta soggetta alla
 disponibilità pubblica della playlist e ai permessi embed dei video su YouTube.
+
+GD AD: il salto ora invia il comando `nextVideo` via postMessage all’iframe esistente, con target origin YouTube, senza ricrearlo o cambiare indice URL. `enablejsapi=1` abilita i comandi iframe senza caricare il Widget SDK. Controlli nativi nascosti (`controls=0`); logo e overlay residui dipendono da YouTube.

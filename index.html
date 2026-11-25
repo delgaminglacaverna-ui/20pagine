@@ -2663,7 +2663,10 @@ function i1() {
     }, [o, enfosi, mediaIndex]));
   const $ = ul.useRef(o);
   function il() {
-    if (DASH_MODE) { f(2.5); setMediaIndex(index => index + 1); return; }
+    if (DASH_MODE) {
+      z.current?.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "nextVideo", args: [] }), "https://www.youtube.com");
+      f(2.5); setMediaIndex(index => index + 1); return;
+    }
     if (enfosi) { f(2.5); setMediaIndex(index => (index + 1 + Math.floor(Math.random() * (ENFOSI_MEDIA.length - 1))) % ENFOSI_MEDIA.length); return; }
     const Q = or($.current);
     (($.current = Q), f(dr), q.current?.loadVideoById?.(Q), h(Q));
@@ -2711,8 +2714,8 @@ function i1() {
               className: (DASH_MODE ? "" : "pointer-events-none ") + "absolute inset-0",
               children: DASH_MODE
                 ? v.jsx("iframe", {
-                    key: mediaIndex, className: "h-full w-full", title: "GD AD",
-                    src: `https://www.youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}&index=${mediaIndex}&autoplay=1&mute=1&controls=1&playsinline=1`,
+                    ref: z, className: "h-full w-full", title: "GD AD",
+                    src: `https://www.youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}&enablejsapi=1&origin=${encodeURIComponent(location.origin)}&autoplay=1&mute=1&controls=0&disablekb=1&playsinline=1`,
                     allow: "autoplay; encrypted-media; picture-in-picture", referrerPolicy: "strict-origin-when-cross-origin",
                   })
                 : v.jsx("div", { ref: z, className: "h-full w-full" }),
