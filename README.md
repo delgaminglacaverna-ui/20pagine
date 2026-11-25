@@ -572,3 +572,16 @@ La versione francese ora usa `/french`, mai `version=` nei nuovi link. Il vecchi
 `/?version=french&partita=...` viene normalizzato a `/french?partita=...`, mantenendo
 il codice e i token salvati. Lingua del coach, archivio, tab e regole senza sinistra
 seguono il percorso `/french` (anche con slash finale).
+
+
+#### Omaggio Geometry Dash in /dash
+Oltre alle icone, `/dash` usa un tema geometrico/neon e un selettore dei 22 livelli
+classici, da Stereo Madness a Dash, con difficoltà, stelle e autore del brano.
+Dati verificati su https://geometrydash.wiki.gg/wiki/Geometry_Dash#Levels .
+La scelta cambia il colore d’atmosfera, non posizione, forza IA o regole; è
+personale anche online. Non si riproducono né distribuiscono le colonne sonore.
+Le dieci aperture 10×10 conservano le mosse ma hanno nomi-omaggio ai livelli
+(Stereo Madness, Back On Track, Blast Processing, Polargeist, Hexagon Force,
+Jumper, Geometrical Dominator, Cycles, Electroman Adventures e Deadlocked).
+Non sono livelli platformer giocabili né contenuto ufficiale RobTop. Tema e
+termini come New Attempt / Dual Mode sono confinati a `/dash`.

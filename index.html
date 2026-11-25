@@ -16,6 +16,8 @@
     <link id="tab-icon" rel="icon" type="image/png" href="/assets/tabs/chronos-eye.png" />
     <script src="/assets/tab-state.js"></script>
     <script src="/assets/risio-effects.js"></script>
+    <link rel="stylesheet" href="/assets/dash-theme.css" />
+    <script src="/assets/dash-theme.js"></script>
     <script src="/assets/coach-i18n.js"></script>
     <script src="/assets/move-coach.js"></script>
     <script src="/assets/game-archive.js"></script>
@@ -230,7 +232,7 @@ for (const method of ["jsx", "jsxs"]) {
       props = { ...props };
       const translate = value => {
         if (Array.isArray(value)) return value.map(translate);
-        const translated = risioText(frenchText(value));
+        const translated = DASH_MODE && typeof DashTheme !== "undefined" ? DashTheme.text(value) : risioText(frenchText(value));
         return typeof SiteText !== "undefined" ? SiteText.text(translated) : translated;
       };
       props.children = translate(props.children);
@@ -1300,6 +1302,25 @@ function OnlinePanel(o) {
     ],
   });
 }
+function DashLevelPanel() {
+  const levels = window.DashTheme.levels;
+  const [index, setIndex] = ul.useState(0);
+  const level = levels[index];
+  ul.useEffect(() => {
+    document.documentElement.style.setProperty("--dash-accent", level.color);
+    return () => document.documentElement.style.removeProperty("--dash-accent");
+  }, [level.color]);
+  return v.jsxs("section", { className: "dash-level-panel", "aria-label": "Geometry Dash · temi dei livelli", children: [
+    v.jsx("label", { htmlFor: "dash-level", children: "SELECT LEVEL · tema visivo" }),
+    v.jsx("select", { id: "dash-level", value: index, onChange: event => setIndex(Number(event.target.value)), children: levels.map((item, i) => v.jsx("option", { value: i, children: `${item.number}. ${item.name}` }, item.name)) }),
+    v.jsx("h2", { className: "dash-level-name", children: level.name }),
+    v.jsx("p", { className: "dash-level-meta", children: `${level.difficulty} · ${level.stars} ★ · musica originale: ${level.artist}` }),
+    v.jsx("p", { children: "Tema ispirato ai livelli ufficiali: cambia i colori, non le regole o la difficoltà della partita. Nessuna musica riprodotta." }),
+    v.jsx("p", { children: "Cube = pedone · Ship = re · Cube408 = torre · Ball = cavallo · Robot = alfiere · UFO = regina · Wave = Estremo" }),
+    v.jsx("p", { children: "Le aperture sono sequenze di scacchi 10×10 ribattezzate come omaggio ai livelli, non livelli giocabili di Geometry Dash." }),
+    v.jsx("a", { href: "https://geometrydash.wiki.gg/wiki/Geometry_Dash#Levels", target: "_blank", rel: "noopener noreferrer", children: "Livelli e crediti · Geometry Dash Wiki" }),
+  ] });
+}
 function a1() {
   const [o] = ul.useState(kh),
     [h, b] = ul.useState(0),
@@ -1796,6 +1817,7 @@ function a1() {
   return v.jsxs("div", {
     className: "min-h-screen bg-slate-100 pb-72 text-slate-800" + (RISIO_MODE ? " risio-page" : ""),
     children: [
+      DASH_MODE && v.jsx(DashLevelPanel, {}),
       v.jsx("header", {
         className: "bg-[#343a40] px-4 py-4 text-white shadow",
         children: v.jsxs("div", {
