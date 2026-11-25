@@ -574,17 +574,15 @@ il codice e i token salvati. Lingua del coach, archivio, tab e regole senza sini
 seguono il percorso `/french` (anche con slash finale).
 
 
-#### Omaggio Geometry Dash in /dash
-Oltre alle icone, `/dash` usa un tema geometrico/neon e un selettore dei 22 livelli
-classici, da Stereo Madness a Dash, con difficoltà, stelle e autore del brano.
-Dati verificati su https://geometrydash.wiki.gg/wiki/Geometry_Dash#Levels .
-La scelta cambia il colore d’atmosfera, non posizione, forza IA o regole; è
-personale anche online. Non si riproducono né distribuiscono le colonne sonore.
-Le dieci aperture 10×10 conservano le mosse ma hanno nomi-omaggio ai livelli
-(Stereo Madness, Back On Track, Blast Processing, Polargeist, Hexagon Force,
-Jumper, Geometrical Dominator, Cycles, Electroman Adventures e Deadlocked).
-Non sono livelli platformer giocabili né contenuto ufficiale RobTop. Tema e
-termini come New Attempt / Dual Mode sono confinati a `/dash`.
+#### Variante GD semplificata
+`/dash` (alias `/gd`) è una variante diretta come RISIO, senza pannello-omaggio,
+selettore degli stage o cambi di colore per livello. Restano le icone caricate,
+i nomi delle aperture a tema e uno stile fisso. La distinzione bianco/nero resta
+indipendente dai livelli. I metadati dei 22 livelli sono conservati per gli alias
+URL, non per un selettore nell'interfaccia.
+La variante non monta la pubblicità (nessun player/iframe o timer pubblicitario),
+non riserva spazio per l'ad, salta il quiz d'ingresso, non mostra Ripassa e non
+attiva la punizione Chronos alle sconfitte. Le altre versioni restano invariate.
 
 ### Pagine /gd e memento mori
 `/gd` e `/gd/` reindirizzano a `/dash`; i parametri della richiesta (incluso

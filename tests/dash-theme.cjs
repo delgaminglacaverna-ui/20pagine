@@ -17,16 +17,14 @@ test('Dash has the 22 classic levels in order with factual metadata and scoped p
   assert.equal(c.DashTheme.text('a2a4'),'a2a4');
   for(const level of levels) {assert(/^#[a-f0-9]{6}$/.test(level.color));assert(level.stars>0);}
 });
-test('level selector changes the theme color without changing the chess position', () => {
-  const {c}=load('/dash');let chosen=0;const colors=[];
-  c.window={DashTheme:c.DashTheme};c.document.documentElement.style={setProperty:(key,value)=>colors.push([key,value]),removeProperty(){}};
-  c.ul={useState:()=>[chosen,v=>chosen=v],useEffect:fn=>fn()};
-  c.v={jsx:(type,props)=>({type,props}),jsxs:(type,props)=>({type,props})};
+test('Dash is a direct variant without stage selector, ad, entry quiz or Ripassa', () => {
   const html=fs.readFileSync('index.html','utf8');
-  vm.runInContext(html.slice(html.indexOf('function DashLevelPanel()'),html.indexOf('function a1()')),c);
-  const panel=c.DashLevelPanel();const select=panel.props.children.find(node=>node.type==='select');
-  assert.equal(select.props.children.length,22);select.props.onChange({target:{value:'19'}});
-  const updated=c.DashLevelPanel();assert.equal(chosen,19);
-  assert.equal(updated.props.children.find(node=>node.type==='h2').props.children,'Deadlocked');
-  assert.equal(colors.at(-1)[1],c.DashTheme.levels[19].color);
+  assert(!html.includes('DashLevelPanel'));
+  assert(!html.includes('SELECT LEVEL'));
+  assert(!html.includes('setProperty("--dash-accent"'));
+  assert(html.includes('!DASH_MODE && v.jsx(i1, {})'));
+  assert(html.includes('if (RISIO_MODE || DASH_MODE) { mountSite(); return; }'));
+  assert(html.includes('!RISIO_MODE && !DASH_MODE && v.jsx("footer"'));
+  assert(html.includes('if (RISIO_MODE || DASH_MODE || reviewActive || historyPaused || typeof EntryGate'));
+  assert(!fs.readFileSync('assets/dash-theme.css','utf8').includes('.dash-level-panel'));
 });
