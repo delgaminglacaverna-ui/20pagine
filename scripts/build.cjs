@@ -1,3 +1,5 @@
+const routing = require('@vercel/routing-utils').getTransformedRoutes(require('../vercel.json'));
+if (routing.error) throw Error('Vercel routing: ' + routing.error.message);
 require('./sync-engine.cjs');
 require('./sync-coach.cjs');
 const fs = require('node:fs');
