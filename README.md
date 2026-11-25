@@ -580,8 +580,7 @@ selettore degli stage o cambi di colore per livello. Restano le icone caricate,
 i nomi delle aperture a tema e uno stile fisso. La distinzione bianco/nero resta
 indipendente dai livelli. I metadati dei 22 livelli sono conservati per gli alias
 URL, non per un selettore nell'interfaccia.
-La variante non monta la pubblicità (nessun player/iframe o timer pubblicitario),
-non riserva spazio per l'ad, richiede il pass compiti come le altre versioni, non mostra Ripassa e non
+La variante monta una GD AD dedicata alla playlist di walkthrough scelta; richiede il pass compiti come le altre versioni, non mostra Ripassa e non
 attiva la punizione Chronos alle sconfitte. Le altre versioni restano invariate.
 
 ### Pagine /gd e memento mori
@@ -644,8 +643,7 @@ Tutte le versioni giocabili (normale, /french, /risio, /dash, /boring) richiedon
 il pass compiti condiviso. Senza pass valido si apre la stessa prova d'ingresso,
 anche tramite alias e inviti online. Con il pass giornaliero valido non viene
 ripetuta inutilmente. In /boring il modulo di gioco e l'autojoin non vengono
-nemmeno caricati prima del superamento. Nessuna pubblicità aggiunta a GD e
-nessuna modifica alle pagine segrete non giocabili o ai redirect esterni.
+nemmeno caricati prima del superamento. La GD AD usa solo la playlist dedicata; nessuna modifica alle pagine segrete non giocabili o ai redirect esterni.
 
 
 ### Boss di The Battle Bricks: riferimenti aggiuntivi
@@ -724,3 +722,12 @@ aggiunge solo gli alias mancanti senza sovrascrivere route esistenti.
 Aggiunta successiva richiesta: `/blight` e `/hell` → https://en.wikipedia.org/wiki/Hell . Blight è registrato come aggiunta dell’utente oltre alle 58 voci della categoria consultata.
 
 Aggiornamento Chessometry Dash: Robot è il cavallo, Wave è l’alfiere, Ball è l’Estremo. Immagini, nomi accessibili, promozioni e replay seguono questa associazione; le regole di movimento dei ruoli non cambiano.
+
+
+### GD AD
+Chessometry Dash mostra una finestra trascinabile **GD AD** con la playlist YouTube
+`PLFEp265cKO3ZM_IpuwB_Htbht8T0kFPG4` (Geometry Dash, complete walkthrough).
+Il player carica direttamente la playlist, non video TBB: velocità normale 1×,
+autoplay muto secondo le regole del browser, pulsante salto pronto dopo 2,5 secondi.
+Il salto passa al prossimo video; a fine video la playlist prosegue da sola.
+TBB AD nelle altre versioni ed ENFOSI AD in RISIO restano invariate.

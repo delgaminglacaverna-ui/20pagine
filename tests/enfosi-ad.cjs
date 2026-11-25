@@ -7,7 +7,7 @@ test('three clock clicks switch the ad, start local music and replace YouTube me
   let cursor = 0, now = 0, plays = 0, pauses = 0;
   const hooks = [];
   const context = vm.createContext({
-    FRENCH_MODE: false, RISIO_MODE: false, location: { href: "/" }, Date: { now: () => now }, Math: Object.assign(Object.create(Math), { random: () => .99 }),
+    DASH_MODE: false, FRENCH_MODE: false, RISIO_MODE: false, location: { href: "/" }, Date: { now: () => now }, Math: Object.assign(Object.create(Math), { random: () => .99 }),
     or: () => 'youtube-id',
     Audio: class {
       constructor(src) { assert.equal(src, '/assets/enfosi/risio.mp3'); this.paused = true; }
