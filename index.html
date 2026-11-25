@@ -767,8 +767,8 @@ function Ff({ code: o, size: h, variant }) {
   const frenchPiece = variant ? variant === "french" : FRENCH_MODE;
   const dashPiece = variant ? variant === "dash" : DASH_MODE;
   if (dashPiece) {
-    const images = { 1: "Cube001", 2: "Ball001", 3: "Robot001", 4: "Cube408", 5: "UFO001", 6: "Ship001", 7: "Wave001" };
-    const names = { 1: "Cube", 2: "Ball", 3: "Robot", 4: "Torre", 5: "UFO", 6: "Ship", 7: "Wave" };
+    const images = { 1: "Cube001", 2: "Robot001", 3: "Wave001", 4: "Cube408", 5: "UFO001", 6: "Ship001", 7: "Ball001" };
+    const names = { 1: "Cube", 2: "Robot", 3: "Wave", 4: "Torre", 5: "UFO", 6: "Ship", 7: "Ball" };
     return v.jsx("img", {
       src: "/assets/dash/" + images[b] + ".webp", alt: names[b], draggable: false,
       className: "dash-piece pointer-events-none select-none",

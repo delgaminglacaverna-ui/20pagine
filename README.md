@@ -562,8 +562,8 @@ nella pagina (`https://github.com/nmrugg/stockfish.js/tree/v18.0.8`).
 ### /dash e /french
 La versione Geometry Dash è raggiungibile da `/dash` (online: `/dash?partita=CODICE`).
 Conserva le regole 10×10 normali; cambia le immagini dei pezzi con gli upload forniti:
-Cube001=pedone, Ball001=cavallo, Robot001=alfiere, Cube408=torre, UFO001=regina,
-Ship001=re, Wave001=Estremo. Spider e Swing non sono usati. Le immagini sono locali;
+Cube001=pedone, Robot001=cavallo, Wave001=alfiere, Cube408=torre, UFO001=regina,
+Ship001=re, Ball001=Estremo. Spider e Swing non sono usati. Le immagini sono locali;
 i pezzi neri sono invertiti e ruotati per distinguerli dai bianchi. La stessa skin
 si usa nelle promozioni e nei replay salvati, anche se aperti da un’altra versione.
 Online il prefisso 4 fissa Dash per entrambi i giocatori, senza cambiare le regole.
@@ -722,3 +722,5 @@ aggiunge solo gli alias mancanti senza sovrascrivere route esistenti.
 | X-TREME | Tortura: riferimento già scelto | /x-treme |
 
 Aggiunta successiva richiesta: `/blight` e `/hell` → https://en.wikipedia.org/wiki/Hell . Blight è registrato come aggiunta dell’utente oltre alle 58 voci della categoria consultata.
+
+Aggiornamento Chessometry Dash: Robot è il cavallo, Wave è l’alfiere, Ball è l’Estremo. Immagini, nomi accessibili, promozioni e replay seguono questa associazione; le regole di movimento dei ruoli non cambiano.

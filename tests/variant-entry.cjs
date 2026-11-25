@@ -22,6 +22,6 @@ test('Chessometry Dash uses mode names and no middle-dot separators',()=>{
   const c=vm.createContext({});vm.runInContext(fs.readFileSync('assets/dash-theme.js','utf8'),c);const text=c.DashTheme.text;
   assert.equal(text('Scacchi Dash 10×10 · 20 Pagine'),'Chessometry Dash');
   assert.equal(text('Puoi giocare solo se studi 20 pagine'),'THE SOCIETY IS GONNA BE IN GRIEF FOR YEARS');
-  assert.equal(text('Pedone Cavallo Alfiere Regina Re Estremo Torre'),'Cube Ball Robot UFO Ship Wave Torre');
+  assert.equal(text('Pedone Cavallo Alfiere Regina Re Estremo Torre'),'Cube Robot Wave UFO Ship Ball Torre');
   assert.equal(text('Bianco · Nero'),'Bianco Nero');
 });

@@ -10,9 +10,10 @@ function load(pathname) {
 }
 test('Dash uses the exact seven supplied icons and normal legal rules', () => {
   const api = load('/dash'); assert.equal(api.DASH_MODE,true); assert.equal(api.FRENCH_MODE,false);
-  const files = ['Cube001','Ball001','Robot001','Cube408','UFO001','Ship001','Wave001'];
+  const files = ['Cube001','Robot001','Wave001','Cube408','UFO001','Ship001','Ball001'];
   for (let piece=1;piece<=7;piece++) for (const side of [1,-1]) {
     const result = api.Ff({code:side*piece});
+    assert.equal(result.props.alt,['Cube','Robot','Wave','Torre','UFO','Ship','Ball'][piece-1]);
     assert.equal(result.type,'img'); assert.equal(result.props.src,`/assets/dash/${files[piece-1]}.webp`);
     assert.equal(result.props.draggable,false);
     assert.equal(fs.readFileSync(result.props.src.slice(1)).toString('ascii',0,4),'RIFF');
