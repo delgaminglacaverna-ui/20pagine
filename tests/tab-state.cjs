@@ -30,7 +30,7 @@ test('tab title and favicon follow each mode and reuse one icon link', () => {
 test('French version uses exact alternate titles while preserving mode icons and chess title', () => {
   const icon = {};
   const document = { title: '', getElementById: () => icon };
-  const context = vm.createContext({ document, URLSearchParams, location: { search: '?version=french' } });
+  const context = vm.createContext({ document, URLSearchParams, location: { pathname: '/french', search: '' } });
   vm.runInContext(fs.readFileSync('assets/tab-state.js', 'utf8'), context);
   assert.equal(document.title, "MIO FIGLIO HA STUDIATO L'INGLESE E LAVORA IN FRANCIA");
   for (const [mode, title, image] of [

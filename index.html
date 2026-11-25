@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/assets/entry-gate.css" />
     <link rel="stylesheet" href="/assets/risio.css" />
     <link rel="stylesheet" href="/assets/move-coach.css" />
+    <script src="/assets/canonical-routes.js"></script>
     <script src="/assets/site-text.js"></script>
     <link id="tab-icon" rel="icon" type="image/png" href="/assets/tabs/chronos-eye.png" />
     <script src="/assets/tab-state.js"></script>
@@ -76,7 +77,8 @@ const Qt = (o, h) => o >= 0 && o < 10 && h >= 0 && h < 10,
   cr = [oe, _t, Zt, Vt, Lt, Rt, Vt, Zt, _t, oe];
 // French is a separate local ruleset; reload when switching to reset the game safely.
 const RISIO_MODE = /^\/risio\/?$/.test(location.pathname || "");
-const FRENCH_MODE = !RISIO_MODE && new URLSearchParams(location.search).get("version") === "french";
+const DASH_MODE = /^\/dash\/?$/.test(location.pathname || "");
+const FRENCH_MODE = /^\/french\/?$/.test(location.pathname || "");
 const FRENCH_TEXT = {
   "Scacchi Estremi 10×10 · 20 Pagine": "Échecs extrêmes 10×10 · 20 Pagine",
   "Scacchiera 10×10 con il nuovo pezzo ": "Échiquier 10×10 avec la nouvelle pièce ",
@@ -761,6 +763,17 @@ function Ff({ code: o, size: h, variant }) {
     z = b === 7;
   const risioPiece = variant ? variant === "risio" : RISIO_MODE;
   const frenchPiece = variant ? variant === "french" : FRENCH_MODE;
+  const dashPiece = variant ? variant === "dash" : DASH_MODE;
+  if (dashPiece) {
+    const images = { 1: "Cube001", 2: "Ball001", 3: "Robot001", 4: "Cube408", 5: "UFO001", 6: "Ship001", 7: "Wave001" };
+    const names = { 1: "Pedone · Cube001", 2: "Cavallo · Ball", 3: "Alfiere · Robot", 4: "Torre · Cube408", 5: "Regina · UFO", 6: "Re · Ship", 7: "Estremo · Wave" };
+    return v.jsx("img", {
+      src: "/assets/dash/" + images[b] + ".webp", alt: names[b], draggable: false,
+      className: "dash-piece pointer-events-none select-none",
+      "data-piece-side": f ? "white" : "black",
+      style: { width: h ?? "var(--chess-piece-size, 55px)", height: h ?? "var(--chess-piece-size, 55px)", objectFit: "contain", filter: f ? "none" : "invert(1)", transform: f ? "none" : "rotate(180deg)" },
+    });
+  }
   if (risioPiece) {
     const images = { 1: '/assets/enfosi/smiley.png', 2: '/assets/risio/Kruzzit3.webp', 3: '/assets/risio/Yippeeyay3.webp', 4: '/assets/risio/Glogga3.webp', 5: '/assets/risio/Floopfang3.webp', 6: '/assets/risio/Zorker2.webp', 7: '/assets/risio/Blepzo3.webp' };
     const names = { 1: 'Pedone', 2: 'Kruzzit', 3: 'Yippeeyay', 4: 'Glogga', 5: 'Floopfang', 6: 'Zorker', 7: "L'enfoso (Blepzo)" };
@@ -1115,12 +1128,11 @@ function onlFind(pos, code) {
     .legalMoves()
     .find((m) => m.from === a && m.to === b && (m.promo || 0) === (c || 0));
 }
-function onlVariant() { return RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "normal"; }
+function onlVariant() { return DASH_MODE ? "dash" : RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "normal"; }
 function onlPageUrl(id) {
   const params = new URLSearchParams();
-  if (FRENCH_MODE) params.set("version", "french");
   if (id) params.set("partita", id);
-  return (RISIO_MODE ? "/risio" : "/") + (params.size ? "?" + params.toString() : "");
+  return (DASH_MODE ? "/dash" : FRENCH_MODE ? "/french" : RISIO_MODE ? "/risio" : "/") + (params.size ? "?" + params.toString() : "");
 }
 const ONL_KEY = "scacchiEstremi.partite";
 function onlTokens() {
@@ -1180,7 +1192,7 @@ function OnlinePanel(o) {
         v.jsx("p", {
           className: "mb-3 text-slate-600",
           children:
-            "Crea una partita e manda il codice a un amico. La prima cifra indica la modalità condivisa: 0 normale, 1 francese, 2 RISIO, 3 scacchi 8×8. Chi entra usa la stessa modalità.",
+            "Crea una partita e manda il codice a un amico. La prima cifra indica la modalità condivisa: 0 normale, 1 francese, 2 RISIO, 3 scacchi 8×8, 4 Dash. Chi entra usa la stessa modalità.",
         }),
         v.jsx("button", {
           className: l1,
@@ -1387,7 +1399,7 @@ function a1() {
   ul.useEffect(() => {
     if (historyPaused || !R.hist.length) return;
     window.GameArchive?.save({
-      id: archiveId.current, variant: RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "normal", mode: z,
+      id: archiveId.current, variant: onlVariant(), mode: z,
       result: onl?.status === "over" ? (onl.reason === "resign" ? "resign" : "onlineOver") : V.kind,
       turn: R.turn, frenchSides: R.frenchSides, moves: R.hist.map(entry => entry.move), notes: o.notes,
     });
@@ -1479,9 +1491,8 @@ function a1() {
     try {
       const info = await onlApi(`/api/matches/${code}`, void 0, onlTokens()[code], "GET");
       if (info.ok && info.data.mode && info.data.mode !== onlVariant()) {
-        const path = info.data.mode === "boring" ? "/boring" : info.data.mode === "risio" ? "/risio" : "/";
+        const path = info.data.mode === "dash" ? "/dash" : info.data.mode === "french" ? "/french" : info.data.mode === "boring" ? "/boring" : info.data.mode === "risio" ? "/risio" : "/";
         const params = new URLSearchParams();
-        if (info.data.mode === "french") params.set("version", "french");
         params.set("partita", code);
         location.assign(path + "?" + params.toString());
         return;
@@ -1792,15 +1803,15 @@ function a1() {
           children: [
             v.jsx("h1", {
               className: "text-2xl font-semibold",
-              children: "Scacchi Estremi 10×10 · 20 Pagine",
+              children: DASH_MODE ? "Scacchi Dash 10×10 · 20 Pagine" : "Scacchi Estremi 10×10 · 20 Pagine",
             }),
             RISIO_MODE ? v.jsx("a", { href: "/", className: "rounded border px-3 py-1 text-sm", children: "Torna alla normalità" }) : v.jsx("button", {
               className: "rounded border px-3 py-1 text-sm",
               onClick: () => {
                 const url = new URL(location.href);
                 url.searchParams.delete("partita");
-                if (FRENCH_MODE) url.searchParams.delete("version");
-                else url.searchParams.set("version", "french");
+                url.searchParams.delete("version");
+                url.pathname = FRENCH_MODE ? "/" : "/french";
                 location.href = url.href;
               },
               children: FRENCH_MODE ? "🇮🇹 Versione italiana" : "🇫🇷 French / Français",
@@ -2746,7 +2757,7 @@ window.GameReplay = { mount(container, initialGame) {
   return { go, update(next) { game = next; render(); }, unmount() { reactRoot.unmount(); } };
 } };
 function mountSite() {
-  window.TabState?.set(RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "chess");
+  window.TabState?.set(DASH_MODE ? "dash" : RISIO_MODE ? "risio" : FRENCH_MODE ? "french" : "chess");
   if (typeof SiteText !== "undefined") document.title = SiteText.text(document.title);
   Lh.createRoot(document.getElementById("root")).render(
     v.jsx(ul.StrictMode, { children: v.jsx(a1, {}) }),

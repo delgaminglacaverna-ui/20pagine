@@ -252,7 +252,7 @@ Titoli esatti della scheda:
 - Ripassa: `NON SI FANNO I COMPITI IN CLASSE!!`
 - Chronos: `IO SAREI MORTIFICATO, NON PROVI VERGOGNA`
 
-Solo nella versione francese (`?version=french`), i titoli Compiti/Ripassa/Chronos
+Solo nella versione francese (`/french`), i titoli Compiti/Ripassa/Chronos
 sono rispettivamente `MIO FIGLIO HA STUDIATO L'INGLESE E LAVORA IN FRANCIA`,
 `perchè è tutto blanc` e `los tempos es bellos hahahas`. Icone e titolo degli
 scacchi francesi restano invariati.
@@ -524,11 +524,12 @@ del codice a 8 caratteri identifica la modalità:
 - **1** francese (niente mosse verso sinistra né arrocco, per entrambi)
 - **2** RISIO
 - **3** boring, scacchi classici 8×8
+- **4** Dash, scacchi 10×10 con le icone caricate di Geometry Dash
 
 Creazione e ingresso sono verificati dal server: il browser che entra legge la
 modalità e raggiunge la pagina corretta prima di occupare il posto. Cambiare URL
 o inviare una variante diversa non cambia le regole della lobby. Gli URL restano
-`/?partita=CODICE`, `/?version=french&partita=CODICE`, `/risio?partita=CODICE`,
+`/?partita=CODICE`, `/french?partita=CODICE`, `/risio?partita=CODICE`,
 `/boring?partita=CODICE`. I vecchi codici senza metadato `mode` conservano le regole
 originali personali per compatibilità. I commenti online restano privati e solo
 successivi alle proprie mosse, sia Bianco sia Nero.
@@ -556,3 +557,18 @@ La build copia solo il motore Lite single-thread (~7 MB WASM), wrapper, licenza 
 modulo chess.js dalle dipendenze bloccate in package-lock; binari e dipendenze non
 sono committati. Stockfish è GPLv3: sorgenti esatti/tag e licenza sono collegati
 nella pagina (`https://github.com/nmrugg/stockfish.js/tree/v18.0.8`).
+
+
+### /dash e /french
+La versione Geometry Dash è raggiungibile da `/dash` (online: `/dash?partita=CODICE`).
+Conserva le regole 10×10 normali; cambia le immagini dei pezzi con gli upload forniti:
+Cube001=pedone, Ball001=cavallo, Robot001=alfiere, Cube408=torre, UFO001=regina,
+Ship001=re, Wave001=Estremo. Spider e Swing non sono usati. Le immagini sono locali;
+i pezzi neri sono invertiti e ruotati per distinguerli dai bianchi. La stessa skin
+si usa nelle promozioni e nei replay salvati, anche se aperti da un’altra versione.
+Online il prefisso 4 fissa Dash per entrambi i giocatori, senza cambiare le regole.
+
+La versione francese ora usa `/french`, mai `version=` nei nuovi link. Il vecchio
+`/?version=french&partita=...` viene normalizzato a `/french?partita=...`, mantenendo
+il codice e i token salvati. Lingua del coach, archivio, tab e regole senza sinistra
+seguono il percorso `/french` (anche con slash finale).

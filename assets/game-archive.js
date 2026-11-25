@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const french = typeof root.URLSearchParams === 'function' && new root.URLSearchParams(root.location?.search || '').get('version') === 'french' && !/^\/risio\/?$/.test(root.location?.pathname || '');
+  const french = /^\/french\/?$/.test(root.location?.pathname || '');
   const t = value => root.CoachI18n?.text(value, french) ?? value;
   const KEY = '20pagine.games.v1', MAX = 50;
   let storageError = false, stopAnalysis = null, replay = null;
@@ -9,7 +9,7 @@
   function read() {
     try {
       const games = JSON.parse(root.localStorage.getItem(KEY) || '[]');
-      return Array.isArray(games) ? games.filter(g => g && typeof g.id === 'string' && ['normal', 'french', 'risio'].includes(g.variant) && ['pvc', 'pvp', 'cvc', 'online'].includes(g.mode) && Array.isArray(g.moves) && g.moves.length <= 600 && g.moves.every(validMove)).slice(0, MAX) : [];
+      return Array.isArray(games) ? games.filter(g => g && typeof g.id === 'string' && ['normal', 'french', 'risio', 'dash'].includes(g.variant) && ['pvc', 'pvp', 'cvc', 'online'].includes(g.mode) && Array.isArray(g.moves) && g.moves.length <= 600 && g.moves.every(validMove)).slice(0, MAX) : [];
     } catch { storageError = true; return []; }
   }
   function write(games) {

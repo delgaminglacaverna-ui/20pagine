@@ -32,7 +32,7 @@ test('normal routes retain text pieces and French behavior without Risio styling
     assert.equal(api.RISIO_MODE, false); assert.equal(api.Ff({ code: 1 }).type, 'span');
   }
   assert.equal(renderContext('/risio/').RISIO_MODE, true);
-  assert.equal(renderContext('/', '?version=french').FRENCH_MODE, true);
+  assert.equal(renderContext('/french').FRENCH_MODE, true);
   assert(html.includes('if (RISIO_MODE) { mountSite(); return; }'));
   assert(html.includes('if (RISIO_MODE || reviewActive || historyPaused || typeof EntryGate'));
   assert(!html.includes('RISIO_MODE && B === "online" ? null'));

@@ -1,7 +1,7 @@
 (function (root) {
   'use strict';
   const strings = {
-    'Crea una partita e manda il codice a un amico. La prima cifra indica la modalità condivisa: 0 normale, 1 francese, 2 RISIO, 3 scacchi 8×8. Chi entra usa la stessa modalità.': 'Créez une partie et partagez le code. Le premier chiffre indique la version commune : 0 normale, 1 française, 2 RISIO, 3 échecs 8×8. Les deux joueurs utilisent la même version.',
+    'Crea una partita e manda il codice a un amico. La prima cifra indica la modalità condivisa: 0 normale, 1 francese, 2 RISIO, 3 scacchi 8×8, 4 Dash. Chi entra usa la stessa modalità.': 'Créez une partie et partagez le code. Le premier chiffre indique la version commune : 0 normale, 1 française, 2 RISIO, 3 échecs 8×8, 4 Dash. Les deux joueurs utilisent la même version.',
     "Apertura del Re (fuori tempo)": "Ouverture du roi (hors du temps)",
     "Gambetto del Tempo": "Gambit du temps",
     "Attacco dell'Estremo": "Attaque de l’extrême",

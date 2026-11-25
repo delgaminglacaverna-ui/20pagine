@@ -15,8 +15,8 @@ test('asymmetric French attacks restrict only the selected attacker', () => {
 test('personal match URLs preserve variant before the match parameter', () => {
   const html = fs.readFileSync('index.html', 'utf8');
   const source = html.slice(html.indexOf('function onlVariant('), html.indexOf('const ONL_KEY ='));
-  for (const [RISIO_MODE, FRENCH_MODE, expected] of [[false, false, '/?partita=ABCD1234'], [false, true, '/?version=french&partita=ABCD1234'], [true, false, '/risio?partita=ABCD1234']]) {
-    const c = vm.createContext({ RISIO_MODE, FRENCH_MODE, URLSearchParams });
+  for (const [RISIO_MODE, FRENCH_MODE, expected] of [[false, false, '/?partita=ABCD1234'], [false, true, '/french?partita=ABCD1234'], [true, false, '/risio?partita=ABCD1234']]) {
+    const c = vm.createContext({ DASH_MODE: false, RISIO_MODE, FRENCH_MODE, URLSearchParams });
     vm.runInContext(source, c); assert.equal(c.onlPageUrl('ABCD1234'), expected);
     assert.equal(c.onlPageUrl().includes('partita'), false);
   }
@@ -44,7 +44,7 @@ test('online retrospective reviews run only for the local color with mixed rules
 test('joining from another UI looks up authoritative shared mode with GET before joining', async () => {
   const html = fs.readFileSync('index.html','utf8');
   const source = html.slice(html.indexOf('  async function onlJoin('),html.indexOf('  async function onlSend('));
-  for (const [mode,path] of [['french','/?version=french&partita=10000001'],['risio','/risio?partita=10000001'],['boring','/boring?partita=10000001']]) {
+  for (const [mode,path] of [['french','/french?partita=10000001'],['risio','/risio?partita=10000001'],['boring','/boring?partita=10000001'],['dash','/dash?partita=10000001']]) {
     const calls = [], navigations = [];
     const c = vm.createContext({ URLSearchParams, String, setOnlBusy() {}, onlTokens:() => ({}), onlVariant:() => 'normal', location:{ assign:p => navigations.push(p) },
       onlApi:async (...args) => { calls.push(args); return { ok:true,data:{ mode } }; }, $l:message => { throw Error(message); } });

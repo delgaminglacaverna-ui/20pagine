@@ -6,7 +6,7 @@ for (const french of [false, true]) {
   for (const resizeObserver of [false, true]) {
     let onResize, disconnected = false;
     const context = vm.createContext({
-      URLSearchParams, location: { search: french ? '?version=french' : '' },
+      URLSearchParams, location: { pathname: french ? '/french' : '/', search: '' },
       document: { documentElement: {} },
       v: { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) },
       window: { addEventListener: (_, fn) => { onResize = fn; }, removeEventListener: (_, fn) => { assert.equal(fn, onResize); } },

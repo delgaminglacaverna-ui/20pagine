@@ -123,7 +123,7 @@ test('Vercel routes target the same Node handler and static output includes asse
 });
 test('new online lobbies use a shared mode encoded by the first digit', async () => {
   const service = createService(memoryStore());
-  for (const [mode, prefix] of [['normal','0'], ['french','1'], ['risio','2'], ['boring','3']]) {
+  for (const [mode, prefix] of [['normal','0'], ['french','1'], ['risio','2'], ['boring','3'], ['dash','4']]) {
     const white = await request(service, 'POST', undefined, undefined, undefined, { variant: mode });
     assert.equal(white.id[0], prefix); assert.equal(white.mode, mode);
     const black = await request(service, 'POST', white.id, 'join', undefined, { variant: 'normal' });
