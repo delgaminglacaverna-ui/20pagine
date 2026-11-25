@@ -21,3 +21,5 @@ for (const ext of ['js', 'wasm']) fs.copyFileSync(`node_modules/stockfish/bin/st
 fs.copyFileSync('node_modules/stockfish/Copying.txt', 'public/assets/vendor/STOCKFISH-LICENSE.txt');
 
 fs.copyFileSync('mortis.html', 'public/mortis.html');
+
+fs.copyFileSync('secret.html', 'public/secret.html');

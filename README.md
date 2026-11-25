@@ -590,12 +590,25 @@ termini come New Attempt / Dual Mode sono confinati a `/dash`.
 `/gd` e `/gd/` reindirizzano a `/dash`; i parametri della richiesta (incluso
 `partita`) sono conservati dal redirect Vercel.
 
-`/morte`, `/mortis`, `/memento-mori` (anche `/mementomori` e `/memento%20mori`)
-aprono una pagina audiovisiva indipendente con titolo dedicato, fondo nero,
-monitor ECG verde animato e battito lub-dub sintetizzato localmente con Web Audio.
-Il valore 72 BPM e il tracciato sono decorativi, non misurazioni mediche.
-Nessun microfono o audio esterno; pulsante per attivare/disattivare il suono e
-volume regolabile. L'audio parte solo dopo un gesto per rispettare i blocchi
-autoplay. In background il contesto audio si sospende; uscendo si chiude.
-`prefers-reduced-motion` rende statico il tracciato e ferma l'animazione del cuore.
-Le pagine non caricano il gioco, i quiz o le pubblicità.
+`/morte`, `/mortis`, `/memento-mori`, `/mementomori` e `/memento%20mori`
+mostrano **soltanto il tracciato verde su nero**, a schermo pieno. Non ci sono più
+titoli, valori BPM, griglie, bordi o controlli visibili. Durata, ampiezza e forma
+dei battiti variano; il lub-dub sintetizzato usa gli stessi istanti del tracciato.
+Tocco/click oppure Spazio/Invio sul canvas attiva/disattiva l'audio (gesto richiesto
+dal browser). Audio sospeso in background e chiuso all'uscita; reduced-motion
+rende statico il disegno. È una simulazione decorativa, non una misura medica.
+
+### Altre pagine nascoste
+- `/chronos`, `/tempo`: soltanto l'occhio di Chronos in un void nero.
+- `/67`: `XD`.
+- `/doomsday`, `/doom`, `/muffin`, `/doomsdaymuffin`: `THE END IS NEAR`.
+- `/harken`, `/sybau`, `/stfu`, `/sybauken`: l'immagine caricata, locale e invariata.
+- `/x-treme`, `/xtreme`, `/estremo`: Wikipedia, Tortura, sezione dal medioevo
+  all'età moderna.
+- `/teiera`, `/newell`, `/tazza`: Wikipedia, Martin Newell (computer scientist),
+  autore della Utah teapot.
+- `/tiki`: https://the-battle-bricks.fandom.com/wiki/Tiki_Battler
+- `/boi`, `/son`: https://www.youtube.com/@TheRealLowTierGod
+
+Alias validi anche con slash finale; redirect esterni a destinazioni fisse.
+Nessuna di queste pagine carica pubblicità, gate, quiz o l'app degli scacchi.
