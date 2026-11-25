@@ -627,3 +627,10 @@ Cheerer, Gleeber, Glaaber, Glogga, Kruzzit, Zorker, Blepzo, Yippeeyay, Smiley),
 `/puh`, `/dih`, `/hawktuah`, `/rizzler`, `/aura` aprono Wikipedia Brain rot.
 `/are-you` (anche spazio o unito), `/ru`, `/tree` aprono il video Hanging Tree indicato.
 `/penna`, `/pennabic`, `/bic` aprono Wikipedia Dio. Alias validi anche con slash finale.
+
+### Pagina non trovata
+I percorsi inesistenti usano `404.html`: solo l'immagine fornita a schermo intero
+(`object-fit: cover`, quindi con possibile ritaglio sui rapporti d'aspetto diversi).
+L'asset ha URL assoluto rispetto al sito, funzionante anche su percorsi annidati.
+Vercel mantiene lo status HTTP 404 senza redirect generico né interferenze con API
+o alias esistenti. Nessuno script di blocco uscita o riapertura delle schede.

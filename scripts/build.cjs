@@ -25,3 +25,6 @@ fs.copyFileSync('node_modules/stockfish/Copying.txt', 'public/assets/vendor/STOC
 fs.copyFileSync('mortis.html', 'public/mortis.html');
 
 fs.copyFileSync('secret.html', 'public/secret.html');
+
+// Vercel serves this with HTTP 404 for unknown static routes; do not catch API routes.
+fs.copyFileSync('404.html', 'public/404.html');
