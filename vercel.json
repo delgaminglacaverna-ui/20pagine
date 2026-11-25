@@ -2288,6 +2288,26 @@
       "source": "/doomsday-muffin/",
       "destination": "/doomsdaymuffin",
       "permanent": false
+    },
+    {
+      "source": "/hell",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
+    },
+    {
+      "source": "/hell/",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
+    },
+    {
+      "source": "/blight",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
+    },
+    {
+      "source": "/blight/",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "permanent": false
     }
   ]
 }

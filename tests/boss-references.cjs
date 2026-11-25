@@ -1,8 +1,8 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');
 const {bosses}=require('../data/boss-references.json');const config=require('../vercel.json');
 const routes=new Map([...config.rewrites,...config.redirects].map(r=>[r.source,r.destination]));
-test('all 58 researched boss names have references and reachable aliases',()=>{
-  assert.equal(bosses.length,58);assert.equal(new Set(bosses.map(b=>b.name)).size,58);
+test('all boss names including the user-added Blight have references and reachable aliases',()=>{
+  assert.equal(bosses.length,59);assert.equal(new Set(bosses.map(b=>b.name)).size,59);
   for(const boss of bosses){
     const name=boss.name.toLowerCase();assert(boss.reference);
     for(const alias of new Set([name,name.replace(/ /g,'-'),name.replace(/[ -]/g,'')])){
@@ -23,4 +23,8 @@ test('user references remain unchanged and script does not introduce missing ali
   assert.equal(routes.get('/terminator'),'https://en.wikipedia.org/wiki/The_Terminator');
   assert.equal(routes.get('/gamek1d'),'https://en.wikipedia.org/wiki/Game_Boy');
   require('node:child_process').execFileSync(process.execPath,['scripts/sync-boss-aliases.cjs','--check']);
+});
+
+test('Blight and hell share the user-requested Hell reference',()=>{
+  for(const source of ['/blight','/blight/','/hell','/hell/'])assert.equal(routes.get(source),'https://en.wikipedia.org/wiki/Hell');
 });

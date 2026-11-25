@@ -720,3 +720,5 @@ aggiunge solo gli alias mancanti senza sovrascrivere route esistenti.
 | Treachstone | Giuda Iscariota | https://en.wikipedia.org/wiki/Judas_Iscariot |
 | Turking | King of the Hill | https://en.wikipedia.org/wiki/King_of_the_Hill |
 | X-TREME | Tortura: riferimento già scelto | /x-treme |
+
+Aggiunta successiva richiesta: `/blight` e `/hell` → https://en.wikipedia.org/wiki/Hell . Blight è registrato come aggiunta dell’utente oltre alle 58 voci della categoria consultata.

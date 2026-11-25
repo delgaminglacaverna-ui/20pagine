@@ -349,6 +349,13 @@
       "reference": "Tortura: riferimento già scelto",
       "destination": "/x-treme",
       "preserve": true
+    },
+    {
+      "name": "Blight",
+      "reference": "Hell",
+      "destination": "https://en.wikipedia.org/wiki/Hell",
+      "preserve": false,
+      "source": "User-supplied addition"
     }
   ]
 }
