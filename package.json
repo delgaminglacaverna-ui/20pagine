@@ -10,6 +10,11 @@
     "test": "node scripts/sync-engine.cjs --check && node scripts/sync-coach.cjs --check && node --test tests/*.cjs"
   },
   "devDependencies": {
-    "acorn": "^8.19.0"
+    "acorn": "^8.19.0",
+    "jsdom": "^26.1.0"
+  },
+  "dependencies": {
+    "chess.js": "1.4.0",
+    "stockfish": "18.0.8"
   }
 }

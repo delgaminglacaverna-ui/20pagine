@@ -41,3 +41,14 @@ test('online retrospective reviews run only for the local color with mixed rules
     assert.equal(calls[0].depth, 3); assert.deepEqual(calls[0].sides, [-1]);
   }
 });
+test('joining from another UI looks up authoritative shared mode with GET before joining', async () => {
+  const html = fs.readFileSync('index.html','utf8');
+  const source = html.slice(html.indexOf('  async function onlJoin('),html.indexOf('  async function onlSend('));
+  for (const [mode,path] of [['french','/?version=french&partita=10000001'],['risio','/risio?partita=10000001'],['boring','/boring?partita=10000001']]) {
+    const calls = [], navigations = [];
+    const c = vm.createContext({ URLSearchParams, String, setOnlBusy() {}, onlTokens:() => ({}), onlVariant:() => 'normal', location:{ assign:p => navigations.push(p) },
+      onlApi:async (...args) => { calls.push(args); return { ok:true,data:{ mode } }; }, $l:message => { throw Error(message); } });
+    vm.runInContext(source,c); await c.onlJoin('10000001');
+    assert.equal(calls.length,1); assert.equal(calls[0][3],'GET'); assert.deepEqual(navigations,[path]);
+  }
+});
