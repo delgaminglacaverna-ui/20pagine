@@ -741,3 +741,12 @@ Widget API non venga chiamato in GD. La riproduzione resta soggetta alla
 disponibilità pubblica della playlist e ai permessi embed dei video su YouTube.
 
 GD AD: il salto ora invia il comando `nextVideo` via postMessage all’iframe esistente, con target origin YouTube, senza ricrearlo o cambiare indice URL. `enablejsapi=1` abilita i comandi iframe senza caricare il Widget SDK. Controlli nativi nascosti (`controls=0`); logo e overlay residui dipendono da YouTube.
+
+GD AD aggiornata: registro dei 40 ID estratti dalla playlist fornita; video casuale
+all'apertura e a ogni salto, senza ripetizione immediata. Embed diretto con ID
+valido, senza Widget SDK né comandi playlist; ogni video resta in loop fino al
+salto. Countdown di 15 secondi rappresentato dal Cube001 del pedone che compie
+una rotazione completa; niente lancetta o X sopra il cubo. Reduced motion rispettato.
+Controlli disattivati, iframe non interattivo. YouTube può comunque imporre logo,
+overlay di caricamento o messaggi: la loro completa eliminazione richiederebbe
+video locali autorizzati, non un embed YouTube.

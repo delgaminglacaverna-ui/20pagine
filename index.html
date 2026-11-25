@@ -2484,11 +2484,11 @@ function startSkipCountdown(setRemaining, duration = dr) {
   }, 100);
   return () => window.clearInterval(timer);
 }
-function SkipClock({ remaining, onSkip, onClockTap, enfosi = false }) {
+function SkipClock({ remaining, onSkip, onClockTap, enfosi = false, gd = false }) {
   const seconds = Math.ceil(Math.max(0, remaining)), ready = remaining <= 0;
   return v.jsxs("button", {
     type: "button",
-    className: "skip-clock" + (enfosi ? " enfosi-clock" : "") + (ready ? " skip-clock-ready" : ""),
+    className: "skip-clock" + (enfosi ? " enfosi-clock" : "") + (gd ? " gd-skip-cube" : "") + (ready ? " skip-clock-ready" : ""),
     "aria-disabled": !ready,
     onClick: () => { if (onClockTap?.()) return; if (ready) onSkip?.(); },
     role: ready ? undefined : "timer",
@@ -2497,7 +2497,7 @@ function SkipClock({ remaining, onSkip, onClockTap, enfosi = false }) {
       : FRENCH_MODE ? `Passer dans ${seconds} secondes` : `Salta tra ${seconds} secondi`,
     "aria-live": "off",
     children: [
-      ...(enfosi ? [v.jsx("img", { src: "/assets/enfosi/smiley.png", className: "enfosi-smiley", alt: "" }, "smiley")] : [1, 2, 3].map((frame) => v.jsx("img", {
+      ...(gd ? [v.jsx("img", { src: "/assets/dash/Cube001.webp", alt: "", className: "gd-timer-cube", style: { transform: `rotate(${(15 - Math.max(0, Math.min(15, remaining))) * 360 / 15}deg)` } }, "cube")] : enfosi ? [v.jsx("img", { src: "/assets/enfosi/smiley.png", className: "enfosi-smiley", alt: "" }, "smiley")] : [1, 2, 3].map((frame) => v.jsx("img", {
         className: `skip-clock-face skip-clock-face-${frame}`,
         src: `assets/clock/face-${frame}.png`,
         alt: "",
@@ -2511,7 +2511,7 @@ function SkipClock({ remaining, onSkip, onClockTap, enfosi = false }) {
         "aria-hidden": true,
         style: { transform: `rotate(${(dr - Math.max(0, Math.min(dr, remaining))) * 360 / dr}deg)` },
       }),
-      ...(ready && !enfosi ? [1, 2, 3].map(frame => v.jsx("img", {
+      ...(ready && !enfosi && !gd ? [1, 2, 3].map(frame => v.jsx("img", {
         className: `skip-clock-cross skip-clock-cross-${frame}`,
         src: `assets/wrong/frame-${frame}.${frame === 3 ? "png" : "webp"}`,
         alt: "", "aria-hidden": true,
@@ -2547,9 +2547,11 @@ const ENFOSI_MEDIA = [
   { type: 'video', src: '/assets/enfosi/rushing.mp4', alt: 'Rushing muh wave 7 solo' },
 ];
 const GD_AD_PLAYLIST = "PLFEp265cKO3ZM_IpuwB_Htbht8T0kFPG4";
+const GD_AD_VIDEOS = ["jPqVXbKNoLk", "1zm0QdW1RDs", "zJ-MuG7cqJA", "JDBvOPsyLLk", "flPv7z1Cf8A", "5_ILP_nQdlo", "meOduliICRU", "V4hjmWoxk8k", "QN2VrKbwyXI", "3U55sNWSEgM", "JEN0dK6zcO4", "NQv3rVRZ7H0", "ivUcHWDSfiw", "fs3EPKRNKm8", "G5uw4uNYZ-0", "XMi8mu7-dJg", "V4NO_CRzw5E", "EF5Z0Il3jSQ", "sC1y5AxDcL4", "ekKQO23N32A", "tI-XcPy_FHY", "OcaLAU4arvk", "e0gYRkDInkw", "ED1ijK1SRBQ", "0RMOm06P6aU", "a7pWpayxREs", "o1gVAbL97tY", "k6AKd9MLtu0", "Xvk9VCynvyA", "nxXTPB-Osl8", "_EUbcmHoy2I", "c9kQFlWr8G0", "Q8Ep5JLiWNw", "NE2aB_h-k_U", "6ZP4qPH3cZY", "dv33QRRSY-k", "HcnTsMUgNAo", "er4zHZM2iMM", "V0_LQt_ZE5E", "c2no-M-PeRQ"];
+function randomGdAd(previous) { const pool = GD_AD_VIDEOS.filter(id => id !== previous); return pool[Math.floor(Math.random() * pool.length)]; }
 function i1() {
   const enfosi = RISIO_MODE,
-    [mediaIndex, setMediaIndex] = ul.useState(() => DASH_MODE ? 0 : Math.floor(Math.random() * ENFOSI_MEDIA.length)),
+    [mediaIndex, setMediaIndex] = ul.useState(() => DASH_MODE ? randomGdAd() : Math.floor(Math.random() * ENFOSI_MEDIA.length)),
     music = ul.useRef(null), trigger = ul.useRef(createEnfosiTrigger());
   ul.useEffect(() => {
     if (!enfosi) return;
@@ -2577,7 +2579,7 @@ function i1() {
   }
   const media = ENFOSI_MEDIA[mediaIndex];
   const [o, h] = ul.useState(() => or()),
-    [b, f] = ul.useState(enfosi || DASH_MODE ? 2.5 : dr),
+    [b, f] = ul.useState(DASH_MODE ? 15 : enfosi ? 2.5 : dr),
     z = ul.useRef(null),
     x = ul.useRef(null),
     [j, D] = ul.useState(null),
@@ -2659,13 +2661,12 @@ function i1() {
     );
   }, [enfosi]),
     ul.useEffect(() => {
-      return startSkipCountdown(f, enfosi || DASH_MODE ? 2.5 : dr);
+      return startSkipCountdown(f, DASH_MODE ? 15 : enfosi ? 2.5 : dr);
     }, [o, enfosi, mediaIndex]));
   const $ = ul.useRef(o);
   function il() {
     if (DASH_MODE) {
-      z.current?.contentWindow?.postMessage(JSON.stringify({ event: "command", func: "nextVideo", args: [] }), "https://www.youtube.com");
-      f(2.5); setMediaIndex(index => index + 1); return;
+      f(15); setMediaIndex(previous => randomGdAd(previous)); return;
     }
     if (enfosi) { f(2.5); setMediaIndex(index => (index + 1 + Math.floor(Math.random() * (ENFOSI_MEDIA.length - 1))) % ENFOSI_MEDIA.length); return; }
     const Q = or($.current);
@@ -2701,7 +2702,7 @@ function i1() {
                 }),
               ],
             }),
-            v.jsx(SkipClock, { remaining: b, onSkip: il, onClockTap: clockTap, enfosi }),
+            v.jsx(SkipClock, { remaining: b, onSkip: il, onClockTap: clockTap, enfosi, gd: DASH_MODE }),
           ],
         }),
         v.jsx("div", {
@@ -2711,11 +2712,11 @@ function i1() {
               ? v.jsx("video", { key: media.src, src: media.src, autoPlay: true, muted: true, playsInline: true, controls: true, onEnded: il, onError: il, className: "enfosi-media" })
               : v.jsx("img", { key: media.src, src: media.src, alt: media.alt, className: "enfosi-media", onError: event => { event.currentTarget.onerror = null; event.currentTarget.src = '/assets/enfosi/smiley.png'; } })
             : v.jsx("div", {
-              className: (DASH_MODE ? "" : "pointer-events-none ") + "absolute inset-0",
+              className: "pointer-events-none absolute inset-0",
               children: DASH_MODE
                 ? v.jsx("iframe", {
-                    ref: z, className: "h-full w-full", title: "GD AD",
-                    src: `https://www.youtube.com/embed/videoseries?list=${GD_AD_PLAYLIST}&enablejsapi=1&origin=${encodeURIComponent(location.origin)}&autoplay=1&mute=1&controls=0&disablekb=1&playsinline=1`,
+                    key: mediaIndex, tabIndex: -1, className: "h-full w-full", title: "GD AD",
+                    src: `https://www.youtube.com/embed/${mediaIndex}?autoplay=1&mute=1&controls=0&disablekb=1&playsinline=1&rel=0&loop=1&playlist=${mediaIndex}`,
                     allow: "autoplay; encrypted-media; picture-in-picture", referrerPolicy: "strict-origin-when-cross-origin",
                   })
                 : v.jsx("div", { ref: z, className: "h-full w-full" }),

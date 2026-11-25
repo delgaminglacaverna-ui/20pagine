@@ -1,23 +1,15 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const vm=require('node:vm');
-test('GD AD uses a native playlist iframe and NEVER initializes the YouTube Widget API',async()=>{
-  const html=fs.readFileSync('index.html','utf8');let cursor=0;const state=[];let effects=[];const commands=[];
-  const SkipClock=()=>{};
-  const context=vm.createContext({DASH_MODE:true,RISIO_MODE:false,location:{origin:"https://example.org"},ENFOSI_MEDIA:[{}],Math,dr:30,wf:1.25,or:()=> 'tbb-id',createEnfosiTrigger:()=>()=>false,SkipClock,
-    startSkipCountdown:(callback,seconds)=>{assert.equal(seconds,2.5);return ()=>{};},
-    c1:()=>{throw Error('Widget API must not load in GD');},
-    window:{addEventListener(){},removeEventListener(){}},
-    v:{jsx:(type,props)=>({type,props}),jsxs:(type,props)=>({type,props})},
-    ul:{useState:initial=>{const i=cursor++;if(!(i in state))state[i]=typeof initial==='function'?initial():initial;return[state[i],value=>state[i]=typeof value==='function'?value(state[i]):value];},useRef:initial=>{const i=cursor++;return state[i]||(state[i]={current:initial});},useEffect:fn=>effects.push(fn)}
-  });
-  vm.runInContext(html.slice(html.indexOf('const GD_AD_PLAYLIST'),html.indexOf('function kf('))+';globalThis.render=i1;',context);
-  const nodes=node=>node&&typeof node==='object'?[node,...[node.props?.children].flat(2).flatMap(nodes)]:[];
-  const render=()=>{cursor=0;effects=[];const all=nodes(context.render());for(const node of all)if(node.props?.ref)node.props.ref.current={contentWindow:{postMessage:(message,origin)=>commands.push({message:JSON.parse(message),origin})}};for(const effect of effects)effect();return all;};
-  let all=render();assert(all.some(n=>n.props?.children==='GD AD'));
-  const iframe=all.find(n=>n.type==='iframe');const url=new URL(iframe.props.src);
-  assert.equal(url.pathname,'/embed/videoseries');assert.equal(url.searchParams.get('list'),'PLFEp265cKO3ZM_IpuwB_Htbht8T0kFPG4');
-  assert.equal(url.searchParams.get('controls'),'0');assert.equal(url.searchParams.get('enablejsapi'),'1');assert.equal(url.searchParams.get('origin'),'https://example.org');assert(!iframe.props.src.includes('undefined'));assert(iframe.props.ref);assert.equal(iframe.props.key,undefined);
-  all.find(n=>n.type===SkipClock).props.onSkip();all=render();
-  assert.equal(all.find(n=>n.type==='iframe').props.src,iframe.props.src);
-  assert.equal(commands.length,1);assert.equal(commands[0].message.func,'nextVideo');assert.equal(commands[0].origin,'https://www.youtube.com');
-  all.find(n=>n.type===SkipClock).props.onSkip();assert.equal(commands.length,2);
+test('GD chooses verified video IDs randomly without immediate repeats, with 15 second cube timer',()=>{
+ const html=fs.readFileSync('index.html','utf8');const c=vm.createContext({Math});
+ vm.runInContext(html.slice(html.indexOf('const GD_AD_PLAYLIST'),html.indexOf('function i1()'))+';globalThis.ids=GD_AD_VIDEOS;',c);
+ assert.equal(c.ids.length,40);assert.equal(new Set(c.ids).size,40);for(const id of c.ids)assert.match(id,/^[\w-]{11}$/);
+ let previous;const seen=new Set();for(let i=0;i<500;i++){const next=c.randomGdAd(previous);assert.notEqual(next,previous);assert(c.ids.includes(next));seen.add(next);previous=next;}assert(seen.size>1);
+ assert(html.includes('DASH_MODE ? 15 : enfosi ? 2.5 : dr'));
+ assert(html.includes('setMediaIndex(previous => randomGdAd(previous))'));
+ assert(html.includes('youtube.com/embed/${mediaIndex}?autoplay=1&mute=1&controls=0'));
+ assert(!html.includes('youtube.com/embed/videoseries'));
+ assert(html.includes('gd: DASH_MODE'));
+ const clock=html.slice(html.indexOf('function SkipClock('),html.indexOf('function createEnfosiTrigger'));
+ assert(clock.includes('/assets/dash/Cube001.webp'));assert(clock.includes('rotate('));assert(clock.includes('!enfosi && !gd'));
+ assert(fs.readFileSync('assets/dash-theme.css','utf8').includes('.gd-skip-cube .skip-clock-hand { display:none; }'));
 });
