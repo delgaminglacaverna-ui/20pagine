@@ -10,6 +10,7 @@
     "test": "node scripts/sync-engine.cjs --check && node scripts/sync-coach.cjs --check && node --test tests/*.cjs"
   },
   "devDependencies": {
+    "@vercel/routing-utils": "4.0.0",
     "acorn": "^8.19.0",
     "jsdom": "^26.1.0"
   },
