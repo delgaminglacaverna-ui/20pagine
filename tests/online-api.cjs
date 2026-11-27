@@ -164,3 +164,19 @@ test('invalid online variants are rejected without changing an existing seat', a
   const white = await request(service, 'POST');
   await rejects(request(service, 'POST', white.id, 'join', undefined, { variant: 'arbitrary' }), 400);
 });
+test('private chat authenticates both players, limits messages and does not alter game version', async()=>{
+ const store=memoryStore(),service=createService(store);
+ const white=await request(service,'POST');const black=await request(service,'POST',white.id,'join');
+ await rejects(request(service,'POST',white.id,'chat',undefined,{}),401);
+ await rejects(request(service,'POST',white.id,'chat','a'.repeat(64),{text:'hello'}),401);
+ await rejects(request(service,'POST',white.id,'chat',white.token,{text:' '.repeat(2)}),400);
+ await rejects(request(service,'POST',white.id,'chat',white.token,{text:'x'.repeat(301)}),400);
+ const result=await request(service,'POST',white.id,'chat',white.token,{text:'<img onerror=alert(1)>'});
+ assert.equal(result.chat[0].color,1);assert.equal(result.chat[0].text,'<img onerror=alert(1)>');
+ await rejects(request(service,'POST',white.id,'chat',white.token,{text:'spam'}),429);
+ const second=await request(service,'POST',white.id,'chat',black.token,{text:'ciao'});assert.equal(second.chat[1].color,-1);
+ const read=await request(service,'POST',white.id,'chat',black.token,{});assert.equal(read.chat.length,2);
+ const publicState=await request(service,'GET',white.id);assert(!('chat' in publicState));assert.equal(publicState.version,black.version);
+ const raw=JSON.parse(store.values.get(white.id));raw.chat=Array.from({length:50},()=>({color:-1,text:'old',at:0}));store.values.set(white.id,JSON.stringify(raw));
+ assert.equal((await request(service,'POST',white.id,'chat',white.token,{text:'last'})).chat.length,50);
+});
