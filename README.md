@@ -761,3 +761,13 @@ messaggio incluso nello stato pubblico, nell'archivio o nelle valutazioni AI.
 La cronologia segue la scadenza della partita nel database. La chat non modifica
 la versione delle mosse e gli aggiornamenti concorrenti usano compare-and-swap.
 Non è presente alcuna funzione di riapertura automatica o blocco della chiusura.
+
+### Schermo intero facoltativo
+In basso a sinistra, “Impostazioni schermo” espone lo switch “Schermo intero +
+conferma prima di uscire”, disponibile prima e dopo il quiz nelle varianti della
+pagina principale. Spento di default, non persistito e attivabile solo con gesto
+esplicito. La conferma standard beforeunload si attiva solo dopo il successo del
+fullscreen; Esc, uscita dal fullscreen e switch spento la rimuovono. Nessun popup,
+riapertura, blocco Esc o testo ingannevole. Il browser sceglie il messaggio e può
+non mostrare la conferma (soprattutto su mobile). Se il fullscreen non è supportato
+o è negato dall'iframe di anteprima, lo switch lo segnala senza attivare avvisi.
