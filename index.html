@@ -19,7 +19,8 @@
     <link rel="stylesheet" href="/assets/dash-theme.css" />
     <script src="/assets/dash-theme.js"></script>
     <script src="/assets/coach-i18n.js"></script>
-    <script src="/assets/move-coach.js"></script>
+    <script src="/assets/online-chat.js"></script>
+<script src="/assets/move-coach.js"></script>
     <script src="/assets/game-archive.js"></script>
     <script src="/assets/archive-rules.js"></script>
     <link rel="stylesheet" href="/assets/game-archive.css" />
@@ -1178,6 +1179,15 @@ const ONL_REASON = {
   resign: "abbandono",
   cancel: "annullata",
 };
+function OnlineChatPanel({ match }) {
+  const ref = ul.useRef(null);
+  ul.useEffect(() => {
+    const token = match.token || onlTokens()[match.id];
+    if (!token || !match.color) return;
+    return window.OnlineChat?.mount(ref.current, match.id, token);
+  }, [match.id, match.color]);
+  return v.jsx("div", { ref });
+}
 function OnlinePanel(o) {
   const { onl: n, busy: b } = o,
     h2 = v.jsx("h2", {
@@ -1260,6 +1270,7 @@ function OnlinePanel(o) {
           }),
         ],
       }),
+      n.color !== 0 && v.jsx(OnlineChatPanel, { match: n }),
       n.status === "waiting" &&
         v.jsxs("div", {
           className: "mt-2 flex gap-2",

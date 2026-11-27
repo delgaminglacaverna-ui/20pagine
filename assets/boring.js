@@ -151,3 +151,11 @@ setInterval(async () => {
 },1500);
 render();
 const code = new URLSearchParams(location.search).get('partita'); if (code) join(code);
+
+let chatKey = '', closeChat;
+setInterval(() => {
+  const key = online ? online.id + ':' + online.token : '';
+  if (key === chatKey) return;
+  closeChat?.(); chatKey = key;
+  if (online?.token) closeChat = window.OnlineChat?.mount(document.getElementById('online-chat'), online.id, online.token);
+}, 1000);

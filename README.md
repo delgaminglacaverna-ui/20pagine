@@ -750,3 +750,14 @@ una rotazione completa; niente lancetta o X sopra il cubo. Reduced motion rispet
 Controlli disattivati, iframe non interattivo. YouTube può comunque imporre logo,
 overlay di caricamento o messaggi: la loro completa eliminazione richiederebbe
 video locali autorizzati, non un embed YouTube.
+
+### Chat online privata
+Ogni partita online ha una chat testuale tra i due giocatori, anche nelle varianti.
+Serve il token giocatore: il solo codice partita non permette di leggere la chat.
+Massimo 300 caratteri, 50 messaggi conservati nella partita e 2 secondi fra invii
+dello stesso giocatore, oltre ai limiti API esistenti. Nessun HTML eseguito: i
+messaggi sono renderizzati con textContent. Aggiornamento ogni 4 secondi; nessun
+messaggio incluso nello stato pubblico, nell'archivio o nelle valutazioni AI.
+La cronologia segue la scadenza della partita nel database. La chat non modifica
+la versione delle mosse e gli aggiornamenti concorrenti usano compare-and-swap.
+Non è presente alcuna funzione di riapertura automatica o blocco della chiusura.
