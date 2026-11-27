@@ -1,0 +1,6 @@
+.focus-mode-settings{position:fixed;left:10px;bottom:10px;z-index:10001;max-width:min(340px,calc(100vw - 20px));padding:8px 12px;border:1px solid #64748b;border-radius:8px;background:#111b2e;color:#f8fafc;font:14px/1.45 system-ui,sans-serif;box-shadow:0 4px 16px #0006}
+.focus-mode-settings summary{cursor:pointer;list-style:revert;font-weight:600}
+.focus-mode-settings label{display:block;margin-top:12px;cursor:pointer}
+.focus-mode-settings input{appearance:auto;width:18px;height:18px;vertical-align:middle;accent-color:#60a5fa}
+.focus-mode-settings p{margin-top:8px;font-size:12px}
+.focus-mode-settings :focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
